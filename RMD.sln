@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34601.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMD.Data", "RMD.Data\RMD.Data.csproj", "{55352663-15D7-4EF6-8428-0DBBF10399B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMD.Business", "RMD.Business\RMD.Business.csproj", "{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMD.GUI", "RMD.GUI\RMD.GUI.csproj", "{DBAAB9EA-D473-4D11-B0ED-A253D936EAE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55352663-15D7-4EF6-8428-0DBBF10399B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55352663-15D7-4EF6-8428-0DBBF10399B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55352663-15D7-4EF6-8428-0DBBF10399B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55352663-15D7-4EF6-8428-0DBBF10399B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBAAB9EA-D473-4D11-B0ED-A253D936EAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBAAB9EA-D473-4D11-B0ED-A253D936EAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBAAB9EA-D473-4D11-B0ED-A253D936EAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBAAB9EA-D473-4D11-B0ED-A253D936EAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC43F2EE-5D20-4F4D-BE52-1E92E46D0686}
+	EndGlobalSection
+EndGlobal
