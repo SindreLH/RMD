@@ -1,6 +1,6 @@
+using GUI.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using RMD.GUI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
