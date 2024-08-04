@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMD.Data", "RMD.Data\RMD.Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMD.Business", "RMD.Business\RMD.Business.csproj", "{9BD5C624-7309-43B9-B0D3-5DBA0B8B0BFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMD.GUI", "RMD.GUI\RMD.GUI.csproj", "{DB5F2FED-56F6-4F80-BAC5-6262AD92C151}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RMD.GUI", "RMD.GUI\RMD.GUI.csproj", "{DB5F2FED-56F6-4F80-BAC5-6262AD92C151}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

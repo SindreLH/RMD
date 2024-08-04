@@ -4,24 +4,31 @@
 
 <h3>Legg til en ny artist i databasen</h3>
 
-<form>
-	<div id="register-artist-wrapper">
+<form id="reg_artist_form">
+	<div id="form-group">
+		<label for="artistName">Navn</label>
+		<input type="text" class="form-control rounded-3"/>
+	</div>
 
-		<!-- Del 1 - låtregistrering -->
+	<div id="form-group">
+		<label for="artistName">Sosiale medier</label>
+		<input type="url" class="form-control" />
+	</div>
 
-		<label>Navn</label>
-		<input type="text"/>
-
-		<label>Sosiale medier</label>
-		<input type="url" />
-
-		<label>Profilbilde</label>
-		<input type="url" />
-
-		<input type="button" onclick="alert('Artist lagret!')" value="Lagre Artist">
-
+	<div id="form-group">
+		<label for="profilePicture">Profilbilde</label>
+		<input type="url" class="form-control" />
 	</div>
 </form>
+
+<div class="save_button">
+	<button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
+		<i class="bi bi-floppy-fill"></i> Lagre Artist
+	</button>
+</div>
+
+
+<!--Sett brødtekst: #b3b3b3-->
 
 @code {
 
