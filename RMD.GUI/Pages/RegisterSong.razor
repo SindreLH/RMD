@@ -1,8 +1,73 @@
 ﻿@page "/AddSong"
 
-<PageTitle>Add a new song</PageTitle>
+<PageTitle>RMD | Add a new song</PageTitle>
 
 <h3>Legg til en ny låt i databasen</h3>
+
+<form>
+<div id="register-song-wrapper">
+
+	<!-- Del 1 - låtregistrering -->
+
+	<label>Tittel</label>
+	<input type="text"/>
+
+	<label>Artist</label>
+	<select name="artist" id="artist">
+		<option value="rob_mayth">Rob Mayth</option>
+		<option value="lazerzf!ne">Lazerzf!ne</option>
+		<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+		<option value="masterblaster">Master Blaster</option>
+	</select>
+
+	<label>Remixartist</label>
+	<select name="remixartist" id="remixartist">
+		<option value="rob_mayth">Rob Mayth</option>
+		<option value="lazerzf!ne">Lazerzf!ne</option>
+		<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+		<option value="masterblaster">Master Blaster</option>
+	</select>
+
+	<label>Lengde (MMSS)</label>
+	<input type="text" />
+
+	<label>Sjanger</label>
+	<select name="sjanger" id="sjanger">
+		<option value="hands_up">Hands Up</option>
+		<option value="hard_trance">Hard Trance</option>
+		<option value="hardstyle">Hardstyle</option>
+		<option value="trance">Trance</option>
+	</select>
+
+	<!-- Del 2 - låtregistrering -->
+
+	<label>Extended Mix</label>
+	<input type="radio" id="extended_mix" value="Extended Mix">
+
+	<label>Radio Mix</label>
+	<input type="radio" id="radio_mix" value="Radio Mix">
+
+	<label>Tidligere spilt</label>
+	<input type="radio" id="played" value="True">
+
+	<label>I samling</label>
+	<input type="radio" id="played" value="True">
+
+	<label>Spilt i episode no.</label>
+	<input type="number"/>
+
+	<input type="button" onclick="alert('Låt lagret!')" value="Lagre låt">
+
+</div>
+</form>
+
+
+
+
+@* <label for="date" class="col-form-label-sm">Fornavn</label>
+<InputText class="form-control" placeholder="Ola" @bind-Value="FormData.Agent.FirstName" />
+<ValidationMessage For=@( () => FormData.Agent.FirstName ) />
+ *@
 
 @code {
 

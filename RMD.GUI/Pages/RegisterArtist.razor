@@ -1,8 +1,27 @@
 ﻿@page "/AddArtist"
 
-<PageTitle>Add new artist</PageTitle>
+<PageTitle>RMD | Add new artist</PageTitle>
 
 <h3>Legg til en ny artist i databasen</h3>
+
+<form>
+	<div id="register-artist-wrapper">
+
+		<!-- Del 1 - låtregistrering -->
+
+		<label>Navn</label>
+		<input type="text"/>
+
+		<label>Sosiale medier</label>
+		<input type="url" />
+
+		<label>Profilbilde</label>
+		<input type="url" />
+
+		<input type="button" onclick="alert('Artist lagret!')" value="Lagre Artist">
+
+	</div>
+</form>
 
 @code {
 
