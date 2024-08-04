@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\RegisterSong.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\RegisterSong.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

@@ -4,70 +4,89 @@
 
 <h3>Legg til en ny låt i databasen</h3>
 
-<form>
-<div id="register-song-wrapper">
+<form id="reg_song_form">
 
-	<!-- Del 1 - låtregistrering -->
+	<div id="reg_song_part_a">
+		<div id="form-group">
+			<label>Tittel</label>
+			<input type="text" class="form-control" />
+		</div>
+	
+		<div class="form-group">
+			<label for="artist">Artist</label>
+			<select name="artist" id="artist" class="form-control">
+				<option value="rob_mayth">Rob Mayth</option>
+				<option value="lazerzf!ne">Lazerzf!ne</option>
+				<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+				<option value="masterblaster">Master Blaster</option>
+			</select>
+		</div>
 
-	<label>Tittel</label>
-	<input type="text"/>
+		<div id="form-group">
+			<label>Remixartist</label>
+			<select name="remixartist" id="remixartist" class="form-control">
+				<option value="rob_mayth">Rob Mayth</option>
+				<option value="lazerzf!ne">Lazerzf!ne</option>
+				<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+				<option value="masterblaster">Master Blaster</option>
+			</select>
+		</div>
 
-	<label>Artist</label>
-	<select name="artist" id="artist">
-		<option value="rob_mayth">Rob Mayth</option>
-		<option value="lazerzf!ne">Lazerzf!ne</option>
-		<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-		<option value="masterblaster">Master Blaster</option>
-	</select>
+		<div id="form-group">
+			<label>Lengde (MMSS)</label>
+			<input type="text" class="form-control" />
+		</div>
 
-	<label>Remixartist</label>
-	<select name="remixartist" id="remixartist">
-		<option value="rob_mayth">Rob Mayth</option>
-		<option value="lazerzf!ne">Lazerzf!ne</option>
-		<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-		<option value="masterblaster">Master Blaster</option>
-	</select>
 
-	<label>Lengde (MMSS)</label>
-	<input type="text" />
+		<div id="form-group">
+			<label>Sjanger</label>
+			<select name="sjanger" id="sjanger" class="form-control">
+				<option value="hands_up">Hands Up</option>
+				<option value="hard_trance">Hard Trance</option>
+				<option value="hardstyle">Hardstyle</option>
+				<option value="trance">Trance</option>
+			</select>
+		</div>
+	</div>
+	
+	<div id="reg_song_part_b">
 
-	<label>Sjanger</label>
-	<select name="sjanger" id="sjanger">
-		<option value="hands_up">Hands Up</option>
-		<option value="hard_trance">Hard Trance</option>
-		<option value="hardstyle">Hardstyle</option>
-		<option value="trance">Trance</option>
-	</select>
 
-	<!-- Del 2 - låtregistrering -->
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+			<label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
+			<label class="col-form-label-sm">Låten er DJ-vennlig og har intro/outro for mixing.</label>
+		</div>
 
-	<label>Extended Mix</label>
-	<input type="radio" id="extended_mix" value="Extended Mix">
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+			<label class="form-check-label" for="flexSwitchCheckDefault">Radio Mix</label>
+		</div>
 
-	<label>Radio Mix</label>
-	<input type="radio" id="radio_mix" value="Radio Mix">
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+			<label class="form-check-label" for="flexSwitchCheckDefault">Tidligere spilt</label>
+		</div>
 
-	<label>Tidligere spilt</label>
-	<input type="radio" id="played" value="True">
+		<div class="form-check form-switch">
+			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+			<label class="form-check-label" for="flexSwitchCheckDefault">Lagret i Samling</label>
+		</div>
+		
+		<div id="form-group">
+			<label>Spilt i episode no.</label>
+			<input type="number" class="form-control" />
+		</div>
+	</div>
 
-	<label>I samling</label>
-	<input type="radio" id="played" value="True">
-
-	<label>Spilt i episode no.</label>
-	<input type="number"/>
-
-	<input type="button" onclick="alert('Låt lagret!')" value="Lagre låt">
-
-</div>
 </form>
 
+<div class="save_button">
+	<button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
+		<i class="bi bi-floppy-fill"></i> Lagre Artist
+	</button>
+</div>
 
-
-
-@* <label for="date" class="col-form-label-sm">Fornavn</label>
-<InputText class="form-control" placeholder="Ola" @bind-Value="FormData.Agent.FirstName" />
-<ValidationMessage For=@( () => FormData.Agent.FirstName ) />
- *@
 
 @code {
 
