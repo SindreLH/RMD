@@ -1,0 +1,21 @@
+﻿#reg_artist_form {
+    display: flex;
+    flex-direction: column;
+    width: 15rem;
+    height: 15rem;
+    justify-content: space-evenly;
+    color: #b3b3b3;
+}
+
+h3 {
+   color: #b3b3b3;
+   margin-bottom:0;
+}
+
+.form-control {
+    border-radius: 6px;
+}
+
+.save_button{
+    margin-top: 35px;
+}

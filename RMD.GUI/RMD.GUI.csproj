@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\MixtapeListPage.razor.css" />
+    <None Remove="Pages\RegisterSong.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\MixtapeListPage.razor.css" />
+    <Content Include="Pages\RegisterSong.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
