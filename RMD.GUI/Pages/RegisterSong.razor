@@ -5,79 +5,101 @@
 <h3>Legg til en ny låt i databasen</h3>
 
 <form id="reg_song_form">
-
-	<div id="reg_song_part_a">
-		<div id="form-group">
-			<label>Tittel</label>
-			<input type="text" class="form-control" />
-		</div>
 	
-		<div class="form-group">
-			<label for="artist">Artist</label>
-			<select name="artist" id="artist" class="form-control">
-				<option value="rob_mayth">Rob Mayth</option>
-				<option value="lazerzf!ne">Lazerzf!ne</option>
-				<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-				<option value="masterblaster">Master Blaster</option>
-			</select>
+	<div id="a_b_container">
+		<div id="reg_song_part_a">
+			<div id="form-group">
+				<label>Tittel</label>
+				<input type="text" class="form-control" />
+			</div>
+
+			<div id="form-group">
+				<label>Remixartist</label>
+				<select name="remixartist" id="remixartist" class="form-control">
+					<option value="rob_mayth">Rob Mayth</option>
+					<option value="lazerzf!ne">Lazerzf!ne</option>
+					<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+					<option value="masterblaster">Master Blaster</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="artist">Artist</label>
+				<select name="artist" id="artist" class="form-control">
+					<option value="rob_mayth">Rob Mayth</option>
+					<option value="lazerzf!ne">Lazerzf!ne</option>
+					<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+					<option value="masterblaster">Master Blaster</option>
+				</select>
+			</div>
+
+			<div id="form-group">
+				<label>Remixartist</label>
+				<select name="remixartist" id="remixartist" class="form-control">
+					<option value="rob_mayth">Rob Mayth</option>
+					<option value="lazerzf!ne">Lazerzf!ne</option>
+					<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+					<option value="masterblaster">Master Blaster</option>
+				</select>
+			</div>
+
+			<div id="form-group">
+				<label>Lengde (MMSS)</label>
+				<input type="text" class="form-control" />
+			</div>
+
+
+			<div id="form-group">
+				<label>Sjanger</label>
+				<select name="sjanger" id="sjanger" class="form-control">
+					<option value="hands_up">Hands Up</option>
+					<option value="hard_trance">Hard Trance</option>
+					<option value="hardstyle">Hardstyle</option>
+					<option value="trance">Trance</option>
+				</select>
+			</div>
 		</div>
-
-		<div id="form-group">
-			<label>Remixartist</label>
-			<select name="remixartist" id="remixartist" class="form-control">
-				<option value="rob_mayth">Rob Mayth</option>
-				<option value="lazerzf!ne">Lazerzf!ne</option>
-				<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-				<option value="masterblaster">Master Blaster</option>
-			</select>
-		</div>
-
-		<div id="form-group">
-			<label>Lengde (MMSS)</label>
-			<input type="text" class="form-control" />
-		</div>
+		<div id="reg_song_part_b">
 
 
-		<div id="form-group">
-			<label>Sjanger</label>
-			<select name="sjanger" id="sjanger" class="form-control">
-				<option value="hands_up">Hands Up</option>
-				<option value="hard_trance">Hard Trance</option>
-				<option value="hardstyle">Hardstyle</option>
-				<option value="trance">Trance</option>
-			</select>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
+				<label class="col-form-label-sm">Mix med intro og outro.</label>
+			</div>
+
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<label class="form-check-label" for="flexSwitchCheckDefault">Radio Mix</label>
+				<label class="col-form-label-sm">Mix for radio play.</label>
+			</div>
+
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
+				<label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
+			</div>
+
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
+				<label class="col-form-label-sm">Låten er lagret i samlingen.</label>
+			</div>
+
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
+				<label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
+			</div>
+
+			<div id="form-group">
+				<label>Mixtape vol.</label>
+				<input type="number" class="form-control number_ticker" />
+				<label class="col-form-label-sm">Mixtape episode (Conditional format based on played)</label>
+			</div>
 		</div>
 	</div>
 	
-	<div id="reg_song_part_b">
-
-
-		<div class="form-check form-switch">
-			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-			<label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
-			<label class="col-form-label-sm">Låten er DJ-vennlig og har intro/outro for mixing.</label>
-		</div>
-
-		<div class="form-check form-switch">
-			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-			<label class="form-check-label" for="flexSwitchCheckDefault">Radio Mix</label>
-		</div>
-
-		<div class="form-check form-switch">
-			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-			<label class="form-check-label" for="flexSwitchCheckDefault">Tidligere spilt</label>
-		</div>
-
-		<div class="form-check form-switch">
-			<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-			<label class="form-check-label" for="flexSwitchCheckDefault">Lagret i Samling</label>
-		</div>
-		
-		<div id="form-group">
-			<label>Spilt i episode no.</label>
-			<input type="number" class="form-control" />
-		</div>
-	</div>
 
 </form>
 
@@ -91,3 +113,4 @@
 @code {
 
 }
+
