@@ -2,9 +2,144 @@
 
 <PageTitle>RMD | Artist Page</PageTitle>
 
-<h3>Artistens individuelle profilside</h3>
-<p>Individuell routing to profil-id kommer</p>
+
+<div class="header_wrapper">
+
+	<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
+		 alt="Artist Press Picture"
+		 class="artist_profile_pic" />
+
+	<div class="text_container">
+		<h3>Rob Mayth</h3>
+		<p>
+			🇩🇪 Tyskland 
+			<br />
+
+			<a href="facebook.com/rob_mayth">
+				<img src="images/fb_icon.png" class="socials_icons" />
+				Facebook
+			</a>
+
+			<br />
+			<a href="soundcloud/rob_mayth">
+				<img src="images/sc_icon.png" class="socials_icons" />
+				Soundcloud
+			</a>
+		</p>
+	</div>
+
+	<div class="button_wrapper">
+		<div class="edit_button">
+			<button type="button" onclick="alert('Rediger artist her!')" class="btn btn-warning fixed-width">
+				<i class="bi bi-pencil"></i> Rediger artist
+			</button>
+		</div>
+
+		<div class="delete_button">
+			<button type="button" onclick="alert('Artist slettet!')" class="btn btn-danger fixed-width">
+				<i class="bi bi-trash3"></i> Fjern artist
+			</button>
+		</div>
+	</div>
+</div>
+
+
+
+ <table class="table table-bordered table-dark table-striped table-hover">
+	<caption>Oversikt over registrerte låter av denne artisten</caption>
+	<thead class="thead-light">
+		 <tr>
+			<th>
+				Tittel
+			</th>
+
+			<th>
+				Remixartist
+			</th>
+
+			<th>
+				Artist
+			</th>
+
+			<th>
+				Spilt i episode 
+			</th>
+		 </tr>
+		 
+	 </thead>
+
+	<tbody>
+		<tr>
+			<td>Barbie Girl</td>
+			<td></td>
+			<td>Rob Mayth</td>
+			<td>2</td>
+		</tr>
+
+		<tr>
+			<td>iPower</td>
+			<td></td>
+			<td>Rob Mayth</td>
+			<td>5</td>
+		</tr>
+
+		<tr>
+			<td>Another Night 2k12</td>
+			<td>Sound Artz</td>
+			<td>Rob Mayth</td>
+			<td></td>
+		</tr>
+	</tbody>
+ </table>
+
+
 
 @code {
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+Regional Indicator Symbol Letter A: 🇦 (U+1F1E6)
+Regional Indicator Symbol Letter B: 🇧 (U+1F1E7)
+Regional Indicator Symbol Letter C: 🇨 (U+1F1E8)
+Regional Indicator Symbol Letter D: 🇩 (U+1F1E9)
+Regional Indicator Symbol Letter E: 🇪 (U+1F1EA)
+Regional Indicator Symbol Letter F: 🇫 (U+1F1EB)
+Regional Indicator Symbol Letter G: 🇬 (U+1F1EC)
+Regional Indicator Symbol Letter H: 🇭 (U+1F1ED)
+Regional Indicator Symbol Letter I: 🇮 (U+1F1EE)
+Regional Indicator Symbol Letter J: 🇯 (U+1F1EF)
+Regional Indicator Symbol Letter K: 🇰 (U+1F1F0)
+Regional Indicator Symbol Letter L: 🇱 (U+1F1F1)
+Regional Indicator Symbol Letter M: 🇲 (U+1F1F2)
+Regional Indicator Symbol Letter N: 🇳 (U+1F1F3)
+Regional Indicator Symbol Letter O: 🇴 (U+1F1F4)
+Regional Indicator Symbol Letter P: 🇵 (U+1F1F5)
+Regional Indicator Symbol Letter Q: 🇶 (U+1F1F6)
+Regional Indicator Symbol Letter R: 🇷 (U+1F1F7)
+Regional Indicator Symbol Letter S: 🇸 (U+1F1F8)
+Regional Indicator Symbol Letter T: 🇹 (U+1F1F9)
+Regional Indicator Symbol Letter U: 🇺 (U+1F1FA)
+Regional Indicator Symbol Letter V: 🇻 (U+1F1FB)
+Regional Indicator Symbol Letter W: 🇼 (U+1F1FC)
+Regional Indicator Symbol Letter X: 🇽 (U+1F1FD)
+Regional Indicator Symbol Letter Y: 🇾 (U+1F1FE)
+Regional Indicator Symbol Letter Z: 🇿 (U+1F1FF)
+*@
