@@ -1,0 +1,71 @@
+﻿/*Header section*/
+.header_wrapper{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: left;
+	margin-bottom: 5rem;
+}
+
+/*Text*/
+a{
+	border-inline-style: none;
+	color: white;
+	text-decoration: none;
+}
+h3{
+	margin-top: 2rem;
+	font-weight: 750;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 4.5rem;
+	letter-spacing: -4px;
+	color: white;
+	width: 100%;
+}
+p{
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.text_container{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+/*Images and icons*/
+.socials_icons{
+	width: 17px;
+	height: 17px;
+}
+.artist_profile_pic{
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	margin-top: 1.5rem;
+	margin-right: 2.5rem;
+}
+
+/*Buttons*/
+.button_wrapper {
+	position: fixed; /*Ankrer div på plass*/
+	margin-top: 2rem;
+	display: flex;
+	flex-direction: column;
+	height: 10rem;
+	justify-content: space-evenly;
+	width: 20rem;
+	margin-left: 91rem;
+}
+.edit_button,
+.delete_button {
+	width: 150px;
+}
+.btn-warning{
+	color: white;
+}
+.fixed-width{
+	width: 150px;
+}
+
+/*Table section*/
+
