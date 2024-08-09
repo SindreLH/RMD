@@ -2,17 +2,33 @@
 
 <PageTitle>RMD | Songs</PageTitle>
 
-<h3>Liste over registrerte låter</h3>
+<input type="text" placeholder="Search..">
 
 <div class="form-check form-check-inline">
 	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="spilt">
-	<label class="form-check-label">Avspilte låter</label>
-</div>
-<div class="form-check form-check-inline">
-	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="lagret">
-	<label class="form-check-label">Lagrede låter</label>
+	<label class="form-check-label">Avspilt</label>
 </div>
 
+<div class="form-check form-check-inline">
+	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="lagret">
+	<label class="form-check-label">Lagret</label>
+</div>
+
+
+<div class="form-check form-check-inline">
+	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="ønsket">
+	<label class="form-check-label">Ønsket</label>
+</div>
+
+<div class="form-check form-check-inline">
+	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="extended">
+	<label class="form-check-label">Extended Mix</label>
+</div>
+
+<div class="form-check form-check-inline">
+	<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
+	<label class="form-check-label">Radio Mix</label>
+</div>
 
 <table class="table table-bordered table-dark table-striped table-hover">
 	<caption>Oversikt over alle registrerte låter i databasen</caption>
@@ -242,6 +258,26 @@
 		</tr>
 	</tbody>
 </table>
+
+<nav aria-label="Page navigation example">
+	<ul class="pagination">
+		<li class="page-item">
+			<a class="page-link" href="#" aria-label="Previous">
+				<span aria-hidden="true">&laquo;</span>
+				<span class="sr-only">Previous</span>
+			</a>
+		</li>
+		<li class="page-item"><a class="page-link" href="#">1</a></li>
+		<li class="page-item"><a class="page-link" href="#">2</a></li>
+		<li class="page-item"><a class="page-link" href="#">3</a></li>
+		<li class="page-item">
+			<a class="page-link" href="#" aria-label="Next">
+				<span aria-hidden="true">&raquo;</span>
+				<span class="sr-only">Next</span>
+			</a>
+		</li>
+	</ul>
+</nav>
 
 @code {
 
