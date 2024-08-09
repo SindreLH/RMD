@@ -1,21 +1,8 @@
-﻿@using RMD.GUI.Pages.Components
-@page "/AddArtist"
+﻿
+@*NEEDS BINDING TO A MODEL - COMPONENT DOES NOT WORK*@
 
-<PageTitle>RMD | Add new artist</PageTitle>
-
-<h3>Legg til en ny artist i databasen</h3>
-
-<form id="reg_artist_form">
-	<div id="form-group">
-		<label for="artistName">Navn</label>
-		<input type="text" class="form-control"/>
-	</div>
-
-	<div id="form-group">
-		<label for="artistNationality">Nasjonalitet</label>
-		<select name="country" id="country" class="form-control">
-    <option value="" disabled selected>PLACEHOLDER Nasjonalitet</option>
-    <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
+<InputSelect name="country" id="country" class="form-control" TValue="string">
+    <option value="" disabled selected>Nasjonalitet</option>
     <option value="Norway" class="fw-bold"> 🇳🇴 Norge</option>
     <option value="Sweden" class="fw-bold"> 🇸🇪 Sverige</option>
     <option value="Denmark" class="fw-bold"> 🇩🇰 Danmark</option>
@@ -63,31 +50,7 @@
     <option value="Austria"> 🇦🇹 Østerrike</option>
     <option value="Argentina"> 🇦🇷 Argentina</option>
     <option value="Ukraine"> 🇺🇦 Ukraina</option>
-</select>
-	</div>
-
-	<div id="form-group">
-		<label for="artistName">Facebook</label>
-		<input type="url" class="form-control" />
-	</div>
-
-    <div id="form-group">
-        <label for="artistName">Soundcloud</label>
-        <input type="url" class="form-control" />
-    </div>
-
-	<div id="form-group">
-		<label for="profilePicture">Profilbilde</label>
-		<input type="url" class="form-control" />
-	</div>
-</form>
-
-<div class="save_button">
-	<button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
-		<i class="bi bi-floppy-fill"></i> Lagre Artist
-	</button>
-</div>
+</InputSelect>
 
 @code {
-
 }
