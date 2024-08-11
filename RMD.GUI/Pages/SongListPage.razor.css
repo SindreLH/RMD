@@ -1,3 +1,79 @@
 ﻿.form-check-label{
 	color: white;
 }
+
+.table-hover > tbody > tr:hover {
+	--bs-table-accent-bg: #010622;
+	color: #aee1ff;
+}
+
+.searchbar{
+	width: 20rem;
+}
+
+.input-group .form-control.search {
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px; 
+}
+
+.search-button-checkbox-wrapper{
+	display: flex;
+	flex-direction: row;
+	height: 2rem;
+	width: 100%;
+	margin-bottom: 2rem;
+}
+
+.checkboxes{
+	display: flex;
+	margin-top: 4px;
+	margin-left: 3rem;
+}
+
+/*Buttons*/
+.button_wrapper {
+	position: fixed;
+	display: flex;
+	flex-direction: row;
+	width: 20rem;
+	justify-content: space-between;
+	margin-left: 81rem;
+}
+
+.edit_button, .delete_button {
+	width: 150px;
+}
+
+.btn-warning {
+	color: white;
+	background-color: #d9a300;
+}
+
+.btn-danger {
+	background-color: #b11f2d;
+}
+
+.btn-warning:hover {
+	background-color: #ffc107;
+}
+
+.btn-danger:hover {
+	background-color: #f86775;
+}
+
+.fixed-width{
+	width: 150px;
+}
+
+.pagination .page-link {
+	background-color: transparent;
+	color: white;
+	border: none;
+}
+
+.pagination .page-link:hover {
+	background-color: transparent;
+	border: none;
+	color: #aee1ff;
+	background-color: #010622;
+}
