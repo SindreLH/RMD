@@ -10,12 +10,14 @@
     <None Remove="Pages\ArtistProfile.razor.css" />
     <None Remove="Pages\MixtapeListPage.razor.css" />
     <None Remove="Pages\RegisterSong.razor.css" />
+    <None Remove="Pages\SongListPage.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Pages\ArtistProfile.razor.css" />
     <Content Include="Pages\MixtapeListPage.razor.css" />
     <Content Include="Pages\RegisterSong.razor.css" />
+    <Content Include="Pages\SongListPage.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 15rem;
-    height: 20rem;
+    height: 25rem;
     justify-content: space-evenly;
     color: #b3b3b3;
 }

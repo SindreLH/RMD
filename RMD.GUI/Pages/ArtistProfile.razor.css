@@ -13,6 +13,11 @@ a{
 	color: white;
 	text-decoration: none;
 }
+
+a:hover{
+	color: #aee1ff;
+}
+
 h3{
 	margin-top: 2rem;
 	font-weight: 750;
@@ -26,6 +31,7 @@ p{
 	color: white;
 	font-family: Arial, Helvetica, sans-serif;
 }
+
 .text_container{
 	width: 100%;
 	display: flex;
@@ -60,12 +66,35 @@ p{
 .delete_button {
 	width: 150px;
 }
-.btn-warning{
+
+
+
+.btn-warning {
 	color: white;
+	background-color: #d9a300;
 }
+
+.btn-danger {
+	background-color: #b11f2d;
+}
+
+.btn-warning:hover {
+	background-color: #ffc107;
+}
+
+.btn-danger:hover {
+	background-color: #f86775;
+}
+
+
 .fixed-width{
 	width: 150px;
 }
 
 /*Table section*/
+
+.table-hover > tbody > tr:hover {
+	--bs-table-accent-bg: #010622;
+	color: #aee1ff;
+}
 

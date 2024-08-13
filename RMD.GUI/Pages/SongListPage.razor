@@ -2,7 +2,316 @@
 
 <PageTitle>RMD | Songs</PageTitle>
 
-<h3>Liste over registrerte låter</h3>
+<div class="search-button-checkbox-wrapper">
+
+	<div class="input-group mb-3 searchbar">
+		<input type="text" class="form-control search" placeholder="Søk etter låt" aria-label="Søk etter låt">
+		<span class="input-group-text" id="basic-addon2">
+			<i class="bi bi-search"></i>
+		</span>
+	</div>
+
+	<div class="checkboxes">
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="spilt">
+			<label class="form-check-label">Avspilt</label>
+		</div>
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="lagret">
+			<label class="form-check-label">Lagret</label>
+		</div>
+
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="ønsket">
+			<label class="form-check-label">Ønsket</label>
+		</div>
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="extended">
+			<label class="form-check-label">Extended Mix</label>
+		</div>
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
+			<label class="form-check-label">Radio Mix</label>
+		</div>
+	</div>
+
+
+	<div class="button_wrapper">
+		<div class="edit_button">
+			<button type="button" onclick="alert('Rediger artist her!')" class="btn btn-warning fixed-width">
+				<i class="bi bi-pencil"></i> Rediger artist
+			</button>
+		</div>
+
+		<div class="delete_button">
+			<button type="button" onclick="alert('Artist slettet!')" class="btn btn-danger fixed-width">
+				<i class="bi bi-trash3"></i> Fjern artist
+			</button>
+		</div>
+	</div>
+
+</div>
+
+
+<table class="table table-bordered table-dark table-striped table-hover">
+	<thead class="thead-light">
+		<tr>
+			<th>
+				ID
+			</th>
+
+			<th>
+				Tittel
+			</th>
+
+			<th>
+				Artist
+			</th>
+
+			<th>
+				Remixartist
+			</th>
+
+			<th>
+				Lengde
+			</th>
+
+			<th>
+				Sjanger
+			</th>
+
+			<th>
+				Extended
+			</th>
+
+			<th>
+				Radio
+			</th>
+
+			<th>
+				Spilt
+			</th>
+
+			<th>
+				Ep
+			</th>
+
+			<th>
+				Lagret
+			</th>
+
+			<th>
+				Ønsket
+			</th>
+
+			<th>
+				Select
+			</th>
+		</tr>
+
+	</thead>
+
+	<tbody>
+		<tr>
+			<td>1</td>
+			<td>Barbie Girl (Extended Mix)</td>
+			<td>Rob Mayth</td>
+			<td>None</td>
+			<td>06:44</td>
+			<td>Hands Up</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>14</td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+
+		<tr>
+			<td>2</td>
+			<td>Milky Way (Teenagerz Remix)</td>
+			<td>Solar Patrol</td>
+			<td>Teenagerz</td>
+			<td>05:38</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td> </td>
+			<td>❌</td>
+			<td>2</td>
+			<td>❌</td>
+			<td>✅</td>
+		</tr>
+
+		<tr>
+			<td>3</td>
+			<td>Heartbeat (Club Mix)</td>
+			<td>DJ Manian</td>
+			<td>DJ Gollum</td>
+			<td>03:45</td>
+			<td>Hands Up</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>11</td>
+			<td>❌</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>Forever Young (Extended Mix)</td>
+			<td>Groove Coverage</td>
+			<td>DJ Gollum</td>
+			<td>06:12</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>15</td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>Castles In The Sky (DJ Manian Remix)</td>
+			<td>Ian Van Dahl</td>
+			<td>DJ Manian</td>
+			<td>05:20</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td> </td>
+			<td>✅</td>
+			<td>✅</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>Heaven (Cascada Remix)</td>
+			<td>DJ Sammy</td>
+			<td>Cascada</td>
+			<td>03:35</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td> </td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>Everytime We Touch (Club Mix)</td>
+			<td>Cascada</td>
+			<td>DJ Manian</td>
+			<td>05:28</td>
+			<td>Hands Up</td>
+			<td>✅</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>20</td>
+			<td>❌</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>Reason (Original Mix)</td>
+			<td>Nightcore</td>
+			<td>Rob Mayth</td>
+			<td>04:18</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td> </td>
+			<td>❌</td>
+			<td>✅</td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>Bad Boy (Club Mix)</td>
+			<td>Cascada</td>
+			<td>Rob Mayth</td>
+			<td>04:54</td>
+			<td>Hands Up</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>5</td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>Through The Eyes Of A Child (Extended Mix)</td>
+			<td>DJ Hixxy</td>
+			<td>DJ Gollum</td>
+			<td>06:01</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td> </td>
+			<td>❌</td>
+			<td>✅</td>
+		</tr>
+		<tr>
+			<td>11</td>
+			<td>Rave Heaven (Extended Mix)</td>
+			<td>Master Blaster</td>
+			<td>Rob Mayth</td>
+			<td>05:47</td>
+			<td>Hands Up</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td> </td>
+			<td> </td>
+			<td>✅</td>
+			<td>❌</td>
+		</tr>
+		<tr>
+			<td>12</td>
+			<td>Dancing In The Rain (Club Mix)</td>
+			<td>DJ Splash</td>
+			<td>Rocco & Bass-T</td>
+			<td>04:26</td>
+			<td>Hands Up</td>
+			<td>❌</td>
+			<td>✅</td>
+			<td>❌</td>
+			<td>2</td>
+			<td>❌</td>
+			<td>✅</td>
+		</tr>
+	</tbody>
+</table>
+
+<nav aria-label="Page navigation">
+	<ul class="pagination">
+		<li class="page-item">
+			<a class="page-link" href="#" aria-label="Tilbake">
+				<span aria-hidden="true">&laquo;</span>
+				<span class="sr-only">Tilbake</span>
+			</a>
+		</li>
+		<li class="page-item"><a class="page-link" href="#">1</a></li>
+		<li class="page-item"><a class="page-link" href="#">2</a></li>
+		<li class="page-item"><a class="page-link" href="#">3</a></li>
+		<li class="page-item">
+			<a class="page-link" href="#" aria-label="Videre">
+				<span class="sr-only">Videre</span>
+				<span aria-hidden="true">&raquo;</span>
+			</a>
+		</li>
+	</ul>
+</nav>
+
+<p style="color:red">Note to self: Remember radio checkbox for each song in the list</p>
+<p style="color:red">Note to self: When selected, render buttons. Else: Hide</p>
+
 
 @code {
 
