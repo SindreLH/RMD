@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\ArtistListPage.razor.css" />
     <None Remove="Pages\ArtistProfile.razor.css" />
     <None Remove="Pages\MixtapeListPage.razor.css" />
     <None Remove="Pages\RegisterSong.razor.css" />
@@ -14,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Pages\ArtistListPage.razor.css" />
     <Content Include="Pages\ArtistProfile.razor.css" />
     <Content Include="Pages\MixtapeListPage.razor.css" />
     <Content Include="Pages\RegisterSong.razor.css" />
