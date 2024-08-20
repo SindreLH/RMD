@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Pages\ArtistListPage.razor.css" />
     <None Remove="Pages\ArtistProfile.razor.css" />
+    <None Remove="Pages\Components\Tabs.razor.css" />
     <None Remove="Pages\MixtapeListPage.razor.css" />
     <None Remove="Pages\RegisterSong.razor.css" />
     <None Remove="Pages\SongListPage.razor.css" />
@@ -17,6 +18,7 @@
   <ItemGroup>
     <Content Include="Pages\ArtistListPage.razor.css" />
     <Content Include="Pages\ArtistProfile.razor.css" />
+    <Content Include="Pages\Components\Tabs.razor.css" />
     <Content Include="Pages\MixtapeListPage.razor.css" />
     <Content Include="Pages\RegisterSong.razor.css" />
     <Content Include="Pages\SongListPage.razor.css" />
