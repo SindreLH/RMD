@@ -41,6 +41,8 @@
 			</div>
 
 			<!--Lag egen komponent med komplett liste over mulige sjangre i biblioteket-->
+			@* <RMD.GUI.Pages.Components.GenreList/> *@
+
 			<div id="form-group">
 				<label>Sjanger</label>
 				<select name="sjanger" id="sjanger" class="form-control">
@@ -68,7 +70,7 @@
 			</div>
 
 			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="isToggled">
 				<label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
 				<label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
 			</div>
@@ -85,11 +87,15 @@
 				<label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
 			</div>
 
-			<div id="form-group">
-				<label>Mixtape vol.</label>
-				<input type="number" class="form-control number_ticker" />
-				<label class="col-form-label-sm">Mixtape episode (Conditional format based on played)</label>
-			</div>
+			@if (isToggled)
+			{
+				<div id="form-group">
+					<label>Mixtape vol.</label>
+					<input type="number" class="form-control number_ticker" />
+					<label class="col-form-label-sm">Låten er spilt i ep</label>
+				</div>
+			}
+			
 		</div>
 	</div>
 	
@@ -104,6 +110,6 @@
 
 
 @code {
-
+	private bool isToggled = false;
 }
 

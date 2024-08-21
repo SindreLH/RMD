@@ -39,20 +39,23 @@
 		</div>
 	</div>
 
+	@if (isSelected)
+	{
+		<div class="button_wrapper">
+			<div class="edit_button">
+				<button type="button" onclick="alert('Rediger låt her!')" class="btn btn-warning fixed-width">
+					<i class="bi bi-pencil"></i> Rediger låt
+				</button>
+			</div>
 
-	<div class="button_wrapper">
-		<div class="edit_button">
-			<button type="button" onclick="alert('Rediger artist her!')" class="btn btn-warning fixed-width">
-				<i class="bi bi-pencil"></i> Rediger artist
-			</button>
+			<div class="delete_button">
+				<button type="button" onclick="alert('Låt slettet!')" class="btn btn-danger fixed-width">
+					<i class="bi bi-trash3"></i> Fjern låt
+				</button>
+			</div>
 		</div>
-
-		<div class="delete_button">
-			<button type="button" onclick="alert('Artist slettet!')" class="btn btn-danger fixed-width">
-				<i class="bi bi-trash3"></i> Fjern artist
-			</button>
-		</div>
-	</div>
+	}
+	
 
 </div>
 
@@ -107,16 +110,12 @@
 			<th>
 				Ønsket
 			</th>
-
-			<th>
-				Select
-			</th>
 		</tr>
 
 	</thead>
 
 	<tbody>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>1</td>
 			<td>Barbie Girl (Extended Mix)</td>
 			<td>Rob Mayth</td>
@@ -131,7 +130,7 @@
 			<td>❌</td>
 		</tr>
 
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>2</td>
 			<td>Milky Way (Teenagerz Remix)</td>
 			<td>Solar Patrol</td>
@@ -146,7 +145,7 @@
 			<td>✅</td>
 		</tr>
 
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>3</td>
 			<td>Heartbeat (Club Mix)</td>
 			<td>DJ Manian</td>
@@ -160,7 +159,7 @@
 			<td>❌</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>4</td>
 			<td>Forever Young (Extended Mix)</td>
 			<td>Groove Coverage</td>
@@ -174,7 +173,7 @@
 			<td>✅</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>5</td>
 			<td>Castles In The Sky (DJ Manian Remix)</td>
 			<td>Ian Van Dahl</td>
@@ -188,7 +187,7 @@
 			<td>✅</td>
 			<td>✅</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>6</td>
 			<td>Heaven (Cascada Remix)</td>
 			<td>DJ Sammy</td>
@@ -202,7 +201,7 @@
 			<td>✅</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>7</td>
 			<td>Everytime We Touch (Club Mix)</td>
 			<td>Cascada</td>
@@ -216,7 +215,7 @@
 			<td>❌</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>8</td>
 			<td>Reason (Original Mix)</td>
 			<td>Nightcore</td>
@@ -230,7 +229,7 @@
 			<td>❌</td>
 			<td>✅</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>9</td>
 			<td>Bad Boy (Club Mix)</td>
 			<td>Cascada</td>
@@ -244,7 +243,7 @@
 			<td>✅</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>10</td>
 			<td>Through The Eyes Of A Child (Extended Mix)</td>
 			<td>DJ Hixxy</td>
@@ -258,7 +257,7 @@
 			<td>❌</td>
 			<td>✅</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>11</td>
 			<td>Rave Heaven (Extended Mix)</td>
 			<td>Master Blaster</td>
@@ -272,7 +271,7 @@
 			<td>✅</td>
 			<td>❌</td>
 		</tr>
-		<tr>
+		<tr @onclick="() => isSelected = !isSelected">
 			<td>12</td>
 			<td>Dancing In The Rain (Club Mix)</td>
 			<td>DJ Splash</td>
@@ -309,10 +308,6 @@
 	</ul>
 </nav>
 
-<p style="color:red">Note to self: Remember radio checkbox for each song in the list</p>
-<p style="color:red">Note to self: When selected, render buttons. Else: Hide</p>
-
-
 @code {
-
+	private bool isSelected = false;
 }
