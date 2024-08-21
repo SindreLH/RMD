@@ -1,0 +1,32 @@
+﻿@page "/Register"
+
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link" @onclick="() => SelectTab(0)">Registrer Artist</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link" @onclick="() => SelectTab(1)">Registrer Låt</a>
+	</li>
+</ul>
+
+<div class="tab-content">
+	@if (selectedTab == 0)
+	{
+		<RegisterArtist/>
+	}
+	else if (selectedTab == 1)
+	{
+		<RegisterSong/>
+	}
+</div>
+
+
+@code {
+	private int selectedTab = 0;
+
+	void SelectTab(int index)
+	{
+		selectedTab = index;
+	}
+}

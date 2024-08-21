@@ -1,0 +1,33 @@
+﻿@page "/Archive"
+
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link" @onclick="() => SelectTab(0)">Artistarkiv</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link" @onclick="() => SelectTab(1)">Låtarkiv</a>
+	</li>
+</ul>
+
+<div class="tab-content">
+	@if (selectedTab == 0)
+	{
+		<ArtistListPage/>
+	}
+	else if (selectedTab == 1)
+	{
+		<SongListPage/>
+	}
+</div>
+
+<p>BITCH</p>
+
+@code {
+	private int selectedTab = 0;
+
+	void SelectTab(int index)
+	{
+		selectedTab = index;
+	}
+}

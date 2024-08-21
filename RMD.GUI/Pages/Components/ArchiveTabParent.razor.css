@@ -1,0 +1,19 @@
+﻿.tab-container {
+	display: flex;
+}
+
+.nav-item{
+	cursor: pointer;
+}
+
+a{
+	color: white;
+}
+
+a:hover {
+	color: #aee1ff;
+}
+
+.tab-content{
+	padding: 20px;
+}
