@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using RMD.Data.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Registrerer ny DBContext i DI-Container, leser inn connection string fra appsettings.json.
+builder.Services.AddDbContext<RMDContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("RmdDatabase")));
 
 var app = builder.Build();
 
