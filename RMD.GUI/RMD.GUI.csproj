@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
@@ -31,13 +31,27 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
-  <ItemGroup>
-	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.12">
+	<!--EFC Versions were set to 6.0.12 here-->
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-preview.7.24405.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0-preview.7.24405.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.1" />
   </ItemGroup>
+
+	<!--Added project reference to Business project
+	
+	Project dependencies flow like this: 
+	GUI depends on BUSINESS
+	BUSINESS depends on DATA
+	DATA depends on NOTHING
+	-->
+	
+	<ItemGroup>
+		<ProjectReference Include="..\RMD.Business\RMD.Business.csproj" />
+	</ItemGroup>
 
 </Project>
