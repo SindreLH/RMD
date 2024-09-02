@@ -1,8 +1,15 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using RMD.Business.Services;
+using RMD.Data.Context;
 using RMD.GUI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<RMDContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("RmdDatabase")));
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
