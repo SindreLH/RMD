@@ -27,8 +27,15 @@ namespace RMD.Business.Controllers
 		[HttpGet(Name ="GetAllArtists")]
 		public async Task<IActionResult> GetAllArtists()
 		{
-			var artists = await _artistService.GetAllArtistsAsync();
-			return Ok(artists);
+
+			var result = await _artistService.GetAllArtistsAsync();
+
+			if (result == null)
+			{
+				return NotFound(result.Error); ;
+			}
+
+			return Ok(result.Value);
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace RMD.Business.Services
 	// Class contract Interfaces - add more as needed
 	public interface IArtistService
 	{
-		Task<IEnumerable<Artist>> GetAllArtistsAsync();
+		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
 	}
 
 	public class ArtistService : IArtistService
@@ -20,10 +20,29 @@ namespace RMD.Business.Services
 			_context = context;
 		}
 
-		// Establishing methods for db interaction - add more as needed
-		public async Task<IEnumerable<Artist>> GetAllArtistsAsync()
+		// Establishing methods for db interaction - add more as needed.
+		// All return values wrapped in result class.
+		public async Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync()
 		{
-			return await _context.Artists.ToListAsync();
+			try
+			{
+				var artists = await _context.Artists.ToListAsync();
+
+				if (artists == null || !artists.Any())
+				{
+					// Consider adding logging here:
+					return Result<IEnumerable<Artist>>.Failure("No artists were found in the database.");
+				}
+
+				// Consider adding logging here:
+				return Result<IEnumerable<Artist>>.Success(artists);
+			}
+
+			catch (Exception ex)
+			{
+				// Consider adding logging here:
+				return Result<IEnumerable<Artist>>.Failure("An unknown error occured while fetching artists from the database." + ex.Message);
+			}
 		}
 	}
 }
