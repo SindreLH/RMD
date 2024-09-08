@@ -52,6 +52,26 @@ namespace RMD.Data.Migrations
                     b.HasKey("ArtistId");
 
                     b.ToTable("Artists");
+
+                    b.HasData(
+                        new
+                        {
+                            ArtistId = 1,
+                            FacebookUrl = "https://www.facebook.com/RejackHS",
+                            Name = "Rejack",
+                            Nationality = "🇳🇴 Norge",
+                            ProfilePicUrl = "https://www.test.com/",
+                            SoundcloudUrl = "https://www.soundcloud.com/RejackHS"
+                        },
+                        new
+                        {
+                            ArtistId = 2,
+                            FacebookUrl = "https://www.facebook.com/RejackHS",
+                            Name = "Rejack 2",
+                            Nationality = "🇳🇴 Norge",
+                            ProfilePicUrl = "https://www.test.com/",
+                            SoundcloudUrl = "https://www.soundcloud.com/RejackHS"
+                        });
                 });
 
             modelBuilder.Entity("RMD.Data.Models.Song", b =>

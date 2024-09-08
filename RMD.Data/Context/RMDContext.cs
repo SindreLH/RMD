@@ -35,6 +35,27 @@ namespace RMD.Data.Context
 					Wanted=false
 				}
 				);
+
+			modelBuilder.Entity<Artist>().HasData(
+				new Artist
+				{
+					ArtistId = 1,
+					Name = "Rejack",
+					Nationality = "🇳🇴 Norge",
+					FacebookUrl = "https://www.facebook.com/RejackHS",
+					SoundcloudUrl = "https://www.soundcloud.com/RejackHS",
+					ProfilePicUrl = "https://www.test.com/"
+				});
+			
+			modelBuilder.Entity<Artist>().HasData(
+				new Artist {
+				ArtistId = 2,
+					Name = "Rejack 2",
+					Nationality = "🇳🇴 Norge",
+					FacebookUrl = "https://www.facebook.com/RejackHS",
+					SoundcloudUrl = "https://www.soundcloud.com/RejackHS",
+					ProfilePicUrl = "https://www.test.com/"
+				});
 		}
 	}
 }

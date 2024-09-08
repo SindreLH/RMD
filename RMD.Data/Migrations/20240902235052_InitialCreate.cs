@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace RMD.Data.Migrations
 {
     /// <inheritdoc />
@@ -48,6 +50,15 @@ namespace RMD.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Songs", x => x.SongId);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Artists",
+                columns: new[] { "ArtistId", "FacebookUrl", "Name", "Nationality", "ProfilePicUrl", "SoundcloudUrl" },
+                values: new object[,]
+                {
+                    { 1, "https://www.facebook.com/RejackHS", "Rejack", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" },
+                    { 2, "https://www.facebook.com/RejackHS", "Rejack 2", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" }
                 });
 
             migrationBuilder.InsertData(

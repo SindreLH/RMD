@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMD.Data.Context;
 using RMD.Data.Models;
+using System.Reflection.Metadata;
 
 namespace RMD.Business.Services
 {
@@ -8,6 +9,7 @@ namespace RMD.Business.Services
 	public interface IArtistService
 	{
 		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
+		Task<Result<Artist>> GetArtistByNameAsync(string artistName);
 	}
 
 	public class ArtistService : IArtistService
@@ -41,8 +43,32 @@ namespace RMD.Business.Services
 			catch (Exception ex)
 			{
 				// Consider adding logging here:
-				return Result<IEnumerable<Artist>>.Failure("An unknown error occured while fetching artists from the database." + ex.Message);
+				return Result<IEnumerable<Artist>>.Failure("An unknown error occured while fetching all artists from the database." + ex.Message);
 			}
+		}
+
+		public async Task<Result<Artist>> GetArtistByNameAsync(string artistName)
+		{
+
+			try
+			{
+				var artist = await _context.Artists.Where(x => x.Name.Equals(artistName)).FirstOrDefaultAsync();
+
+				if (artist == null)
+				{
+					return Result<Artist>.Failure($"The artist {artistName} does not exist in the database.");
+				}
+
+				return Result<Artist>.Success(artist);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Artist>.Failure("An unknown error occured while fetching a single artist from the database." + ex.Message);
+			}
+			
+
+			
 		}
 	}
 }
