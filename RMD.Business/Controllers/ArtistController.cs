@@ -47,8 +47,9 @@ namespace RMD.Business.Controllers
 		}
 
 		/// <summary>
-		/// Gets a specific artist from the database based on a search string.
+		/// Gets a specific artist from the database using a search string.
 		/// </summary>
+		/// <param name="artistName">The name of an artist entity.</param>
 		/// <returns>
 		/// A single artist entity.
 		/// </returns>
@@ -57,7 +58,7 @@ namespace RMD.Business.Controllers
 		/// - "The artist {artistName} does not exist in the database."
 		/// - "An unknown error occured while fetching artists from the database."
 		/// </Remarks>
-		[HttpGet("search", Name = "GetSpecificArtist")]
+		[HttpGet("Search", Name = "GetSpecificArtist")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Artist))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 		public async Task<IActionResult> GetArtistByName(string artistName)
