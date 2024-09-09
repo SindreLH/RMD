@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMD.Data.Context;
 using RMD.Data.Models;
+using RMD.Data.Models.DTO;
 using System.Reflection.Metadata;
 
 namespace RMD.Business.Services
@@ -11,7 +12,8 @@ namespace RMD.Business.Services
 		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
 		Task<Result<Artist>> GetArtistByNameAsync(string artistName);
 		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
-		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, Artist updatedArtist);
+		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, UpdateArtistDto updatedArtistDto);
+		Task<Result<Artist>> CreateNewArtistAsync(Artist newArtist);
 	}
 
 	public class ArtistService : IArtistService
@@ -96,7 +98,7 @@ namespace RMD.Business.Services
 			}
 		}
 
-		public async Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, Artist updatedArtist)
+		public async Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, UpdateArtistDto updatedArtistDto)
 		{
 			try
 			{
@@ -107,12 +109,11 @@ namespace RMD.Business.Services
 					return Result<Artist>.Failure($"Update failed. The artist ID {artistId} does not exist in the database.");
 				}
 
-				artist.ArtistId = updatedArtist.ArtistId;
-				artist.Name = updatedArtist.Name;
-				artist.Nationality = updatedArtist.Nationality;
-				artist.FacebookUrl = updatedArtist.FacebookUrl;
-				artist.SoundcloudUrl = updatedArtist.SoundcloudUrl;
-				artist.ProfilePicUrl = updatedArtist.ProfilePicUrl;
+				artist.Name = updatedArtistDto.Name;
+				artist.Nationality = updatedArtistDto.Nationality;
+				artist.FacebookUrl = updatedArtistDto.FacebookUrl;
+				artist.SoundcloudUrl = updatedArtistDto.SoundcloudUrl;
+				artist.ProfilePicUrl = updatedArtistDto.ProfilePicUrl;
 
 				_context.Artists.Update(artist);
 				await _context.SaveChangesAsync();
@@ -126,6 +127,12 @@ namespace RMD.Business.Services
 			}
 
 
+		}
+
+		//TODO:
+		public async Task<Result<Artist>> CreateNewArtistAsync(Artist newArtist)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RMD.Business.Services;
 using RMD.Data.Models;
+using RMD.Data.Models.DTO;
 
 namespace RMD.Business.Controllers
 {
@@ -106,7 +107,7 @@ namespace RMD.Business.Controllers
 		/// <param name="artistId">The ID of an artist entity.</param>
 		/// <param name="updatedArtist">The updated version of the selected artist entity.</param>
 		/// <returns>
-		/// Returns the updated artist entity.
+		/// Returns an updated version of the selected artist entity.
 		/// </returns>
 		/// <Remarks>
 		/// Possible error messages include:
@@ -116,9 +117,9 @@ namespace RMD.Business.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Artist))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 		[HttpPatch(Name = "UpdateSpecificArtist")]
-		public async Task<IActionResult> UpdateArtistById(int artistId, Artist updatedArtist)
+		public async Task<IActionResult> UpdateArtistById(int artistId, [FromBody] UpdateArtistDto updatedArtistDto)
 		{
-			var result = await _artistService.UpdateArtistByIdAsync(artistId, updatedArtist);
+			var result = await _artistService.UpdateArtistByIdAsync(artistId, updatedArtistDto);
 
 			if (!result.IsSuccess)
 			{
