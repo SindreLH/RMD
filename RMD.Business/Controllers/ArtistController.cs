@@ -71,7 +71,33 @@ namespace RMD.Business.Controllers
 			}
 
 			return Ok(result.Value);
+		}
 
+		/// <summary>
+		/// Deletes a specific artist from the database using the artist entity's ID.
+		/// </summary>
+		/// <param name="artistId">The ID of an artist entity.</param>
+		/// <returns>
+		/// A Boolean result value, indicating the operations success or failure status.
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "Deletion failed. No artist with the ID {artistId} exists."
+		/// - "An unknown error occured while fetching artists from the database."
+		/// </Remarks>
+		[HttpDelete(Name = "DeleteSpecificArtist")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		public async Task<IActionResult> DeleteArtistById(int artistId)
+		{
+			var result = await _artistService.DeleteArtistByIdAsync(artistId);
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
 		}
 	}
 }

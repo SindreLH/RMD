@@ -10,6 +10,7 @@ namespace RMD.Business.Services
 	{
 		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
 		Task<Result<Artist>> GetArtistByNameAsync(string artistName);
+		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
 	}
 
 	public class ArtistService : IArtistService
@@ -24,6 +25,7 @@ namespace RMD.Business.Services
 
 		// Establishing methods for db interaction - add more as needed.
 		// All return values wrapped in result class.
+
 		public async Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync()
 		{
 			try
@@ -66,9 +68,31 @@ namespace RMD.Business.Services
 			{
 				return Result<Artist>.Failure("An unknown error occured while fetching a single artist from the database." + ex.Message);
 			}
-			
+		}
 
-			
+		public async Task<Result<bool>> DeleteArtistByIdAsync(int artistId)
+		{
+			try
+			{
+				var artist = await _context.Artists.FindAsync(artistId);
+
+				if (artist == null)
+				{
+					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists.");
+				}
+
+				_context.Artists.Remove(artist);
+				await _context.SaveChangesAsync();
+
+				return Result<bool>.Success(true);
+			}
+
+			catch (Exception ex)
+			{
+				// Consider adding logging here:
+				return Result<bool>.Failure("An unknown error occured when deleting an artist from the database." + ex.Message);
+
+			}
 		}
 	}
 }
