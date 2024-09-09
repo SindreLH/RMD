@@ -99,5 +99,33 @@ namespace RMD.Business.Controllers
 
 			return Ok(result.Value);
 		}
+
+		/// <summary>
+		/// Updates a specific artist in the database using the artist entity's ID.
+		/// </summary>
+		/// <param name="artistId">The ID of an artist entity.</param>
+		/// <param name="updatedArtist">The updated version of the selected artist entity.</param>
+		/// <returns>
+		/// Returns the updated artist entity.
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "Update failed. The artist ID {artistId} does not exist in the database."
+		/// - "An unknown error occured while fetching artists from the database."
+		/// </Remarks>
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Artist))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		[HttpPatch(Name = "UpdateSpecificArtist")]
+		public async Task<IActionResult> UpdateArtistById(int artistId, Artist updatedArtist)
+		{
+			var result = await _artistService.UpdateArtistByIdAsync(artistId, updatedArtist);
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
+		}
 	}
 }

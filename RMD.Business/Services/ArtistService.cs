@@ -11,6 +11,7 @@ namespace RMD.Business.Services
 		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
 		Task<Result<Artist>> GetArtistByNameAsync(string artistName);
 		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
+		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, Artist updatedArtist);
 	}
 
 	public class ArtistService : IArtistService
@@ -45,7 +46,7 @@ namespace RMD.Business.Services
 			catch (Exception ex)
 			{
 				// Consider adding logging here:
-				return Result<IEnumerable<Artist>>.Failure("An unknown error occured while fetching all artists from the database." + ex.Message);
+				return Result<IEnumerable<Artist>>.Failure("An unknown error occured while FETCHING ALL artists from the database." + ex.Message);
 			}
 		}
 
@@ -66,7 +67,7 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<Artist>.Failure("An unknown error occured while fetching a single artist from the database." + ex.Message);
+				return Result<Artist>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
 			}
 		}
 
@@ -93,6 +94,38 @@ namespace RMD.Business.Services
 				return Result<bool>.Failure("An unknown error occured when deleting an artist from the database." + ex.Message);
 
 			}
+		}
+
+		public async Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, Artist updatedArtist)
+		{
+			try
+			{
+				var artist = await _context.Artists.FindAsync(artistId);
+
+				if (artist == null)
+				{
+					return Result<Artist>.Failure($"Update failed. The artist ID {artistId} does not exist in the database.");
+				}
+
+				artist.ArtistId = updatedArtist.ArtistId;
+				artist.Name = updatedArtist.Name;
+				artist.Nationality = updatedArtist.Nationality;
+				artist.FacebookUrl = updatedArtist.FacebookUrl;
+				artist.SoundcloudUrl = updatedArtist.SoundcloudUrl;
+				artist.ProfilePicUrl = updatedArtist.ProfilePicUrl;
+
+				_context.Artists.Update(artist);
+				await _context.SaveChangesAsync();
+
+				return Result<Artist>.Success(artist);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Artist>.Failure("An unknown error occured while UPDATING a single artist from the database." + ex.Message);
+			}
+
+
 		}
 	}
 }
