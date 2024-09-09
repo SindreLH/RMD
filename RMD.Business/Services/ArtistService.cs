@@ -12,8 +12,8 @@ namespace RMD.Business.Services
 		Task<Result<IEnumerable<Artist>>> GetAllArtistsAsync();
 		Task<Result<Artist>> GetArtistByNameAsync(string artistName);
 		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
-		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, UpdateArtistDto updatedArtistDto);
-		Task<Result<Artist>> CreateNewArtistAsync(Artist newArtist);
+		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, ArtistDto updatedArtistDto);
+		Task<Result<Artist>> CreateNewArtistAsync(ArtistDto newArtist);
 	}
 
 	public class ArtistService : IArtistService
@@ -98,7 +98,7 @@ namespace RMD.Business.Services
 			}
 		}
 
-		public async Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, UpdateArtistDto updatedArtistDto)
+		public async Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, ArtistDto updatedArtistDto)
 		{
 			try
 			{
@@ -129,10 +129,30 @@ namespace RMD.Business.Services
 
 		}
 
-		//TODO:
-		public async Task<Result<Artist>> CreateNewArtistAsync(Artist newArtist)
+		public async Task<Result<Artist>> CreateNewArtistAsync(ArtistDto newArtistDto)
 		{
-			throw new NotImplementedException();
+			try
+			{
+
+				// Converting DTO to Artist Entity (Because: User should not be able to set ID)
+				var newArtist = new Artist
+				{
+					Name = newArtistDto.Name,
+					Nationality = newArtistDto.Nationality,
+					FacebookUrl = newArtistDto.FacebookUrl,
+					SoundcloudUrl = newArtistDto.SoundcloudUrl,
+					ProfilePicUrl = newArtistDto.ProfilePicUrl,
+				};
+
+				await _context.Artists.AddAsync(newArtist);
+				await _context.SaveChangesAsync();
+				return Result<Artist>.Success(newArtist);
+			}
+			catch (Exception ex)
+			{
+				return Result<Artist>.Failure("An unknown error occured while CREATING a new artist." + ex.Message);
+			}
+
 		}
 	}
 }

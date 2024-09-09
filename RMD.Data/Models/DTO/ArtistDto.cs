@@ -1,6 +1,6 @@
 ﻿namespace RMD.Data.Models.DTO
 {
-	public class UpdateArtistDto
+	public class ArtistDto
 	{
 		public string Name { get; set; }
 		public string Nationality { get; set; }
