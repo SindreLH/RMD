@@ -59,7 +59,7 @@ namespace RMD.Business.Controllers
 		/// - "The artist {artistName} does not exist in the database."
 		/// - "An unknown error occured while fetching artists from the database."
 		/// </Remarks>
-		[HttpGet("Search", Name = "GetSpecificArtist")]
+		[HttpGet("Search/{artistName}", Name="GetSpecificArtist")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Artist))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 		public async Task<IActionResult> GetArtistByName(string artistName)
@@ -105,7 +105,7 @@ namespace RMD.Business.Controllers
 		/// Updates a specific artist in the database using the artist entity's ID.
 		/// </summary>
 		/// <param name="artistId">The ID of an artist entity.</param>
-		/// <param name="updatedArtist">The updated version of the selected artist entity.</param>
+		/// <param name="updatedArtistDto">The updated version of the selected artist entity. Minus the ID field.</param>
 		/// <returns>
 		/// Returns an updated version of the selected artist entity.
 		/// </returns>
