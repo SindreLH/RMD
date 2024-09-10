@@ -134,12 +134,10 @@ namespace RMD.Business.Controllers
 		/// </summary>
 		/// <param name="newArtistDto">DTO of a new artist entity minus ID field.</param>
 		/// <returns>
-		/// Returns the newly created artist entity.
-		/// </returns>
+		/// Returns status code 201 - Created along with the newly created artist entity and its location.
 		/// <Remarks>
-		/// Possible error messages include:
-		/// - "Update failed. The artist ID {artistId} does not exist in the database."
-		/// - "An unknown error occured while fetching artists from the database."
+		/// <Remarks>
+		/// TBD
 		/// </Remarks>
 		[ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Artist))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
@@ -153,7 +151,9 @@ namespace RMD.Business.Controllers
 				return BadRequest(result.Error);
 			}
 
-			return Created();
+			//Returning 201 Created along with a link to the actual created entity
+			var newArtist = result.Value;
+			return CreatedAtAction(nameof(GetArtistByName), new { artistName = newArtist.Name }, newArtist);
 		}
 	}
 }
