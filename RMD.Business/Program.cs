@@ -12,6 +12,7 @@ builder.Services.AddDbContext<RMDContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("RmdDatabase")));
 
 builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<ISongService, SongService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
