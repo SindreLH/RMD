@@ -80,6 +80,59 @@ namespace RMD.Business.Controllers
             return CreatedAtAction(nameof(GetSongByTitle), new { songTitle = newSong.Title }, newSong);
         }
 
-        
-    }
+		/// <summary>
+		/// Gets all songs from the database.
+		/// </summary>
+		/// <returns>
+		/// A list of songs.
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "No songs were found in the database."
+		/// - "An unknown error occured while fetching artists from the database."
+		/// </Remarks>
+		[HttpGet(Name = "GetAllSongs")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		public async Task<IActionResult> GetAllSongs()
+		{
+
+			var result = await _songService.GetAllSongsAsync();
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Deletes a specific song from the database using the song entity's ID.
+		/// </summary>
+		/// <param name="songId">The ID of an song entity.</param>
+		/// <returns>
+		/// A Boolean result value, indicating the operations success or failure status.
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "Deletion failed. No song with the ID {songId} exists."
+		/// - "An unknown error occured while fetching songs from the database."
+		/// </Remarks>
+		[HttpDelete("{songId:int}", Name = "DeleteSpecificSong")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		public async Task<IActionResult> DeleteSongById(int songId)
+		{
+			var result = await _songService.DeleteSongByIdAsync(songId);
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
+		}
+
+	}
 }

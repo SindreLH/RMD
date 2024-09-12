@@ -2,6 +2,7 @@
 using RMD.Data.Context;
 using RMD.Data.Models;
 using RMD.Data.Models.DTO;
+using System.Linq.Expressions;
 
 namespace RMD.Business.Services
 {
@@ -9,6 +10,8 @@ namespace RMD.Business.Services
 	{
 		Task<Result<Song>> CreateNewSongAsync(SongDto newSongDto);
 		Task<Result<Song>> GetSongByTitleAsync(string songTitle);
+		Task<Result<IEnumerable<Song>>> GetAllSongsAsync();
+		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 	}
 
 	public class SongService : ISongService
@@ -50,6 +53,26 @@ namespace RMD.Business.Services
 
 		}
 
+		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync()
+		{
+			try
+			{
+				var songs = await _context.Songs.ToListAsync();
+
+				if (songs == null || !songs.Any())
+				{
+					return Result<IEnumerable<Song>>.Failure("No songs were found in the database.");
+				}
+
+				return Result<IEnumerable<Song>>.Success(songs);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING ALL songs from the database." + ex.Message);
+			}
+		}
+
 		public async Task<Result<Song>> GetSongByTitleAsync(string songTitle)
 		{
 			try
@@ -69,5 +92,28 @@ namespace RMD.Business.Services
 				return Result<Song>.Failure("An unknown error occured while FETCHING a single song from the database." + ex.Message);
 			}
 		}
-	}
+
+		public async Task<Result<bool>> DeleteSongByIdAsync(int songId)
+		{
+			try
+			{
+				var song = await _context.Songs.FindAsync(songId);
+
+				if (song == null)
+				{
+					return Result<bool>.Failure($"Deletion failed. No song with ID {songId} exists in the database.");
+				}
+
+				_context.Remove(song);
+				await _context.SaveChangesAsync();
+
+				return Result<bool>.Success(true);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<bool>.Failure("An unknown error occured when deleting a song from the database." + ex.Message);
+			}
+		}
+	} 
 }

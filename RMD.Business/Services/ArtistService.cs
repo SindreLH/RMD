@@ -81,7 +81,7 @@ namespace RMD.Business.Services
 
 				if (artist == null)
 				{
-					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists.");
+					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists in the database.");
 				}
 
 				_context.Artists.Remove(artist);
