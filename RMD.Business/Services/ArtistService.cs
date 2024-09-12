@@ -81,7 +81,7 @@ namespace RMD.Business.Services
 
 				if (artist == null)
 				{
-					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists.");
+					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists in the database.");
 				}
 
 				_context.Artists.Remove(artist);
@@ -123,7 +123,7 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<Artist>.Failure("An unknown error occured while UPDATING a single artist from the database." + ex.Message);
+				return Result<Artist>.Failure("An unknown error occured while UPDATING a single artist in the database." + ex.Message);
 			}
 
 
@@ -134,7 +134,15 @@ namespace RMD.Business.Services
 			try
 			{
 
-				// Explicityl converting DTO to Artist Entity (Because: User should not be able to set ID)
+				var existingArtist = await _context.Artists.
+					Where(x => x.Name == newArtistDto.Name).FirstOrDefaultAsync();
+
+				if (existingArtist != null)
+				{
+					return Result<Artist>.Failure($"An artist with the name {newArtistDto.Name} already exists in the database.");
+				}
+
+				// Explicitly converting DTO to Artist Entity (Because: User should not be able to set ID)
 				var newArtist = new Artist
 				{
 					Name = newArtistDto.Name,
