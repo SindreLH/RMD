@@ -134,6 +134,14 @@ namespace RMD.Business.Services
 			try
 			{
 
+				var existingArtist = await _context.Artists.
+					Where(x => x.Name == newArtistDto.Name).FirstOrDefaultAsync();
+
+				if (existingArtist != null)
+				{
+					return Result<Artist>.Failure($"An artist with the name {newArtistDto.Name} already exists in the database.");
+				}
+
 				// Explicitly converting DTO to Artist Entity (Because: User should not be able to set ID)
 				var newArtist = new Artist
 				{

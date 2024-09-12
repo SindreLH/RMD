@@ -28,6 +28,15 @@ namespace RMD.Business.Services
 		{
 			try
 			{
+
+				var existingSong = await _context.Songs.
+					Where(x => x.Title == newSongDto.Title).FirstOrDefaultAsync();
+
+				if (existingSong != null)
+				{
+					return Result<Song>.Failure($"A song with the name {newSongDto.Title} already exists in the database.");
+				}
+
 				var newSong = new Song
 				{
 					Title = newSongDto.Title,

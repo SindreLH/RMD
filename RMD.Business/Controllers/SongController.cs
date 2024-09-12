@@ -47,17 +47,19 @@ namespace RMD.Business.Controllers
         }
 
 
-        /// <summary>
-        /// Creates a new song entity and stores it in the database.
-        /// </summary>
-        /// <param name="newSongDto">DTO of a new song entity minus ID field.</param>
-        /// <returns>
-        /// Returns status code 201 - Created along with the newly created entity. 
-        /// </returns>
-        /// <Remarks>
-        /// TBD
-        /// </Remarks>
-        [ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Song))]
+		/// <summary>
+		/// Creates a new song entity and stores it in the database.
+		/// </summary>
+		/// <param name="newSongDto">DTO of a new song entity minus ID field.</param>
+		/// <returns>
+		/// Returns status code 201 - Created along with the newly created entity. 
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include: 
+		/// - A song with the name {newSongDto.Title} already exists in the database.
+		/// - ModelState validations with respective error messages for each field.
+		/// </Remarks>
+		[ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Song))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
 		[HttpPost(Name = "CreateSong")]
         public async Task<IActionResult> CreateSong(SongDto newSongDto)
