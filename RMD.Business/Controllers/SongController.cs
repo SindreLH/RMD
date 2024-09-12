@@ -18,6 +18,33 @@ namespace RMD.Business.Controllers
         }
 
 
+        /// <summary>
+        /// Gets a specific song from the database using a search string.
+        /// </summary>
+        /// <param name="songTitle">The title of a song entity.</param>
+        /// <returns>
+        /// A single song entity.
+        /// </returns>
+        /// <Remarks>
+        /// Possible error messages include:
+        /// - "The song {songTitle} does not exist in the database."
+        /// - "An unknown error occured while FETCHING a single song from the database."
+        /// </Remarks>
+
+        [HttpGet("Search/{songTitle}", Name ="GetSpecificSong")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Song))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
+		public async Task<IActionResult> GetSongByTitle(string songTitle)
+        {
+            var result = await _songService.GetSongByTitleAsync(songTitle);
+
+            if (!result.IsSuccess)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
 
 
         /// <summary>
@@ -49,9 +76,8 @@ namespace RMD.Business.Controllers
 
             //TODO - Implement GetSongByName and return CreatedAtAction
 
-            // var newSong = result.Value;
-            // return CreatedAtAction(nameof(GetSongByName), new { songName = newSong.Name}, newSong);
-            return Created();
+            var newSong = result.Value;
+            return CreatedAtAction(nameof(GetSongByTitle), new { songTitle = newSong.Title }, newSong);
         }
 
         

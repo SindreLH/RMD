@@ -134,7 +134,7 @@ namespace RMD.Business.Services
 			try
 			{
 
-				// Explicityl converting DTO to Artist Entity (Because: User should not be able to set ID)
+				// Explicitly converting DTO to Artist Entity (Because: User should not be able to set ID)
 				var newArtist = new Artist
 				{
 					Name = newArtistDto.Name,
