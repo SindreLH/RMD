@@ -134,5 +134,33 @@ namespace RMD.Business.Controllers
 			return Ok(result.Value);
 		}
 
+
+		/// <summary>
+		/// Updates a specific song in the database using the song entity's ID.
+		/// </summary>
+		/// <param name="songId">The ID of a song entity.</param>
+		/// <param name="updatedSongDto">The updated version of the selected song entity. Minus the ID field.</param>
+		/// <returns>
+		/// Returns an updated version of the selected song entity.
+		/// </returns>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "Update failed. The song ID {songId} does not exist in the database."
+		/// - "An unknown error occured while fetching artists from the database."
+		/// </Remarks>
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Song))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		[HttpPatch("{songId:int}", Name = "UpdateSpecificSong")]
+		public async Task<IActionResult> UpdateSongById(int songId, [FromBody] SongDto updatedSongDto)
+		{
+			var result = await _songService.UpdateSongByIdAsync(songId, updatedSongDto);
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
+		}
 	}
 }

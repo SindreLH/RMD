@@ -123,7 +123,7 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<Artist>.Failure("An unknown error occured while UPDATING a single artist from the database." + ex.Message);
+				return Result<Artist>.Failure("An unknown error occured while UPDATING a single artist in the database." + ex.Message);
 			}
 
 

@@ -12,6 +12,7 @@ namespace RMD.Business.Services
 		Task<Result<Song>> GetSongByTitleAsync(string songTitle);
 		Task<Result<IEnumerable<Song>>> GetAllSongsAsync();
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
+		Task<Result<Song>>	UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
 	}
 
 	public class SongService : ISongService
@@ -113,6 +114,42 @@ namespace RMD.Business.Services
 			catch (Exception ex)
 			{
 				return Result<bool>.Failure("An unknown error occured when deleting a song from the database." + ex.Message);
+			}
+		}
+
+		public async Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto)
+		{
+			try
+			{
+				var song = await _context.Songs.FindAsync(songId);
+
+				if(song == null)
+				{
+					return Result<Song>.Failure("Update failed. The song ID {songId} does not exist in the database.");
+
+				}
+
+				song.Title = updatedSongDto.Title;
+				song.RemixArtist = updatedSongDto.RemixArtist;
+				song.Artist = updatedSongDto.Artist;
+				song.Length = updatedSongDto.Length;
+				song.Genre = updatedSongDto.Genre;
+				song.ExtendedMix = updatedSongDto.ExtendedMix;
+				song.RadioMix = updatedSongDto.RadioMix;
+				song.Played = updatedSongDto.Played;
+				song.PlayedInEp = updatedSongDto.PlayedInEp;
+				song.Stored = updatedSongDto.Stored;
+				song.Wanted = updatedSongDto.Wanted;
+
+				_context.Songs.Update(song);
+				await _context.SaveChangesAsync();
+
+				return Result<Song>.Success(song);
+			}
+
+			catch(Exception ex)
+			{
+				return Result<Song>.Failure("An unknown error occured while UPDATING a single song in the the database." + ex.Message);
 			}
 		}
 	} 
