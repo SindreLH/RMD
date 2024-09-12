@@ -21,11 +21,11 @@ namespace RMD.Business.Controllers
 
 
         /// <summary>
-        /// Creates a new song entity in the database.
+        /// Creates a new song entity and stores it in the database.
         /// </summary>
         /// <param name="newSongDto">DTO of a new song entity minus ID field.</param>
         /// <returns>
-        /// Returns status code 201 - Created.
+        /// Returns status code 201 - Created along with the newly created entity. 
         /// </returns>
         /// <Remarks>
         /// TBD
@@ -35,6 +35,11 @@ namespace RMD.Business.Controllers
 		[HttpPost(Name = "CreateSong")]
         public async Task<IActionResult> CreateSong(SongDto newSongDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
            var result = await _songService.CreateNewSongAsync(newSongDto);
 
             if (!result.IsSuccess)

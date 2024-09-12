@@ -135,7 +135,7 @@ namespace RMD.Business.Controllers
 		/// <param name="newArtistDto">DTO of a new artist entity minus ID field.</param>
 		/// <returns>
 		/// Returns status code 201 - Created along with the newly created artist entity and its location.
-		/// <Remarks>
+		/// </returns>
 		/// <Remarks>
 		/// TBD
 		/// </Remarks>
@@ -144,6 +144,11 @@ namespace RMD.Business.Controllers
 		[HttpPost(Name = "CreateArtist")]
 		public async Task<IActionResult> CreateArtist(ArtistDto newArtistDto)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var result = await _artistService.CreateNewArtistAsync(newArtistDto);
 
 			if (!result.IsSuccess)
