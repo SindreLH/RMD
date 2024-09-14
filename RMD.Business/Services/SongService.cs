@@ -10,7 +10,13 @@ namespace RMD.Business.Services
 	{
 		Task<Result<Song>> CreateNewSongAsync(SongDto newSongDto);
 		Task<Result<Song>> GetSongByTitleAsync(string songTitle);
-		Task<Result<IEnumerable<Song>>> GetAllSongsAsync();
+		Task<Result<IEnumerable<Song>>> GetAllSongsAsync(
+			bool? ExtendedMix,
+			bool? RadioMix,
+			bool? Played,
+			bool? Stored,
+			bool? Wanted);
+
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>>	UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
 	}
@@ -63,7 +69,13 @@ namespace RMD.Business.Services
 
 		}
 
-		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync()
+		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync(
+			bool? extendedMix,
+			bool? radioMix,
+			bool? played,
+			bool? stored,
+			bool? wanted
+			)
 		{
 			try
 			{
@@ -73,6 +85,15 @@ namespace RMD.Business.Services
 				{
 					return Result<IEnumerable<Song>>.Failure("No songs were found in the database.");
 				}
+
+				// Fluent LINQ Filtering of the list of songs based on the various boolean parameters available to the user.
+				songs = songs
+					.Where(x => !extendedMix.HasValue || x.ExtendedMix == extendedMix.Value)
+					.Where(x => !radioMix.HasValue || x.RadioMix == radioMix.Value)
+					.Where(x => !played.HasValue || x.Played == played.Value)
+					.Where(x => !stored.HasValue || x.Stored == stored.Value)
+					.Where(x => !wanted.HasValue || x.Wanted == wanted.Value)
+					.ToList();
 
 				return Result<IEnumerable<Song>>.Success(songs);
 			}
