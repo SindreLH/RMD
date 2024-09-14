@@ -83,11 +83,16 @@ namespace RMD.Business.Controllers
         }
 
 		/// <summary>
-		/// Gets all songs from the database.
+		/// Gets all songs from the database. Results can be filtered on various search parameters in boolean form. 
 		/// </summary>
 		/// <returns>
 		/// A list of songs.
 		/// </returns>
+		/// <param name="extendedMix">The song is DJ friendly.</param>
+		/// <param name="radioMix">The song is suited for air play.</param>
+		/// <param name="played">The song has been played in a mixtape.</param>
+		/// <param name="stored">The song has been stored in the record collection.</param>
+		/// <param name="wanted">The song is not stored in the record collection, but it is wanted.</param>
 		/// <Remarks>
 		/// Possible error messages include:
 		/// - "No songs were found in the database."
@@ -96,10 +101,16 @@ namespace RMD.Business.Controllers
 		[HttpGet(Name = "GetAllSongs")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-		public async Task<IActionResult> GetAllSongs()
+		public async Task<IActionResult> GetAllSongs(
+			bool? extendedMix = null,
+			bool? radioMix = null,
+			bool? played = null,
+			bool? stored = null,
+			bool? wanted = null
+			)
 		{
 
-			var result = await _songService.GetAllSongsAsync();
+			var result = await _songService.GetAllSongsAsync(extendedMix, radioMix, played, stored, wanted);
 
 			if (!result.IsSuccess)
 			{
