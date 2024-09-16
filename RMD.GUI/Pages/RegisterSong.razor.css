@@ -42,6 +42,14 @@
 
 .save_button {
     margin-top: 35px;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.save_button:hover {
+    transform: scale(1.1);
+    transform-origin: center;
 }
 
 .number_ticker {

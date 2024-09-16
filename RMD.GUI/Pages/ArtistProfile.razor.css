@@ -1,24 +1,46 @@
 ﻿/*Header section*/
-.header_wrapper{
+.header_wrapper {
 	display: flex;
 	flex-direction: row;
+	height: 18rem;
 	width: 100%;
 	justify-content: left;
 	margin-bottom: 5rem;
+	margin-top: 0rem;
+	background-image: url("images/rmd_profile_banner_opacity50_blur.png");
+	background-size: auto;
+	background-position: bottom;
+}
+
+.top_text_wrapper {
+	display: flex;
+	flex-direction: row;
+}
+
+.text_vertical_stack {
+	display: flex;
+	flex-direction: column
+}
+
+.header_contents {
+	display: flex;
+	flex-direction: row;
+	margin-top: 2rem;
+	margin-left: 2rem;
 }
 
 /*Text*/
-a{
+a {
 	border-inline-style: none;
 	color: white;
 	text-decoration: none;
 }
 
-a:hover{
-	color: #aee1ff;
-}
+	a:hover {
+		color: #aee1ff;
+	}
 
-h3{
+h3 {
 	margin-top: 2rem;
 	font-weight: 750;
 	font-family: Arial, Helvetica, sans-serif;
@@ -27,23 +49,26 @@ h3{
 	color: white;
 	width: 100%;
 }
-p{
+
+
+p {
 	color: white;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-.text_container{
+.text_container {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
 /*Images and icons*/
-.socials_icons{
+.socials_icons {
 	width: 17px;
 	height: 17px;
 }
-.artist_profile_pic{
+
+.artist_profile_pic {
 	width: 200px;
 	height: 200px;
 	border-radius: 50%;
@@ -62,11 +87,17 @@ p{
 	width: 20rem;
 	margin-left: 91rem;
 }
+
 .edit_button,
 .delete_button {
 	width: 150px;
 }
 
+.edit_button:hover,
+.delete_button:hover {
+	transform: scale(1.1);
+	transition: 0.5s ease-in-out;
+}
 
 
 .btn-warning {
@@ -87,7 +118,7 @@ p{
 }
 
 
-.fixed-width{
+.fixed-width {
 	width: 150px;
 }
 
@@ -96,5 +127,26 @@ p{
 .table-hover > tbody > tr:hover {
 	--bs-table-accent-bg: #010622;
 	color: #aee1ff;
+}
+
+
+.text_vertical_stack {
+	display: flex;
+	flex-direction: column;
+	width: 8rem;
+	margin-top: 4rem;
+	margin-left: 0;
+	justify-content: center;
+}
+
+.text_vertical_stack p {
+	margin: 0;
+	line-height: 1.2rem;
+}
+
+
+.top_text_wrapper {
+	display: flex;
+	align-items: flex-start;
 }
 

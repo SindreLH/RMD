@@ -37,7 +37,7 @@
 	flex-direction: row;
 	width: 20rem;
 	justify-content: space-between;
-	margin-left: 81rem;
+	margin-left: 79rem;
 }
 
 .edit_button, .delete_button {
@@ -63,6 +63,12 @@
 
 .fixed-width{
 	width: 150px;
+}
+
+.edit_button:hover,
+.delete_button:hover {
+	transform: scale(1.1);
+	transition: 0.5s ease-in-out;
 }
 
 .pagination .page-link {
