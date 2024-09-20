@@ -1,4 +1,6 @@
-﻿/*Header section*/
+﻿
+
+/*Header section*/
 .header_wrapper {
 	display: flex;
 	flex-direction: row;
@@ -7,7 +9,9 @@
 	justify-content: left;
 	margin-bottom: 5rem;
 	margin-top: 0rem;
-	background-image: url("images/rmd_profile_banner_opacity50_blur.png");
+	background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/rmd_profile_banner_opacity50_blur.png');
+	/*background-image: url("images/rmd_profile_banner_opacity50_blur.png");*/
+	border-radius: 20px;
 	background-size: auto;
 	background-position: bottom;
 }
@@ -85,7 +89,7 @@ p {
 	height: 10rem;
 	justify-content: space-evenly;
 	width: 20rem;
-	margin-left: 91rem;
+	margin-left: 89rem;
 }
 
 .edit_button,

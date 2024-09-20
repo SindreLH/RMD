@@ -3,90 +3,109 @@
 
 <PageTitle>RMD | Add new artist</PageTitle>
 
-<h3>Legg til en ny artist i databasen</h3>
+<div class="container_parent">
+    <div class="main_form_container">
 
-<form id="reg_artist_form">
-	<div id="form-group">
-		<label for="artistName">Navn</label>
-		<input type="text" class="form-control"/>
-	</div>
+        <h3>Registrer artist</h3>
 
-	<div id="form-group">
-		<label for="artistNationality">Nasjonalitet</label>
-		<select name="country" id="country" class="form-control">
-    <option value="" disabled selected>Nasjonalitet</option>
-    <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
-    <option value="Norway" class="fw-bold"> 🇳🇴 Norge</option>
-    <option value="Sweden" class="fw-bold"> 🇸🇪 Sverige</option>
-    <option value="Denmark" class="fw-bold"> 🇩🇰 Danmark</option>
-    <option value="Finland" class="fw-bold"> 🇫🇮 Finland</option>
-    <option value="Germany" class="fw-bold"> 🇩🇪 Tyskland</option>
-    <option value="Iceland" class="fw-bold"> 🇮🇸 Island</option>
-    <option value="Australia" class="fw-bold"> 🇦🇺 Australia</option>
-    <option value="United States" class="fw-bold"> 🇺🇸 USA</option>
-    <option value="Netherlands" class="fw-bold"> 🇳🇱 Nederland</option>
-    <option value="United Kingdom" class="fw-bold"> 🇬🇧 Storbritannia</option>
-    <option value="Turkey"> 🇹🇷 Tyrkia</option>
-    <option value="Thailand"> 🇹🇭 Thailand</option>
-    <option value="Taiwan"> 🇹🇼 Taiwan</option>
-    <option value="Switzerland"> 🇨🇭 Sveits</option>
-    <option value="Spain"> 🇪🇸 Spania</option>
-    <option value="South Africa"> 🇿🇦 Sør-Afrika</option>
-    <option value="Slovenia"> 🇸🇮 Slovenia</option>
-    <option value="Slovakia"> 🇸🇰 Slovakia</option>
-    <option value="Russian Federation"> 🇷🇺 Russland</option>
-    <option value="Romania"> 🇷🇴 Romania</option>
-    <option value="Portugal"> 🇵🇹 Portugal</option>
-    <option value="Poland"> 🇵🇱 Polen</option>
-    <option value="Peru"> 🇵🇪 Peru</option>
-    <option value="New Zealand"> 🇳🇿 New Zealand</option>
-    <option value="Mexico"> 🇲🇽 Mexico</option>
-    <option value="Lithuania"> 🇱🇹 Litauen</option>
-    <option value="Liechtenstein"> 🇱🇮 Liechtenstein</option>
-    <option value="Latvia"> 🇱🇻 Latvia</option>
-    <option value="Korea, Republic of"> 🇰🇷 Sør-Korea</option>
-    <option value="Japan"> 🇯🇵 Japan</option>
-    <option value="Italy"> 🇮🇹 Italia</option>
-    <option value="Israel"> 🇮🇱 Israel</option>
-    <option value="Ireland"> 🇮🇪 Irland</option>
-    <option value="Hungary"> 🇭🇺 Ungarn</option>
-    <option value="Greenland"> 🇬🇱 Grønland</option>
-    <option value="Greece"> 🇬🇷 Hellas</option>
-    <option value="Georgia"> 🇬🇪 Georgia</option>
-    <option value="France"> 🇫🇷 Frankrike</option>
-    <option value="Estonia"> 🇪🇪 Estland</option>
-    <option value="Czech Republic"> 🇨🇿 Tsjekkia</option>
-    <option value="Croatia"> 🇭🇷 Kroatia</option>
-    <option value="Canada"> 🇨🇦 Canada</option>
-    <option value="Belgium"> 🇧🇪 Belgia</option>
-    <option value="Belarus"> 🇧🇾 Hviterussland</option>
-    <option value="Austria"> 🇦🇹 Østerrike</option>
-    <option value="Argentina"> 🇦🇷 Argentina</option>
-    <option value="Ukraine"> 🇺🇦 Ukraina</option>
-</select>
-	</div>
+        <form id="reg_artist_form">
+            <div class="artist_information">
 
-	<div id="form-group">
-		<label for="artistName">Facebook</label>
-		<input type="url" class="form-control" />
-	</div>
+                <div class="info_child">
+                    <label for="artistName">Navn</label>
+                    <input type="text" class="form-control" />
+                </div>
 
-    <div id="form-group">
-        <label for="artistName">Soundcloud</label>
-        <input type="url" class="form-control" />
+                <div class="info_child">
+                    <label for="artistNationality">Byttes ut med komponent </label>
+                    <select name="country" id="country" class="form-control">
+                        <option value="" disabled selected>Nasjonalitet</option>
+                        <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
+                        <option value="Norway" class="fw-bold"> 🇳🇴 Norge</option>
+                        <option value="Sweden" class="fw-bold"> 🇸🇪 Sverige</option>
+                        <option value="Denmark" class="fw-bold"> 🇩🇰 Danmark</option>
+                        <option value="Finland" class="fw-bold"> 🇫🇮 Finland</option>
+                        <option value="Germany" class="fw-bold"> 🇩🇪 Tyskland</option>
+                        <option value="Iceland" class="fw-bold"> 🇮🇸 Island</option>
+                        <option value="Australia" class="fw-bold"> 🇦🇺 Australia</option>
+                        <option value="United States" class="fw-bold"> 🇺🇸 USA</option>
+                        <option value="Netherlands" class="fw-bold"> 🇳🇱 Nederland</option>
+                        <option value="United Kingdom" class="fw-bold"> 🇬🇧 Storbritannia</option>
+                        <option value="Turkey"> 🇹🇷 Tyrkia</option>
+                        <option value="Thailand"> 🇹🇭 Thailand</option>
+                        <option value="Taiwan"> 🇹🇼 Taiwan</option>
+                        <option value="Switzerland"> 🇨🇭 Sveits</option>
+                        <option value="Spain"> 🇪🇸 Spania</option>
+                        <option value="South Africa"> 🇿🇦 Sør-Afrika</option>
+                        <option value="Slovenia"> 🇸🇮 Slovenia</option>
+                        <option value="Slovakia"> 🇸🇰 Slovakia</option>
+                        <option value="Russian Federation"> 🇷🇺 Russland</option>
+                        <option value="Romania"> 🇷🇴 Romania</option>
+                        <option value="Portugal"> 🇵🇹 Portugal</option>
+                        <option value="Poland"> 🇵🇱 Polen</option>
+                        <option value="Peru"> 🇵🇪 Peru</option>
+                        <option value="New Zealand"> 🇳🇿 New Zealand</option>
+                        <option value="Mexico"> 🇲🇽 Mexico</option>
+                        <option value="Lithuania"> 🇱🇹 Litauen</option>
+                        <option value="Liechtenstein"> 🇱🇮 Liechtenstein</option>
+                        <option value="Latvia"> 🇱🇻 Latvia</option>
+                        <option value="Korea, Republic of"> 🇰🇷 Sør-Korea</option>
+                        <option value="Japan"> 🇯🇵 Japan</option>
+                        <option value="Italy"> 🇮🇹 Italia</option>
+                        <option value="Israel"> 🇮🇱 Israel</option>
+                        <option value="Ireland"> 🇮🇪 Irland</option>
+                        <option value="Hungary"> 🇭🇺 Ungarn</option>
+                        <option value="Greenland"> 🇬🇱 Grønland</option>
+                        <option value="Greece"> 🇬🇷 Hellas</option>
+                        <option value="Georgia"> 🇬🇪 Georgia</option>
+                        <option value="France"> 🇫🇷 Frankrike</option>
+                        <option value="Estonia"> 🇪🇪 Estland</option>
+                        <option value="Czech Republic"> 🇨🇿 Tsjekkia</option>
+                        <option value="Croatia"> 🇭🇷 Kroatia</option>
+                        <option value="Canada"> 🇨🇦 Canada</option>
+                        <option value="Belgium"> 🇧🇪 Belgia</option>
+                        <option value="Belarus"> 🇧🇾 Hviterussland</option>
+                        <option value="Austria"> 🇦🇹 Østerrike</option>
+                        <option value="Argentina"> 🇦🇷 Argentina</option>
+                        <option value="Ukraine"> 🇺🇦 Ukraina</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="artist_links">
+                <div class="links_child">
+                    <label for="artistName">Facebook</label>
+                    <input type="url" class="form-control" />
+                </div>
+
+                <div class="links_child">
+                    <label for="artistName">Soundcloud</label>
+                    <input type="url" class="form-control" />
+                </div>
+
+                <div class="links_child">
+                    <label for="profilePicture">Profilbilde</label>
+                    <input type="url" class="form-control" />
+                </div>
+
+                <div class="links_child">
+                    <label for="profilePicture">Discogs</label>
+                    <input type="url" class="form-control" />
+                </div>
+            </div>
+
+        </form>
+
+        <div class="save_button">
+            <button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
+                <i class="bi bi-floppy-fill"></i> Lagre Artist
+            </button>
+        </div>
     </div>
-
-	<div id="form-group">
-		<label for="profilePicture">Profilbilde</label>
-		<input type="url" class="form-control" />
-	</div>
-</form>
-
-<div class="save_button">
-	<button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
-		<i class="bi bi-floppy-fill"></i> Lagre Artist
-	</button>
 </div>
+
+
 
 @code {
 

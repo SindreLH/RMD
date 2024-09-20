@@ -1,23 +1,30 @@
 ﻿@page "/Register"
 
-<ul class="nav nav-tabs">
-	<li class="nav-item">
-			<a class="nav-link" @onclick="() => SelectTab(0)">Registrer Artist</a>
-	</li>
+<div class="center_tabs">
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<a class="nav-link @(selectedTab == 0 ? "active-tab" : "")" @onclick="() => SelectTab(0)">
+				Register artist
+			</a>
+		</li>
 
-	<li class="nav-item">
-		<a class="nav-link" @onclick="() => SelectTab(1)">Registrer Låt</a>
-	</li>
+		<li class="nav-item">
+			<a class="nav-link @(selectedTab == 1 ? "active-tab" : "")" @onclick="() => SelectTab(1)">
+				Registrer låt
+			</a>
+		</li>
+	</ul>
+</div>
 
-</ul>
 
 <div class="tab-content">
-	@if(selectedTab == 0)
+	@if (selectedTab == 0)
 	{
-		<RegisterArtist/>
+		<RegisterArtist />
 	}
-	else if(selectedTab == 1){
-		<RegisterSong/>
+	else if (selectedTab == 1)
+	{
+		<RegisterSong />
 	}
 </div>
 

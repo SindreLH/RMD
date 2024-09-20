@@ -1,5 +1,6 @@
 ﻿.tab-container {
 	display: flex;
+	width: 150px;
 }
 
 .nav-item{

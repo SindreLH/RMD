@@ -1,15 +1,58 @@
-﻿#reg_artist_form {
+﻿.container_parent{
+    display: flex;
+    justify-content: center;
+}
+
+
+.main_form_container{
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
-    width: 15rem;
-    height: 25rem;
+    justify-content: center;
+    align-items: center;
+    width: 42rem;
+    height: 40rem;
+    background-color: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+}
+
+#reg_artist_form {
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    height: 20rem;
     justify-content: space-evenly;
-    color: #b3b3b3;
+    /*color: #b3b3b3;*/
+}
+
+.info_child{
+    width: 16rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.links_child{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.artist_information {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.artist_links{
+    
 }
 
 h3 {
+    font-weight: 400;
+    font-size:xx-large;
+    justify-content: center;
     color: white;
-    margin-bottom: 0;
+    margin-bottom:7rem;
 }
 
 label {
@@ -20,14 +63,19 @@ label {
     border-radius: 6px;
 }
 
+.btn-success{
+    background-color:#14AE5C;
+    width: 35rem;
+}
+
 .save_button {
-    margin-top: 35px;
+    margin-top: 5rem;
     position: relative;
     display: inline-block;
     transition: transform 0.5s ease-in-out;
 }
 
-.save_button:hover {
-    transform: scale(1.1);
-    transform-origin: center;
-}
+    .save_button:hover {
+        transform: scale(1.1);
+        transform-origin: center;
+    }
