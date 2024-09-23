@@ -10,18 +10,18 @@ namespace RMD.Data.Models
 
         [Required]
         [MaxLength(150)]
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
         public string? RemixArtist { get; set; }
 
 		[Required]
-        public string Artist { get; set; }
+        public required string Artist { get; set; }
 		//public ICollection<Artist> Artist { get; set; } = new List<Artist>();
 		[Required]
-        public string Length { get; set; }
+        public required string Length { get; set; }
 
 		[Required]
-        public string Genre { get; set; }
+        public required string Genre { get; set; }
         public bool ExtendedMix { get; set; }
         public bool RadioMix { get; set; }
         public bool Played { get; set; }

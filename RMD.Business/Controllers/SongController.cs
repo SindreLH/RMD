@@ -83,13 +83,13 @@ namespace RMD.Business.Controllers
         }
 
 		/// <summary>
-		/// Gets all songs from the database. Results can be filtered on various search parameters in boolean form. 
+		/// Gets all songs from the database. Results can be filtered on various boolean parameters.
 		/// </summary>
 		/// <returns>
 		/// A list of songs.
 		/// </returns>
-		/// <param name="extendedMix">The song is DJ friendly.</param>
-		/// <param name="radioMix">The song is suited for air play.</param>
+		/// <param name="extendedMix">The song is DJ friendly and suited for mixing.</param>
+		/// <param name="radioMix">The song is most suited for radio air play.</param>
 		/// <param name="played">The song has been played in a mixtape.</param>
 		/// <param name="stored">The song has been stored in the record collection.</param>
 		/// <param name="wanted">The song is not stored in the record collection, but it is wanted.</param>

@@ -37,6 +37,11 @@
 			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
 			<label class="form-check-label">Radio Mix</label>
 		</div>
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
+			<label class="form-check-label">Favoritt</label>
+		</div>
 	</div>
 
 	@if (isSelected)
@@ -59,234 +64,236 @@
 
 </div>
 
+<div class="table-container">
+	<table class="table table-bordered table-dark table-striped table-hover">
+		<thead class="thead-light">
+			<tr>
+				<th>
+					#
+				</th>
 
-<table class="table table-bordered table-dark table-striped table-hover">
-	<thead class="thead-light">
-		<tr>
-			<th>
-				ID
-			</th>
+				<th>
+					Tittel
+				</th>
 
-			<th>
-				Tittel
-			</th>
+				<th>
+					Artist
+				</th>
 
-			<th>
-				Artist
-			</th>
+				<th>
+					Remixartist
+				</th>
 
-			<th>
-				Remixartist
-			</th>
+				<th>
+					Lengde
+				</th>
 
-			<th>
-				Lengde
-			</th>
+				<th>
+					Sjanger
+				</th>
 
-			<th>
-				Sjanger
-			</th>
+				<th>
+					Extended
+				</th>
 
-			<th>
-				Extended
-			</th>
+				<th>
+					Spilt
+				</th>
 
-			<th>
-				Radio
-			</th>
+				<th>
+					Ep
+				</th>
 
-			<th>
-				Spilt
-			</th>
+				<th>
+					Lagret
+				</th>
 
-			<th>
-				Ep
-			</th>
+				<th>
+					Ønsket
+				</th>
 
-			<th>
-				Lagret
-			</th>
+				<th>
+					Favoritt
+				</th>
+			</tr>
 
-			<th>
-				Ønsket
-			</th>
-		</tr>
+		</thead>
 
-	</thead>
+		<tbody>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>1</td>
+				<td>Barbie Girl (Extended Mix)</td>
+				<td>Rob Mayth</td>
+				<td>None</td>
+				<td>06:44</td>
+				<td>Hands Up</td>
+				<td>✅</td>
+				<td>✅</td>
+				<td>14</td>
+				<td>✅</td>
+				<td>❌</td>
+				<td>⭐</td>
+			</tr>
 
-	<tbody>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>1</td>
-			<td>Barbie Girl (Extended Mix)</td>
-			<td>Rob Mayth</td>
-			<td>None</td>
-			<td>06:44</td>
-			<td>Hands Up</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>14</td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>2</td>
+				<td>Milky Way (Teenagerz Remix)</td>
+				<td>Solar Patrol</td>
+				<td>Teenagerz</td>
+				<td>05:38</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td>2</td>
+				<td>❌</td>
+				<td>✅</td>
+				<td> </td>
+			</tr>
 
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>2</td>
-			<td>Milky Way (Teenagerz Remix)</td>
-			<td>Solar Patrol</td>
-			<td>Teenagerz</td>
-			<td>05:38</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td> </td>
-			<td>❌</td>
-			<td>2</td>
-			<td>❌</td>
-			<td>✅</td>
-		</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>3</td>
+				<td>Heartbeat (Club Mix)</td>
+				<td>DJ Manian</td>
+				<td>DJ Gollum</td>
+				<td>03:45</td>
+				<td>Hands Up</td>
+				<td>✅</td>
+				<td>✅</td>
+				<td>11</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td>⭐</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>4</td>
+				<td>Forever Young (Extended Mix)</td>
+				<td>Groove Coverage</td>
+				<td>DJ Gollum</td>
+				<td>06:12</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td>15</td>
+				<td>✅</td>
+				<td>❌</td>
+				<td>⭐</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>5</td>
+				<td>Castles In The Sky (DJ Manian Remix)</td>
+				<td>Ian Van Dahl</td>
+				<td>DJ Manian</td>
+				<td>05:20</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>✅</td>
+				<td> </td>
+				<td>✅</td>
+				<td>✅</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>6</td>
+				<td>Heaven (Cascada Remix)</td>
+				<td>DJ Sammy</td>
+				<td>Cascada</td>
+				<td>03:35</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>✅</td>
+				<td> </td>
+				<td>✅</td>
+				<td>❌</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>7</td>
+				<td>Everytime We Touch (Club Mix)</td>
+				<td>Cascada</td>
+				<td>DJ Manian</td>
+				<td>05:28</td>
+				<td>Hands Up</td>
+				<td>✅</td>
+				<td>❌</td>
+				<td>20</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>8</td>
+				<td>Reason (Original Mix)</td>
+				<td>Nightcore</td>
+				<td>Rob Mayth</td>
+				<td>04:18</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td> </td>
+				<td>❌</td>
+				<td>✅</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>9</td>
+				<td>Bad Boy (Club Mix)</td>
+				<td>Cascada</td>
+				<td>Rob Mayth</td>
+				<td>04:54</td>
+				<td>Hands Up</td>
+				<td>✅</td>
+				<td>✅</td>
+				<td>5</td>
+				<td>✅</td>
+				<td>❌</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>10</td>
+				<td>Through The Eyes Of A Child (Extended Mix)</td>
+				<td>DJ Hixxy</td>
+				<td>DJ Gollum</td>
+				<td>06:01</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td> </td>
+				<td>❌</td>
+				<td>✅</td>
+				<td>⭐</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>11</td>
+				<td>Rave Heaven (Extended Mix)</td>
+				<td>Master Blaster</td>
+				<td>Rob Mayth</td>
+				<td>05:47</td>
+				<td>Hands Up</td>
+				<td>✅</td>
+				<td> </td>
+				<td> </td>
+				<td>✅</td>
+				<td>❌</td>
+				<td> </td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>12</td>
+				<td>Dancing In The Rain (Club Mix)</td>
+				<td>DJ Splash</td>
+				<td>Rocco & Bass-T</td>
+				<td>04:26</td>
+				<td>Hands Up</td>
+				<td>❌</td>
+				<td>❌</td>
+				<td>2</td>
+				<td>❌</td>
+				<td>✅</td>
+				<td>⭐</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>3</td>
-			<td>Heartbeat (Club Mix)</td>
-			<td>DJ Manian</td>
-			<td>DJ Gollum</td>
-			<td>03:45</td>
-			<td>Hands Up</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>11</td>
-			<td>❌</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>4</td>
-			<td>Forever Young (Extended Mix)</td>
-			<td>Groove Coverage</td>
-			<td>DJ Gollum</td>
-			<td>06:12</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>15</td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>5</td>
-			<td>Castles In The Sky (DJ Manian Remix)</td>
-			<td>Ian Van Dahl</td>
-			<td>DJ Manian</td>
-			<td>05:20</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td> </td>
-			<td>✅</td>
-			<td>✅</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>6</td>
-			<td>Heaven (Cascada Remix)</td>
-			<td>DJ Sammy</td>
-			<td>Cascada</td>
-			<td>03:35</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td> </td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>7</td>
-			<td>Everytime We Touch (Club Mix)</td>
-			<td>Cascada</td>
-			<td>DJ Manian</td>
-			<td>05:28</td>
-			<td>Hands Up</td>
-			<td>✅</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>20</td>
-			<td>❌</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>8</td>
-			<td>Reason (Original Mix)</td>
-			<td>Nightcore</td>
-			<td>Rob Mayth</td>
-			<td>04:18</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td> </td>
-			<td>❌</td>
-			<td>✅</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>9</td>
-			<td>Bad Boy (Club Mix)</td>
-			<td>Cascada</td>
-			<td>Rob Mayth</td>
-			<td>04:54</td>
-			<td>Hands Up</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>5</td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>10</td>
-			<td>Through The Eyes Of A Child (Extended Mix)</td>
-			<td>DJ Hixxy</td>
-			<td>DJ Gollum</td>
-			<td>06:01</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td> </td>
-			<td>❌</td>
-			<td>✅</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>11</td>
-			<td>Rave Heaven (Extended Mix)</td>
-			<td>Master Blaster</td>
-			<td>Rob Mayth</td>
-			<td>05:47</td>
-			<td>Hands Up</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td> </td>
-			<td> </td>
-			<td>✅</td>
-			<td>❌</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>12</td>
-			<td>Dancing In The Rain (Club Mix)</td>
-			<td>DJ Splash</td>
-			<td>Rocco & Bass-T</td>
-			<td>04:26</td>
-			<td>Hands Up</td>
-			<td>❌</td>
-			<td>✅</td>
-			<td>❌</td>
-			<td>2</td>
-			<td>❌</td>
-			<td>✅</td>
-		</tr>
-	</tbody>
-</table>
 
 <nav aria-label="Page navigation">
 	<ul class="pagination">

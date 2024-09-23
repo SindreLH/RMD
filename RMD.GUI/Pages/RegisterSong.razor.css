@@ -1,23 +1,45 @@
-﻿h3 {
-    color: #b3b3b3;
+﻿.container_parent {
+    display: flex;
+    justify-content: center;
 }
 
-/**Ytre skjema**/
-#reg_song_form {
+.main_form_container {
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
-    width: 15rem;
-    justify-content: space-evenly;
-    color: #b3b3b3;
+    justify-content: center;
+    align-items: center;
+    width: 42rem;
+    height: 40rem;
+    background-color: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
 }
+
+
+h3 {
+    font-weight: 400;
+    font-size:xx-large;
+    justify-content: center;
+    color: white;
+}
+
+label{
+    color: white;
+}
+
 
 /**Indre skjema - beholder for del a og b**/
 #a_b_container{
     display: flex; 
     flex-direction: row;
+    margin-left: 5rem;
     width: 40rem;
 }
 
+input, select {
+    width: 18rem;
+}
 
 /**Del A**/
 #reg_song_part_a {
@@ -25,28 +47,45 @@
     flex-direction: column;
     width: 15rem;
     margin-right: 7rem;
+    margin-top: 2rem;
 }
 
 /**Del B**/
 #reg_song_part_b {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
+    /*padding-top: 2rem;*/
+    margin-top: 3.5rem;
     width: 15rem;
 }
+
+.number_ticker {
+    width: 13rem;
+}
+
 
 /**Ymse pirk**/
 .form-control {
     border-radius: 6px;
 }
 
-.save_button {
-    margin-top: 35px;
+
+.btn-success {
+    background-color: #14AE5C;
+    width: 35rem;
 }
 
-.number_ticker {
-    width: 4.5rem;
+.save_button {
+    margin-top: 5rem;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
 }
+
+    .save_button:hover {
+    transform: scale(1.1);
+    transform-origin: center;
+    }
 
 #form-group {
     display: flex;

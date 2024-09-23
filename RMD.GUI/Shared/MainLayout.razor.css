@@ -6,15 +6,20 @@
 
 main {
     flex: 1;
-    background-color: #212529;
+    /*background-color: #212529;*/
+    background-image: linear-gradient(#1f78d7, #25369B);
+    /*background-image: url("images/wave_background_optimized.png");*/
+    /*background-image: url("images/test.jpg");*/
+    background-size: cover;
+    /*background-size:inherit;*/
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, #292d87 0%, #010623 70%);
+    background-image: linear-gradient(180deg, #212529 0%, #181818 70%);
 }
 
 .top-row {
-    background-color: #636363;
+    background-image: linear-gradient(180deg, #181818 0%, #212529 70%);
     justify-content: flex-end;
     height: 5.5rem;
     display: flex;

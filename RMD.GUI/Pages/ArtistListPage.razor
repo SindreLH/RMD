@@ -31,88 +31,219 @@
 
 </div>
 
+<div class="table-container">
+	<table class="table table-bordered table-dark table-striped table-hover">
+		<thead class="thead-light">
+			<tr>
+				<th>
+					#
+				</th>
 
-<table class="table table-bordered table-dark table-striped table-hover">
-	<thead class="thead-light">
-	</thead>
+				<th>
+					Artist
+				</th>
 
-	<tbody>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
-				alt="Artist Press Picture"
-				class="artist_profile_pic"/>
-				 Rob Mayth
-			</td>
-		</tr>
+				<th>
+					Sjanger
+				</th>
+
+				<th>
+					Profil
+				</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr @onclick="() => isSelected = !isSelected">
+
+				<td>
+					1
+				</td>
+
+				<td>
+					<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					Rob Mayth
+				</td>
+
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+
+			</tr>
 
 
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://cdns-images.dzcdn.net/images/artist/d51ba713d1e8c59b207098f72d507c95/500x500-000000-80-0-0.jpg"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic"/>
-				 DJ Gollum
-			</td>
-		
-		</tr>
+			<tr @onclick="() => isSelected = !isSelected">
 
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<i class="bi bi-person h1"></i>
-				 Lazerzf!ne
-				
-			</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://i.discogs.com/iAnRNTibXDHeYA7i84YqNs0IwhWYavuwH4Wn3l_75fs/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTk0NDI3/NS0xMjEzMjc2NzI1/LmpwZWc.jpeg"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic" />
-				 De-Grees
-			</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkC50R7C_GuJWgG8GpMQie5IoSN8Mf4MMtqA&s"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic" />
-				 Cascada
-			</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/67/f4/c6/67f4c650-3ece-bfdc-3a77-c98cd0f3aa46/pr_source.png/725x725bb.webp"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic" />
-				 DJ Splash
-			</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<i class="bi bi-person h1"></i>
-				 Freestylerz</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://i.scdn.co/image/ab6761610000e5eb2a70dbf635d7e988179a8c9d"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic" />
-				 AJP
-			</td>
-		</tr>
-		<tr @onclick="() => isSelected = !isSelected">
-			<td>
-				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YcMII6szNxTWcxjfX45vagA6aJ772PLMkA&s"
-					 alt="Artist Press Picture"
-					 class="artist_profile_pic" />
-				 Topmodelz
-			</td>
-		</tr>
-		<tr>
-		</tr>
-	</tbody>
-</table>
+				<td>
+					2
+				</td>
+
+				<td>
+					<img src="https://cdns-images.dzcdn.net/images/artist/d51ba713d1e8c59b207098f72d507c95/500x500-000000-80-0-0.jpg"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					DJ Gollum
+				</td>
+
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+
+			</tr>
+
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					3
+				</td>
+
+				<td>
+					<i class="bi bi-person h1"></i>
+					Lazerzf!ne
+
+				</td>
+
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					4
+				</td>
+
+				<td>
+					<img src="https://i.discogs.com/iAnRNTibXDHeYA7i84YqNs0IwhWYavuwH4Wn3l_75fs/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTk0NDI3/NS0xMjEzMjc2NzI1/LmpwZWc.jpeg"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					De-Grees
+				</td>
+
+				<td>
+					Hardstyle
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					5
+				</td>
+
+				<td>
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkC50R7C_GuJWgG8GpMQie5IoSN8Mf4MMtqA&s"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					Cascada
+				</td>
+
+				<td>
+					Hardstyle
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					6
+				</td>
+
+				<td>
+					<img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/67/f4/c6/67f4c650-3ece-bfdc-3a77-c98cd0f3aa46/pr_source.png/725x725bb.webp"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					DJ Splash
+				</td>
+
+				<td>
+					Hard Trance
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					7
+				</td>
+
+				<td>
+					<i class="bi bi-person h1"></i>
+					Freestylerz
+				</td>
+					
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					8
+				</td>
+
+				<td>
+					<img src="https://i.scdn.co/image/ab6761610000e5eb2a70dbf635d7e988179a8c9d"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					AJP
+				</td>
+
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr @onclick="() => isSelected = !isSelected">
+				<td>
+					9
+				</td>
+
+				<td>
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YcMII6szNxTWcxjfX45vagA6aJ772PLMkA&s"
+						 alt="Artist Press Picture"
+						 class="artist_profile_pic" />
+					Topmodelz
+				</td>
+
+				<td>
+					Hands Up
+				</td>
+
+				<td>
+					Se profil
+				</td>
+			</tr>
+			<tr>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
 
 <nav aria-label="Page navigation">
 	<ul class="pagination">

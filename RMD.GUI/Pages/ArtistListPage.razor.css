@@ -7,14 +7,69 @@
 	color: #aee1ff;
 }
 
-.searchbar{
+.table-container {
+	margin-top: 5rem;
+	margin-bottom: 3rem;
+	max-height: 34rem;
+	overflow-y: auto;
+	height: 30rem;
+	border-radius: 20px;
+}
+
+.table {
+	height: 30rem;
+	opacity: 80%;
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: 20px;
+	overflow: hidden;
+}
+
+.table td:first-child, .table th:first-child {
+	padding-left: 45px; /* Padding mellom første kolonne og container kanten */
+}
+
+th {
+	padding: 10px;
+	line-height: 2.5;
+	font-weight: 600;
+	font-size: large;
+}
+
+.table tbody tr {
+	line-height: 3.5;
+}
+
+.table-bordered {
+	border: none;
+}
+
+.table td, .table th {
+	border: none;
+}
+
+.table thead th:first-child {
+	border-top-left-radius: 10px;
+}
+
+.table thead th:last-child {
+	border-top-right-radius: 10px;
+}
+
+.table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 20px;
+}
+
+.table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 20px;
+}
+
+.searchbar {
+	margin-top: 3rem;
 	width: 20rem;
 	height: 2rem;
 }
 
-.table{
-	width:80%;
-}
 
 .artist_profile_pic {
 	width: 50px;
@@ -43,12 +98,10 @@
 .button_wrapper {
 	position: fixed;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	width: 20rem;
-	height: 10rem;
-	justify-content: space-evenly;
-	margin-top: 2rem;
-	margin-left: 86rem;
+	justify-content: space-between;
+	margin-left: 79rem;
 }
 
 .edit_button, .delete_button {
@@ -72,8 +125,14 @@
 	background-color: #f86775;
 }
 
-.fixed-width{
+.fixed-width {
 	width: 150px;
+}
+
+.edit_button:hover,
+.delete_button:hover {
+	transform: scale(1.1);
+	transition: 0.5s ease-in-out;
 }
 
 .pagination .page-link {
