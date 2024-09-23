@@ -2,114 +2,121 @@
 
 <PageTitle>RMD | Add a new song</PageTitle>
 
-<h3>Legg til en ny låt i databasen</h3>
+<div class="container_parent">
+    <div class="main_form_container">
 
-<form id="reg_song_form">
-	
-	<div id="a_b_container">
-		<div id="reg_song_part_a">
-			<div id="form-group">
-				<label>Tittel</label>
-				<input type="text" class="form-control" />
-			</div>
+        <h3>Registrer låt</h3>
 
-			<div id="form-group">
-				<label>Remixartist</label>
-				<select name="remixartist" id="remixartist" class="form-control">
-					<option value="#">#</option>
-					<option value="rob_mayth">Rob Mayth</option>
-					<option value="lazerzf!ne">Lazerzf!ne</option>
-					<option value="tube_tonic_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-					<option value="masterblaster">Master Blaster</option>
-				</select>
-			</div>
+        <div id="a_b_container">
+            <div id="reg_song_part_a">
+                <div id="form-group">
+                    <label>Tittel</label>
+                    <input type="text" class="form-control" />
+                </div>
 
-			<div class="form-group" style="margin-bottom: 15px;">
-				<label for="artist">Artist</label>
-				<select name="artist" id="artist" class="form-control">
-					<option value="rob_mayth">Rob Mayth</option>
-					<option value="lazerzf!ne">Lazerzf!ne</option>
-					<option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-					<option value="masterblaster">Master Blaster</option>
-				</select>
-			</div>
+                <div id="form-group">
+                    <label>Remixartist</label>
+                    <select name="remixartist" id="remixartist" class="form-control">
+                        <option value="rob_mayth">Rob Mayth</option>
+                        <option value="lazerzf!ne">Lazerzf!ne</option>
+                        <option value="tube_tonic_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+                        <option value="masterblaster">Master Blaster</option>
+                    </select>
+                </div>
 
-			
-			<div id="form-group">
-				<label>Lengde (MMSS)</label>
-				<input type="text" class="form-control" />
-			</div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="artist">Artist</label>
+                    <select name="artist" id="artist" class="form-control">
+                        <option value="rob_mayth">Rob Mayth</option>
+                        <option value="lazerzf!ne">Lazerzf!ne</option>
+                        <option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
+                        <option value="masterblaster">Master Blaster</option>
+                    </select>
+                </div>
 
-			<!--Lag egen komponent med komplett liste over mulige sjangre i biblioteket-->
-			@* <RMD.GUI.Pages.Components.GenreList/> *@
+                <div id="form-group">
+                    <label>Lengde (MMSS)</label>
+                    <input type="text" class="form-control" />
+                </div>
 
-			<div id="form-group">
-				<label>Sjanger</label>
-				<select name="sjanger" id="sjanger" class="form-control">
-					<option value="hands_up">Hands Up</option>
-					<option value="hard_trance">Hard Trance</option>
-					<option value="hardstyle">Hardstyle</option>
-					<option value="trance">Trance</option>
-				</select>
-			</div>
-		</div>
+                <div id="form-group">
+                    <label>Sjanger</label>
+                    <select name="sjanger" id="sjanger" class="form-control">
+                        <option value="hands_up">Hands Up</option>
+                        <option value="hard_trance">Hard Trance</option>
+                        <option value="hardstyle">Hardstyle</option>
+                        <option value="trance">Trance</option>
+                    </select>
+                </div>
+            </div>
 
-		<div id="reg_song_part_b">
+            <div id="reg_song_part_b">
 
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
+                    <label class="col-form-label-sm">Mix med intro og outro.</label>
+                </div>
 
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-				<label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
-				<label class="col-form-label-sm">Mix med intro og outro.</label>
-			</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
+                    <label class="col-form-label-sm">Låten har favorittstatus.</label>
+                </div>
 
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-				<label class="form-check-label" for="flexSwitchCheckDefault">Radio Mix</label>
-				<label class="col-form-label-sm">Mix for radio play.</label>
-			</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="playedIsToggled">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
+                    <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
+                </div>
 
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="isToggled">
-				<label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
-				<label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
-			</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
+                    <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
+                </div>
 
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-				<label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
-				<label class="col-form-label-sm">Låten er lagret i samlingen.</label>
-			</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="wantedIsToggled">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
+                    <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
+                </div>
 
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-				<label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
-				<label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
-			</div>
+                @if (playedIsToggled)
+                {
+                    <div class="toggledInput">
+                        <div id="form-group">
+                            <label>Mixtape vol.</label>
+                            <input type="number" class="form-control number_ticker" />
+                            <label class="col-form-label-sm">Låten er spilt i ep</label>
+                        </div>
+                    </div>
+                }
 
-			@if (isToggled)
-			{
-				<div id="form-group">
-					<label>Mixtape vol.</label>
-					<input type="number" class="form-control number_ticker" />
-					<label class="col-form-label-sm">Låten er spilt i ep</label>
-				</div>
-			}
-			
-		</div>
-	</div>
-	
+                @if (wantedIsToggled)
+                {
+                    <div class="toggledInput">
+                        <div id="form-group">
+                            <label>Låtkilde</label>
+                            <input type="text" class="form-control number_ticker" />
+                            <label class="col-form-label-sm">URL til låten</label>
+                        </div>
+                    </div>
+                }
 
-</form>
+            </div>
+        </div>
 
-<div class="save_button">
-	<button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
-		<i class="bi bi-floppy-fill"></i> Lagre Artist
-	</button>
+        <div class="save_button">
+            <button type="button" onclick="alert('Artist lagret!')" class="btn btn-success">
+                <i class="bi bi-floppy-fill"></i> Lagre Artist
+            </button>
+        </div>
+    </div>
 </div>
 
-
 @code {
-	private bool isToggled = false;
+    private bool playedIsToggled = false;
+    private bool wantedIsToggled = false;
 }
 

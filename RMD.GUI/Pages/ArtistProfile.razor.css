@@ -1,19 +1,38 @@
 ﻿
-
 /*Header section*/
 .header_wrapper {
 	display: flex;
 	flex-direction: row;
-	height: 18rem;
 	width: 100%;
+	height: 21rem;
 	justify-content: left;
-	margin-bottom: 5rem;
-	margin-top: 0rem;
-	background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/rmd_profile_banner_opacity50_blur.png');
-	/*background-image: url("images/rmd_profile_banner_opacity50_blur.png");*/
+	margin-bottom: 3rem;
+	margin-top: 1.5rem;
+	background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/newheader.png');
+	/*background-image: url("images/newheader.png");*/
+	background-position-y:bottom;
+	/*opacity: 80%;*/
 	border-radius: 20px;
-	background-size: auto;
-	background-position: bottom;
+}
+
+.text_vertical_stack {
+	display: flex;
+	flex-direction: column;
+	width: 8rem;
+	margin-top: 4rem;
+	margin-left: 0;
+	justify-content: center;
+}
+
+	.text_vertical_stack p {
+		margin: 0;
+		line-height: 1.2rem;
+	}
+
+
+.top_text_wrapper {
+	display: flex;
+	align-items: flex-start;
 }
 
 .top_text_wrapper {
@@ -44,11 +63,11 @@ a {
 		color: #aee1ff;
 	}
 
-h3 {
-	margin-top: 2rem;
+h3{
+	margin-top: 4.5rem;
 	font-weight: 750;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 4.5rem;
+	font-size: 5.5rem;
 	letter-spacing: -4px;
 	color: white;
 	width: 100%;
@@ -80,16 +99,54 @@ p {
 	margin-right: 2.5rem;
 }
 
+.table_and_box{
+	display: flex;
+	flex-direction: row;
+}
+
+h4{
+	color: white;
+	margin-bottom: 2rem;
+}
+
+.info_box {
+	display: flex;
+	flex-direction: row;
+	background-color: rgba(37, 37, 37, 0.5);
+	backdrop-filter: blur(5px);
+	border-radius: 20px;
+	width: 30rem;
+	margin-left: 10.5rem;
+}
+
+.info_box_text{
+	display: flex;
+	height: 25rem;
+	flex-direction: column;
+	margin-left: 3rem;
+	margin-top: 1.5rem;
+}
+
+.text_control{
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.info_box_buttons{
+	margin-left: 4rem;
+	margin-top: 3rem;
+}
+
 /*Buttons*/
 .button_wrapper {
-	position: fixed; /*Ankrer div på plass*/
+	/*position: fixed; Ankrer div på plass*/
 	margin-top: 2rem;
 	display: flex;
 	flex-direction: column;
 	height: 10rem;
 	justify-content: space-evenly;
 	width: 20rem;
-	margin-left: 89rem;
+	/*margin-left: 89rem;*/
 }
 
 .edit_button,
@@ -133,24 +190,43 @@ p {
 	color: #aee1ff;
 }
 
-
-.text_vertical_stack {
-	display: flex;
-	flex-direction: column;
-	width: 8rem;
-	margin-top: 4rem;
-	margin-left: 0;
-	justify-content: center;
+.table-container{
+	max-height: 26.5rem;
+	overflow-y: auto;
+	width: 60rem; /*Må matche .table*/
+	border-radius: 20px; /*For sikkerhets skyld*/
 }
 
-.text_vertical_stack p {
-	margin: 0;
-	line-height: 1.2rem;
+.table {
+	opacity: 0.8;
+	width: 60rem;
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: 20px; 
+	overflow: hidden;
 }
 
-
-.top_text_wrapper {
-	display: flex;
-	align-items: flex-start;
+th{
+	margin-left: 10px;
 }
-
+.table tbody tr{
+	line-height: 3.5;
+}
+.table-bordered {
+	border: none;
+}
+.table td, .table th {
+	border: none;
+}
+.table thead th:first-child {
+	border-top-left-radius: 10px; 
+}
+.table thead th:last-child {
+	border-top-right-radius: 10px;
+}
+.table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 10px; /* Bottom-left corner */
+}
+.table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 10px; /* Bottom-right corner */
+}
