@@ -1,232 +1,175 @@
-﻿
-/*Header section*/
+﻿/* Header section */
 .header_wrapper {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	height: 21rem;
-	justify-content: left;
-	margin-bottom: 3rem;
-	margin-top: 1.5rem;
-	background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/newheader.png');
-	/*background-image: url("images/newheader.png");*/
-	background-position-y:bottom;
-	/*opacity: 80%;*/
-	border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    height: 21rem;
+    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+    background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/newheader.png');
+    background-position-y: bottom;
+    border-radius: 20px;
 }
-
-.text_vertical_stack {
-	display: flex;
-	flex-direction: column;
-	width: 8rem;
-	margin-top: 4rem;
-	margin-left: 0;
-	justify-content: center;
-}
-
-	.text_vertical_stack p {
-		margin: 0;
-		line-height: 1.2rem;
-	}
-
-
-.top_text_wrapper {
-	display: flex;
-	align-items: flex-start;
-}
-
-.top_text_wrapper {
-	display: flex;
-	flex-direction: row;
-}
-
-.text_vertical_stack {
-	display: flex;
-	flex-direction: column
-}
-
 .header_contents {
-	display: flex;
-	flex-direction: row;
-	margin-top: 2rem;
-	margin-left: 2rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+    margin-left: 2rem;
 }
 
-/*Text*/
+/* Text */
 a {
-	border-inline-style: none;
-	color: white;
-	text-decoration: none;
+    color: white;
+    text-decoration: none;
 }
-
-	a:hover {
-		color: #aee1ff;
-	}
-
-h3{
-	margin-top: 4.5rem;
-	font-weight: 750;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 5.5rem;
-	letter-spacing: -4px;
-	color: white;
-	width: 100%;
+    a:hover {
+        color: #aee1ff;
+    }
+h3 {
+    margin-top: 4.5rem;
+    font-weight: 750;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 5.5rem;
+    letter-spacing: -4px;
+    color: white;
 }
-
-
 p {
-	color: white;
-	font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+h4 {
+    color: white;
+    margin-bottom: 2rem;
+    font-weight: 400;
 }
 
-.text_container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-}
 
-/*Images and icons*/
+/* Images and icons */
 .socials_icons {
-	width: 17px;
-	height: 17px;
+    width: 17px;
+    height: 17px;
 }
-
 .artist_profile_pic {
-	width: 200px;
-	height: 200px;
-	border-radius: 50%;
-	margin-top: 1.5rem;
-	margin-right: 2.5rem;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-top: 1.5rem;
+    margin-right: 2.5rem;
 }
 
-.table_and_box{
-	display: flex;
-	flex-direction: row;
-}
-
-h4{
-	color: white;
-	margin-bottom: 2rem;
+/* Artist information */
+.table_and_box {
+    display: flex;
+    flex-direction: row;
 }
 
 .info_box {
-	display: flex;
-	flex-direction: row;
-	background-color: rgba(37, 37, 37, 0.5);
-	backdrop-filter: blur(5px);
-	border-radius: 20px;
-	width: 30rem;
-	margin-left: 10.5rem;
+    display: flex;
+    background-color: rgba(37, 37, 37, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    width: 35rem;
+    margin-left: 3rem;
 }
 
-.info_box_text{
-	display: flex;
-	height: 25rem;
-	flex-direction: column;
-	margin-left: 3rem;
-	margin-top: 1.5rem;
+.info_box_text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3rem;
+    margin-top: 1.5rem;
 }
 
-.text_control{
-	margin-top: 0.5rem;
-	margin-bottom: 1rem;
+.text_control {
+    margin: 0.5rem 0 0.2rem 0;
 }
 
-.info_box_buttons{
-	margin-left: 4rem;
-	margin-top: 3rem;
+.info_box_buttons {
+    margin-left: 4rem;
+    margin-top: 3rem;
 }
 
-/*Buttons*/
+/* Buttons */
 .button_wrapper {
-	/*position: fixed; Ankrer div på plass*/
-	margin-top: 2rem;
-	display: flex;
-	flex-direction: column;
-	height: 10rem;
-	justify-content: space-evenly;
-	width: 20rem;
-	/*margin-left: 89rem;*/
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 16rem;
 }
-
 .edit_button,
 .delete_button {
-	width: 150px;
+    width: 150px;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
 }
-
-.edit_button:hover,
-.delete_button:hover {
-	transform: scale(1.1);
-	transition: 0.5s ease-in-out;
-}
-
-
+    .edit_button:hover,
+    .delete_button:hover {
+        transform: scale(1.1);
+        transition: 0.5s ease-in-out;
+    }
 .btn-warning {
-	color: white;
-	background-color: #d9a300;
+    color: white;
+    background-color: #d9a300;
 }
-
 .btn-danger {
-	background-color: #b11f2d;
+    background-color: #b11f2d;
 }
-
 .btn-warning:hover {
-	background-color: #ffc107;
+    background-color: #ffc107;
 }
-
 .btn-danger:hover {
-	background-color: #f86775;
+    background-color: #f86775;
 }
-
-
 .fixed-width {
-	width: 150px;
+    width: 150px;
 }
 
-/*Table section*/
-
+/* Table section */
 .table-hover > tbody > tr:hover {
-	--bs-table-accent-bg: #010622;
-	color: #aee1ff;
+    --bs-table-accent-bg: #010622;
+    color: #aee1ff;
 }
-
-.table-container{
-	max-height: 26.5rem;
-	overflow-y: auto;
-	width: 60rem; /*Må matche .table*/
-	border-radius: 20px; /*For sikkerhets skyld*/
+.table-container {
+    max-height: 26.5rem;
+    overflow-y: auto;
+    width: 65rem;
+    border-radius: 20px;
 }
-
 .table {
-	opacity: 0.8;
-	width: 60rem;
-	border-collapse: separate;
-	border-spacing: 0;
-	border-radius: 20px; 
-	overflow: hidden;
+    opacity: 80%;
+    width: 65rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 20px;
+    overflow: hidden;
 }
+.table td:first-child, .table th:first-child {
+    padding-left: 45px; /* Padding mellom første kolonne og container kanten */
+}
+th {
 
-th{
-	margin-left: 10px;
+    padding: 10px;
+    line-height: 2.5;
+    font-weight: 600;
+    font-size: large;
 }
-.table tbody tr{
-	line-height: 3.5;
+.table tbody tr {
+    line-height: 3.5;
 }
 .table-bordered {
-	border: none;
+    border: none;
 }
 .table td, .table th {
-	border: none;
+    border: none;
 }
 .table thead th:first-child {
-	border-top-left-radius: 10px; 
+    border-top-left-radius: 10px;
 }
 .table thead th:last-child {
-	border-top-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 .table tbody tr:last-child td:first-child {
-	border-bottom-left-radius: 10px; /* Bottom-left corner */
+    border-bottom-left-radius: 10px;
 }
 .table tbody tr:last-child td:last-child {
-	border-bottom-right-radius: 10px; /* Bottom-right corner */
+    border-bottom-right-radius: 10px;
 }

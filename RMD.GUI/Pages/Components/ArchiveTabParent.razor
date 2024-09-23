@@ -1,14 +1,21 @@
 ﻿@page "/Archive"
 
-<ul class="nav nav-tabs">
-	<li class="nav-item">
-		<a class="nav-link" @onclick="() => SelectTab(0)">Artistarkiv</a>
-	</li>
+<div class="center_tabs">
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<a class="nav-link @(selectedTab == 0 ? "active-tab" : "" )" @onclick="() => SelectTab(0)">
+				Artistarkiv
+			</a>
+		</li>
 
-	<li class="nav-item">
-		<a class="nav-link" @onclick="() => SelectTab(1)">Låtarkiv</a>
-	</li>
-</ul>
+		<li class="nav-item">
+			<a class="nav-link @(selectedTab== 1 ? "active-tab" : "" )" @onclick="() => SelectTab(1)">
+				Låtarkiv
+			</a>
+		</li>
+	</ul>
+</div>
+
 
 <div class="tab-content">
 	@if (selectedTab == 0)
