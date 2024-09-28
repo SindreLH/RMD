@@ -8,6 +8,10 @@
 	<EditArtistModal IsVisible="editModalVisible" OnClose="ToggleEditModal"/>
 }
 
+@if(deleteModalVisible){
+	<WarningModalDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+}
+
 <div class="header_wrapper">
 
 	<div class="header_contents">
@@ -138,7 +142,7 @@
 				</div>
 
 				<div class="delete_button">
-					<button type="button" onclick="alert('Artist slettet!')" class="btn btn-danger fixed-width">
+					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
 						<i class="bi bi-trash3"></i> Fjern artist
 					</button>
 				</div>
@@ -153,9 +157,16 @@
 
 @code {
 	private bool editModalVisible = false;
+	private bool deleteModalVisible = false;
+
 
 	private void ToggleEditModal()
 	{
 		editModalVisible = !editModalVisible;
+	}
+
+	private void ToggleDeleteModal()
+	{
+		deleteModalVisible = !deleteModalVisible;
 	}
 }

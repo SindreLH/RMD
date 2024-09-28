@@ -1,42 +1,48 @@
 ﻿@page "/Modal2"
 
+@if (IsVisible)
+{
+	<div class="modal-backdrop" @onclick="CloseDeleteModal">
+		<div class="parent_container">
+			<div class="main_container">
 
-<div class="parent_container">
-	<div class="main_container">
+				<i class="bi bi-exclamation-triangle"></i>
 
-		<i class="bi bi-exclamation-triangle"></i>
+				<h3>Advarsel</h3>
+				<h4>Sletting</h4>
 
-		<h3>Advarsel</h3>
-		<h4>Sletting</h4>
+				<div class="text_container">
+					<p>Ønsker du virkelig å slette "Artist" fra databasen?</p>
+					<p>Handlingen kan ikke angres.</p>
+				</div>
 
-		<div class="text_container">
-			<p>Ønsker du virkelig å slette "Artist" fra databasen?</p>
-			<p>Handlingen kan ikke angres.</p>
-		</div>
+				<div class="button_container">
+					<div class="cancel_button">
+						<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+							Avbryt
+						</button>
+					</div>
 
-		<div class="button_container">
-			<div class="cancel_button">
-				<button type="button" class="btn btn-secondary">
-					Avbryt
-				</button>
+					<div class="delete_button">
+						<button type="button" class="btn btn-danger">
+							Slett artist
+						</button>
+					</div>
+				</div>
 			</div>
-
-			<div class="delete_button">
-				<button type="button" class="btn btn-danger">
-					Slett artist
-				</button>
-			</div>
 		</div>
-
-
-
 	</div>
-
-</div>
+}
 
 
 
 @code {
+	[Parameter] public bool IsVisible{ get; set; }
+	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
+	private void CloseDeleteModal()
+	{
+		OnClose.InvokeAsync(false);
+	}
 }
 
