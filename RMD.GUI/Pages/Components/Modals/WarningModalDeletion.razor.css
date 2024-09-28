@@ -1,0 +1,84 @@
+﻿.parent_container {
+	display: flex;
+	justify-content: center;
+}
+
+.main_container {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 42rem;
+	height: 40rem;
+	/*background-color: rgba(37, 37, 37, 0.5);*/
+	background: rgb(0,0,0);
+	background: linear-gradient(0deg, rgba(29, 15, 15, 0.5) 0%, rgba(73, 0, 0, 0.5) 100%);
+	backdrop-filter: blur(5px);
+	border-radius: 20px;
+}
+
+.bi-exclamation-triangle {
+	background: -webkit-linear-gradient(#ff0844, #ffb199);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	font-size: 8rem;
+}
+
+h3 {
+	font-size: 3rem;
+	color: white;
+}
+
+h4 {
+	font-size: 1.5rem;
+	color: white;
+}
+
+.text_container {
+	color: white;
+	text-align: center;
+	margin-top: 2rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.button_container{
+	display: flex;
+	flex-direction: row;
+}
+
+.btn {
+	width: 11rem;
+}
+
+.btn-secondary {
+	background-color: #1f78d7;
+}
+
+.cancel_button {
+	margin-top: 5rem;
+	margin-right: 2rem;
+	position: relative;
+	display: inline-block;
+	transition: transform 0.5s ease-in-out;
+}
+
+	.cancel_button:hover {
+		transform: scale(1.1);
+		transform-origin: center;
+	}
+
+
+.delete_button {
+	margin-top: 5rem;
+	margin-left: 2rem;
+	position: relative;
+	display: inline-block;
+	transition: transform 0.5s ease-in-out;
+}
+
+	.delete_button:hover {
+		transform: scale(1.1);
+		transform-origin: center;
+	}

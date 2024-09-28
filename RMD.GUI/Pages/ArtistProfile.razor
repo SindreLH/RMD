@@ -1,6 +1,12 @@
 ﻿@page "/Artist"
+@using RMD.GUI.Pages.Components.Modals;
 
 <PageTitle>RMD | Artist Page</PageTitle>
+
+@if (editModalVisible)
+{
+	<EditArtistModal IsVisible="editModalVisible" OnClose="ToggleEditModal"/>
+}
 
 <div class="header_wrapper">
 
@@ -120,17 +126,13 @@
 					Discogs
 				</a>
 			</div>
-			
-			
-
-			
 		</div>
 
 		<div class="info_box_buttons">
 
 			<div class="button_wrapper">
 				<div class="edit_button">
-					<button type="button" onclick="alert('Rediger artist her!')" class="btn btn-warning fixed-width">
+					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
 						<i class="bi bi-pencil"></i> Rediger artist
 					</button>
 				</div>
@@ -150,5 +152,10 @@
 
 
 @code {
+	private bool editModalVisible = false;
 
+	private void ToggleEditModal()
+	{
+		editModalVisible = !editModalVisible;
+	}
 }
