@@ -7,13 +7,13 @@
 main {
     flex: 1;
     /*background-color: #212529;*/
-    /*background-image: linear-gradient(#1f78d7, #25369B);*/
+    background-image: linear-gradient(#1f78d7, #25369B);
     /*background-image: linear-gradient(-225deg, #FF057C 0%, #8D0B93 50%, #321575 100%);*/
     /*background-image: url("images/wave_background_optimized.png");*/
     /*background-image: url("images/test.jpg");*/
-    background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
+    /*background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
     background-blend-mode: multiply;
-    background-size: cover;
+    background-size: cover;*/
     /*background-size:inherit;*/
 }
 
