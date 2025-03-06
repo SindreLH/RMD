@@ -10,260 +10,140 @@
 			<i class="bi bi-search"></i>
 		</span>
 	</div>
-
-	@if(isSelected == true)
-	{
-		<div class="button_wrapper">
-			<div class="edit_button">
-				<button type="button" onclick="alert('Rediger artist her!')" class="btn btn-warning fixed-width">
-					<i class="bi bi-pencil"></i> Rediger artist
-				</button>
-			</div>
-
-			<div class="delete_button">
-				<button type="button" onclick="alert('Artist slettet!')" class="btn btn-danger fixed-width">
-					<i class="bi bi-trash3"></i> Fjern artist
-				</button>
-			</div>
-		</div>
-	}
-	
-
-</div>
-
-<div class="table-container">
-	<table class="table table-bordered table-dark table-striped table-hover">
-		<thead class="thead-light">
-			<tr>
-				<th>
-					#
-				</th>
-
-				<th>
-					Artist
-				</th>
-
-				<th>
-					Sjanger
-				</th>
-
-				<th>
-					Profil
-				</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			<tr @onclick="() => isSelected = !isSelected">
-
-				<td>
-					1
-				</td>
-
-				<td>
-					<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					Rob Mayth
-				</td>
-
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-
-			</tr>
-
-
-			<tr @onclick="() => isSelected = !isSelected">
-
-				<td>
-					2
-				</td>
-
-				<td>
-					<img src="https://cdns-images.dzcdn.net/images/artist/d51ba713d1e8c59b207098f72d507c95/500x500-000000-80-0-0.jpg"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					DJ Gollum
-				</td>
-
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-
-			</tr>
-
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					3
-				</td>
-
-				<td>
-					<i class="bi bi-person h1"></i>
-					Lazerzf!ne
-
-				</td>
-
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					4
-				</td>
-
-				<td>
-					<img src="https://i.discogs.com/iAnRNTibXDHeYA7i84YqNs0IwhWYavuwH4Wn3l_75fs/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTk0NDI3/NS0xMjEzMjc2NzI1/LmpwZWc.jpeg"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					De-Grees
-				</td>
-
-				<td>
-					Hardstyle
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					5
-				</td>
-
-				<td>
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkC50R7C_GuJWgG8GpMQie5IoSN8Mf4MMtqA&s"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					Cascada
-				</td>
-
-				<td>
-					Hardstyle
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					6
-				</td>
-
-				<td>
-					<img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/67/f4/c6/67f4c650-3ece-bfdc-3a77-c98cd0f3aa46/pr_source.png/725x725bb.webp"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					DJ Splash
-				</td>
-
-				<td>
-					Hard Trance
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					7
-				</td>
-
-				<td>
-					<i class="bi bi-person h1"></i>
-					Freestylerz
-				</td>
-					
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					8
-				</td>
-
-				<td>
-					<img src="https://i.scdn.co/image/ab6761610000e5eb2a70dbf635d7e988179a8c9d"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					AJP
-				</td>
-
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>
-					9
-				</td>
-
-				<td>
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YcMII6szNxTWcxjfX45vagA6aJ772PLMkA&s"
-						 alt="Artist Press Picture"
-						 class="artist_profile_pic" />
-					Topmodelz
-				</td>
-
-				<td>
-					Hands Up
-				</td>
-
-				<td>
-					Se profil
-				</td>
-			</tr>
-			<tr>
-			</tr>
-		</tbody>
-	</table>
 </div>
 
 
-<nav aria-label="Page navigation">
-	<ul class="pagination">
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Tilbake">
-				<span aria-hidden="true">&laquo;</span>
-				<span class="sr-only">Tilbake</span>
-			</a>
-		</li>
-		<li class="page-item"><a class="page-link" href="#">1</a></li>
-		<li class="page-item"><a class="page-link" href="#">2</a></li>
-		<li class="page-item"><a class="page-link" href="#">3</a></li>
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Videre">
-				<span class="sr-only">Videre</span>
-				<span aria-hidden="true">&raquo;</span>
-			</a>
-		</li>
-	</ul>
-</nav>
+<div class="grid_container">
+	<div class="artist_card">
+		<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Rob Mayth</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/Lh6FWGY1_6Hp2yCwNRxtvqUkismHmZfjLsJ579BIy0A/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTk1MzI1/LTE1NjYwNjczNDkt/ODE3OC5qcGVn.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Special D</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.scdn.co/image/ab67616100005174462d73741b2c2a0abc214f7f"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>89ers</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i1.sndcdn.com/avatars-zpuDY6JWVBbvulPK-0AT21g-t1080x1080.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Timster</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://viberate-upload.ams3.cdn.digitaloceanspaces.com/prod/entity/artist/basslouder-0KB2M"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Basslouder</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/aKC2MSXzFkzMTPec0i1ssTVgz9W8R3Z1CpbjtCqBmr4/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI0NTcy/MC0xMTUzNzg3ODYz/LmpwZWc.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Discotronic</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://lh3.googleusercontent.com/GVeSJC45vKQYWx3e2-T0c-tmIWRhj5V2zyx1n3FCudAm82lJfN8XQQ74IAoEDTMPg7kcbmMR4UZpgR8=w544-h544-l90-rj"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>DJ Splash</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://f4.bcbits.com/img/0016486522_25.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Lazerzf!ne</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxcHhodIqbqTgvrr081LAf0yQLww6-2dxPPQ&s"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Jacq & Konstruktor</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Nanobii</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Tube Tonic & DJ Shandar</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>CLAWS</h3>
+	</div>
+
+
+
+	<div class="artist_card">
+		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Nanobii</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Tube Tonic & DJ Shandar</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>CLAWS</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Nanobii</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Tube Tonic & DJ Shandar</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>CLAWS</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Nanobii</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>Tube Tonic & DJ Shandar</h3>
+	</div>
+	<div class="artist_card">
+		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+			 alt="Artist Press Picture"
+			 class="artist_profile_pic" />
+		<h3>CLAWS</h3>
+	</div>
+</div>
 
 
 @code {

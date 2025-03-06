@@ -10,6 +10,9 @@
     <None Remove="Pages\ArtistListPage.razor.css" />
     <None Remove="Pages\ArtistProfile.razor.css" />
     <None Remove="Pages\Components\ArchiveTabParent.razor.css" />
+    <None Remove="Pages\Components\Modals\ErrorModalDuplicate.razor.css" />
+    <None Remove="Pages\Components\Modals\WarningModal.razor.css" />
+    <None Remove="Pages\Components\Modals\WarningModalDeletion.razor.css" />
     <None Remove="Pages\Components\RegisterTabParent.razor.css" />
     <None Remove="Pages\Components\Tabs.razor.css" />
     <None Remove="Pages\MixtapeListPage.razor.css" />
@@ -21,6 +24,7 @@
     <Content Include="Pages\ArtistListPage.razor.css" />
     <Content Include="Pages\ArtistProfile.razor.css" />
     <Content Include="Pages\Components\ArchiveTabParent.razor.css" />
+    <Content Include="Pages\Components\Modals\ErrorModalDuplicate.razor.css" />
     <Content Include="Pages\Components\RegisterTabParent.razor.css" />
     <Content Include="Pages\MixtapeListPage.razor.css" />
     <Content Include="Pages\RegisterSong.razor.css" />
@@ -28,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Components\Tabs\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

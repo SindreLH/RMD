@@ -1,6 +1,18 @@
 ﻿@page "/Songs"
+@using RMD.GUI.Pages.Components.Modals;
 
 <PageTitle>RMD | Songs</PageTitle>
+
+@if (editModalVisible)
+{
+	<EditSongModal IsVisible = "editModalVisible" onclose="ToggleEditModal"/>
+}
+
+@if (deleteModalVisible)
+{
+	<WarningModalSongDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+}
+
 
 <div class="search-button-checkbox-wrapper">
 
@@ -48,19 +60,19 @@
 	{
 		<div class="button_wrapper">
 			<div class="edit_button">
-				<button type="button" onclick="alert('Rediger låt her!')" class="btn btn-warning fixed-width">
+				<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
 					<i class="bi bi-pencil"></i> Rediger låt
 				</button>
 			</div>
 
 			<div class="delete_button">
-				<button type="button" onclick="alert('Låt slettet!')" class="btn btn-danger fixed-width">
+				<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
 					<i class="bi bi-trash3"></i> Fjern låt
 				</button>
 			</div>
 		</div>
 	}
-	
+
 
 </div>
 
@@ -317,4 +329,17 @@
 
 @code {
 	private bool isSelected = false;
+	private bool editModalVisible = false;
+	private bool deleteModalVisible = false;
+
+	private void ToggleEditModal()
+	{
+		editModalVisible = !editModalVisible;
+	}
+
+	private void ToggleDeleteModal()
+	{
+		deleteModalVisible = !deleteModalVisible;
+	}
+
 }

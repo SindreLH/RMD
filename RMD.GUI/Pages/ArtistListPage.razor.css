@@ -2,79 +2,51 @@
 	color: white;
 }
 
-.table-hover > tbody > tr:hover {
-	--bs-table-accent-bg: #010622;
-	color: #aee1ff;
-}
-
-.table-container {
-	margin-top: 5rem;
-	margin-bottom: 3rem;
-	max-height: 34rem;
-	overflow-y: auto;
-	height: 30rem;
-	border-radius: 20px;
-}
-
-.table {
-	height: 30rem;
-	opacity: 80%;
-	border-collapse: separate;
-	border-spacing: 0;
-	border-radius: 20px;
-	overflow: hidden;
-}
-
-.table td:first-child, .table th:first-child {
-	padding-left: 45px; /* Padding mellom første kolonne og container kanten */
-}
-
-th {
-	padding: 10px;
-	line-height: 2.5;
-	font-weight: 600;
-	font-size: large;
-}
-
-.table tbody tr {
-	line-height: 3.5;
-}
-
-.table-bordered {
-	border: none;
-}
-
-.table td, .table th {
-	border: none;
-}
-
-.table thead th:first-child {
-	border-top-left-radius: 10px;
-}
-
-.table thead th:last-child {
-	border-top-right-radius: 10px;
-}
-
-.table tbody tr:last-child td:first-child {
-	border-bottom-left-radius: 20px;
-}
-
-.table tbody tr:last-child td:last-child {
-	border-bottom-right-radius: 20px;
-}
-
 .searchbar {
 	margin-top: 3rem;
-	width: 20rem;
+	width: 35rem;
 	height: 2rem;
 }
 
+.grid_container {
+	background-color: #00000050;
+	margin-top: 6rem;
+	padding: 2rem;
+	border-radius:20px;
+	display: grid;
+	grid-template-columns: repeat(5, 7fr);
+	gap: 2.3rem;
+}
+
+h3{
+	font-size: large;
+}
+
+.artist_card {
+	display: flex;
+	flex-direction: column;
+	padding-top: 1rem;
+	align-items: center;
+	width: 16rem;
+	height: 11rem;
+	border-radius: 20px;
+	color: white;
+	background-color: #00000070;
+}
+
+	.artist_card:hover {
+		background-color: #01062280;
+		color: #aee1ff;
+		transform: scale(1.1);
+		transform-origin: center;
+		transition: transform 0.5s ease-in-out;
+	}
 
 .artist_profile_pic {
-	width: 50px;
-	height: 50px;
+	width: 115px;
+	height: 115px;
 	border-radius: 50%;
+	margin-bottom: 1rem;
 }
 
 
