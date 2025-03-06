@@ -37,7 +37,7 @@
 
 
 @code {
-	[Parameter] public bool IsVisible{ get; set; }
+	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
 	private void CloseDeleteModal()
@@ -45,4 +45,5 @@
 		OnClose.InvokeAsync(false);
 	}
 }
+
 

@@ -25,7 +25,6 @@
     <Content Include="Pages\ArtistProfile.razor.css" />
     <Content Include="Pages\Components\ArchiveTabParent.razor.css" />
     <Content Include="Pages\Components\Modals\ErrorModalDuplicate.razor.css" />
-    <Content Include="Pages\Components\Modals\WarningModalDeletion.razor.css" />
     <Content Include="Pages\Components\RegisterTabParent.razor.css" />
     <Content Include="Pages\MixtapeListPage.razor.css" />
     <Content Include="Pages\RegisterSong.razor.css" />
