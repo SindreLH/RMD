@@ -10,11 +10,11 @@ namespace RMD.Data.Models
         [Required]
         public string Name { get; set; }
 
-		[Required]
 		public string Nationality { get; set; }
         public string FacebookUrl { get; set; }
         public string SoundcloudUrl { get; set; }
         public string ProfilePicUrl { get; set; }
+        public string DiscogsUrl { get; set; }
 
         public Artist()
         {

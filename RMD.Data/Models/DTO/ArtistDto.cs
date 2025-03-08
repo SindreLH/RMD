@@ -19,5 +19,8 @@ namespace RMD.Data.Models.DTO
 
 		[Url(ErrorMessage = "Please enter a valid URL.")]
 		public string? ProfilePicUrl { get; set; }
+
+		[Url(ErrorMessage = "Please enter a valid URL.")]
+		public string? DiscogsUrl { get; set; }
 	}
 }

@@ -11,15 +11,15 @@ using RMD.Data.Context;
 namespace RMD.Data.Migrations
 {
     [DbContext(typeof(RMDContext))]
-    [Migration("20240902235052_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250308140459_AddDiscogsUrlToArtistAndDTO")]
+    partial class AddDiscogsUrlToArtistAndDTO
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0-preview.7.24405.3")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -31,6 +31,10 @@ namespace RMD.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArtistId"));
+
+                    b.Property<string>("DiscogsUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacebookUrl")
                         .IsRequired()
@@ -60,6 +64,7 @@ namespace RMD.Data.Migrations
                         new
                         {
                             ArtistId = 1,
+                            DiscogsUrl = "https://www.test.com/",
                             FacebookUrl = "https://www.facebook.com/RejackHS",
                             Name = "Rejack",
                             Nationality = "🇳🇴 Norge",
@@ -69,6 +74,7 @@ namespace RMD.Data.Migrations
                         new
                         {
                             ArtistId = 2,
+                            DiscogsUrl = "https://www.test.com/",
                             FacebookUrl = "https://www.facebook.com/RejackHS",
                             Name = "Rejack 2",
                             Nationality = "🇳🇴 Norge",

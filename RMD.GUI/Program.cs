@@ -7,14 +7,19 @@ using RMD.GUI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<RMDContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("RmdDatabase")));
-
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<ISongService, SongService>();
+
+//Registering DbContext and getting connection string from appsettings.json
+
+var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");
+
+builder.Services.AddDbContext<RMDContext>(options =>
+	options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
@@ -34,5 +39,4 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
 app.Run();
