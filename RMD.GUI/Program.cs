@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using RMD.Business.Controllers;
 using RMD.Business.Services;
 using RMD.Data.Context;
 using RMD.GUI.Data;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +17,7 @@ builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ISongService, SongService>();
 
 //Registering DbContext and getting connection string from appsettings.json
-
 var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");
-
 builder.Services.AddDbContext<RMDContext>(options =>
 	options.UseSqlServer(connectionString));
 
@@ -32,11 +32,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.Run();
