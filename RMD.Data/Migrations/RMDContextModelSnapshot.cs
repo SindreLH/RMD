@@ -16,7 +16,7 @@ namespace RMD.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0-preview.7.24405.3")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -29,8 +29,10 @@ namespace RMD.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArtistId"));
 
+                    b.Property<string>("DiscogsUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FacebookUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -42,11 +44,9 @@ namespace RMD.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SoundcloudUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ArtistId");
@@ -57,6 +57,7 @@ namespace RMD.Data.Migrations
                         new
                         {
                             ArtistId = 1,
+                            DiscogsUrl = "https://www.test.com/",
                             FacebookUrl = "https://www.facebook.com/RejackHS",
                             Name = "Rejack",
                             Nationality = "🇳🇴 Norge",
@@ -66,6 +67,7 @@ namespace RMD.Data.Migrations
                         new
                         {
                             ArtistId = 2,
+                            DiscogsUrl = "https://www.test.com/",
                             FacebookUrl = "https://www.facebook.com/RejackHS",
                             Name = "Rejack 2",
                             Nationality = "🇳🇴 Norge",

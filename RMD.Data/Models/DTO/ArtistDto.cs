@@ -11,13 +11,15 @@ namespace RMD.Data.Models.DTO
 		[Required(ErrorMessage = "Artist nationality is required.")]
 		public required string Nationality { get; set; }
 
-		[Url(ErrorMessage = "Please enter a valid Facebook URL.")]
 		public string? FacebookUrl { get; set; }
 
-		[Url(ErrorMessage = "Please enter a valid Soundcloud URL.")]
+
 		public string? SoundcloudUrl { get; set; }
 
-		[Url(ErrorMessage = "Please enter a valid URL.")]
+
 		public string? ProfilePicUrl { get; set; }
+
+
+		public string? DiscogsUrl { get; set; }
 	}
 }

@@ -3,7 +3,7 @@ using RMD.Business.Services;
 using RMD.Data.Models;
 using RMD.Data.Models.DTO;
 
-namespace RMD.Business.Controllers
+namespace RMD.GUI.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]

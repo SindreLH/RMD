@@ -44,7 +44,8 @@ namespace RMD.Data.Context
 					Nationality = "🇳🇴 Norge",
 					FacebookUrl = "https://www.facebook.com/RejackHS",
 					SoundcloudUrl = "https://www.soundcloud.com/RejackHS",
-					ProfilePicUrl = "https://www.test.com/"
+					ProfilePicUrl = "https://www.test.com/",
+					DiscogsUrl = "https://www.test.com/"
 				});
 			
 			modelBuilder.Entity<Artist>().HasData(
@@ -54,7 +55,8 @@ namespace RMD.Data.Context
 					Nationality = "🇳🇴 Norge",
 					FacebookUrl = "https://www.facebook.com/RejackHS",
 					SoundcloudUrl = "https://www.soundcloud.com/RejackHS",
-					ProfilePicUrl = "https://www.test.com/"
+					ProfilePicUrl = "https://www.test.com/",
+					DiscogsUrl = "https://www.test.com/"
 				});
 		}
 	}

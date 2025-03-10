@@ -20,9 +20,10 @@ namespace RMD.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nationality = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SoundcloudUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePicUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SoundcloudUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePicUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiscogsUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,11 +55,11 @@ namespace RMD.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Artists",
-                columns: new[] { "ArtistId", "FacebookUrl", "Name", "Nationality", "ProfilePicUrl", "SoundcloudUrl" },
+                columns: new[] { "ArtistId", "DiscogsUrl", "FacebookUrl", "Name", "Nationality", "ProfilePicUrl", "SoundcloudUrl" },
                 values: new object[,]
                 {
-                    { 1, "https://www.facebook.com/RejackHS", "Rejack", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" },
-                    { 2, "https://www.facebook.com/RejackHS", "Rejack 2", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" }
+                    { 1, "https://www.test.com/", "https://www.facebook.com/RejackHS", "Rejack", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" },
+                    { 2, "https://www.test.com/", "https://www.facebook.com/RejackHS", "Rejack 2", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" }
                 });
 
             migrationBuilder.InsertData(

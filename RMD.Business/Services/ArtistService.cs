@@ -4,6 +4,7 @@ using RMD.Data.Models;
 using RMD.Data.Models.DTO;
 using System.Reflection.Metadata;
 
+
 namespace RMD.Business.Services
 {
 	// Class contract Interfaces - add more as needed
@@ -150,6 +151,7 @@ namespace RMD.Business.Services
 					FacebookUrl = newArtistDto.FacebookUrl,
 					SoundcloudUrl = newArtistDto.SoundcloudUrl,
 					ProfilePicUrl = newArtistDto.ProfilePicUrl,
+					DiscogsUrl = newArtistDto.DiscogsUrl
 				};
 
 				await _context.Artists.AddAsync(newArtist);
