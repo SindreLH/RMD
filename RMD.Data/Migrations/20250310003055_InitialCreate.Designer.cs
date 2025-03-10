@@ -11,8 +11,8 @@ using RMD.Data.Context;
 namespace RMD.Data.Migrations
 {
     [DbContext(typeof(RMDContext))]
-    [Migration("20250308140459_AddDiscogsUrlToArtistAndDTO")]
-    partial class AddDiscogsUrlToArtistAndDTO
+    [Migration("20250310003055_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,11 +33,9 @@ namespace RMD.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArtistId"));
 
                     b.Property<string>("DiscogsUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacebookUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -49,11 +47,9 @@ namespace RMD.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SoundcloudUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ArtistId");

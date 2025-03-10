@@ -20,10 +20,10 @@ namespace RMD.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nationality = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SoundcloudUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePicUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DiscogsUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SoundcloudUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePicUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiscogsUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

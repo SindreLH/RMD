@@ -30,11 +30,9 @@ namespace RMD.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArtistId"));
 
                     b.Property<string>("DiscogsUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FacebookUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -46,11 +44,9 @@ namespace RMD.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SoundcloudUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ArtistId");
