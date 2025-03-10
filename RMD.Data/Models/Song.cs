@@ -28,6 +28,8 @@ namespace RMD.Data.Models
         public int? PlayedInEp { get; set; }
         public bool Stored { get; set; }
         public bool Wanted { get; set; }
+        public string? WantedSongUrl { get; set; }
+        public bool Favorite { get; set; }
 
 		public Song()
         {

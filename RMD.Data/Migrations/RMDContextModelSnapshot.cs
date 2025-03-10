@@ -91,6 +91,9 @@ namespace RMD.Data.Migrations
                     b.Property<bool>("ExtendedMix")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Favorite")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Genre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -122,6 +125,9 @@ namespace RMD.Data.Migrations
                     b.Property<bool>("Wanted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("WantedSongUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("SongId");
 
                     b.ToTable("Songs");
@@ -132,6 +138,7 @@ namespace RMD.Data.Migrations
                             SongId = 1,
                             Artist = "Artist",
                             ExtendedMix = true,
+                            Favorite = true,
                             Genre = "Hands Up",
                             Length = "02:23",
                             Played = true,
@@ -140,7 +147,8 @@ namespace RMD.Data.Migrations
                             RemixArtist = "Test",
                             Stored = true,
                             Title = "Hands Up Track (Test Remix)",
-                            Wanted = false
+                            Wanted = false,
+                            WantedSongUrl = "https://www.soundcloud.com/RejackHS"
                         });
                 });
 #pragma warning restore 612, 618

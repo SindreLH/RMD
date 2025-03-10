@@ -32,7 +32,9 @@ namespace RMD.Data.Context
 					Played=true,
 					PlayedInEp=18,
 					Stored=true,
-					Wanted=false
+					Wanted=false,
+					Favorite=true,
+					WantedSongUrl="https://www.soundcloud.com/RejackHS"
 				}
 				);
 

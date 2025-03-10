@@ -3,8 +3,8 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
-@page "/AddArtist"
 @inject IArtistService ArtistService
+@page "/AddArtist"
 
 <PageTitle>RMD | Add new artist</PageTitle>
 
@@ -116,7 +116,8 @@
 
 
 @code {
-	private ArtistDto newArtistDto = new ArtistDto{
+	private ArtistDto newArtistDto = new ArtistDto
+	{
 
 		//Init required members 
 		Name = string.Empty,
