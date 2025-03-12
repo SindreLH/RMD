@@ -46,7 +46,9 @@ namespace RMD.Data.Migrations
                     Played = table.Column<bool>(type: "bit", nullable: false),
                     PlayedInEp = table.Column<int>(type: "int", nullable: true),
                     Stored = table.Column<bool>(type: "bit", nullable: false),
-                    Wanted = table.Column<bool>(type: "bit", nullable: false)
+                    Wanted = table.Column<bool>(type: "bit", nullable: false),
+                    WantedSongUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Favorite = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,8 +66,8 @@ namespace RMD.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Songs",
-                columns: new[] { "SongId", "Artist", "ExtendedMix", "Genre", "Length", "Played", "PlayedInEp", "RadioMix", "RemixArtist", "Stored", "Title", "Wanted" },
-                values: new object[] { 1, "Artist", true, "Hands Up", "02:23", true, 18, false, "Test", true, "Hands Up Track (Test Remix)", false });
+                columns: new[] { "SongId", "Artist", "ExtendedMix", "Favorite", "Genre", "Length", "Played", "PlayedInEp", "RadioMix", "RemixArtist", "Stored", "Title", "Wanted", "WantedSongUrl" },
+                values: new object[] { 1, "Artist", true, true, "Hands Up", "02:23", true, 18, false, "Test", true, "Hands Up Track (Test Remix)", false, "https://www.soundcloud.com/RejackHS" });
         }
 
         /// <inheritdoc />

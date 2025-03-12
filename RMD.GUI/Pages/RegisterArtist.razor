@@ -3,8 +3,8 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
-@page "/AddArtist"
 @inject IArtistService ArtistService
+@page "/AddArtist"
 
 <PageTitle>RMD | Add new artist</PageTitle>
 
@@ -14,8 +14,7 @@
 		<h3>Registrer artist</h3>
 
 		<EditForm Model="newArtistDto" OnValidSubmit="SaveArtist">
-			<DataAnnotationsValidator/>
-			<ValidationSummary/>
+			<DataAnnotationsValidator />
 			<div class="artist_information">
 
 				<div class="info_child">
@@ -102,12 +101,19 @@
 				</div>
 			</div>
 
-
-			<div class="save_button">
-				<button type="submit" class="btn btn-success">
-					<i class="bi bi-floppy-fill"></i> Lagre Artist
-				</button>
+			<div class="links_child">
+				<div class="save_button">
+					<button type="submit" class="btn btn-success">
+						<i class="bi bi-floppy-fill"></i> Lagre Artist
+					</button>
+				</div>
 			</div>
+
+			<div class="validation-container-artist">
+				<ValidationSummary class="fade-in" />
+			</div>
+			
+
 
 		</EditForm>
 	</div>
@@ -116,7 +122,8 @@
 
 
 @code {
-	private ArtistDto newArtistDto = new ArtistDto{
+	private ArtistDto newArtistDto = new ArtistDto
+	{
 
 		//Init required members 
 		Name = string.Empty,

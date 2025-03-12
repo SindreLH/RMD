@@ -56,6 +56,8 @@ namespace RMD.Business.Services
 					PlayedInEp = newSongDto.PlayedInEp,
 					Stored = newSongDto.Stored,
 					Wanted = newSongDto.Wanted,
+					WantedSongUrl = newSongDto.WantedSongUrl,
+					Favorite = newSongDto.Favorite
 				};
 
 				await _context.Songs.AddAsync(newSong);
