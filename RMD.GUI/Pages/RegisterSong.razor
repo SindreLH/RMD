@@ -15,7 +15,6 @@
 
         <EditForm Model="newSongDto" OnValidSubmit="SaveSong">
             <DataAnnotationsValidator/>
-            <ValidationSummary/>
             <div id="a_b_container">
                 <div id="reg_song_part_a">
                     <div id="form-group">
@@ -165,8 +164,21 @@
                     <i class="bi bi-floppy-fill"></i> Lagre låt
                 </button>
             </div>
+
+            <div class="validation-container-song">
+                  <ValidationSummary class="fade-in"/>
+            </div>
+          
+
+
+            
+            
+
         </EditForm>
     </div>
+
+    
+
 </div>
 
 
@@ -198,7 +210,7 @@
 
         if (result.IsSuccess)
         {
-            // Resetting the form input data here
+            // Resetting the form 
             playedIsToggled = false;
             wantedIsToggled = false;
 

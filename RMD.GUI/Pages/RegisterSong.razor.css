@@ -3,14 +3,23 @@
     justify-content: center;
 }
 
+/*.validation-container{
+    width: 35rem;
+    height: 5rem;
+    border:solid 1px black;
+    margin-top: 2rem;
+    margin-left: 5rem;
+}*/
+
 .main_form_container {
-    margin-top: 3rem;
+/*    margin-top: 3rem;
+    padding-top: 1rem;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 42rem;
-    height: 40rem;
+    height: 45rem;
     background-color: rgba(37, 37, 37, 0.5);
     backdrop-filter: blur(5px);
     border-radius: 20px;
@@ -45,8 +54,8 @@ input, select {
 #reg_song_part_a {
     display: flex;
     flex-direction: column;
-    width: 15rem;
-    margin-right: 7rem;
+    width: 20rem;
+    margin-right: 3rem;
     margin-top: 2rem;
 }
 
@@ -76,7 +85,8 @@ input, select {
 }
 
 .save_button {
-    margin-top: 5rem;
+    margin-left:5rem;
+    margin-top: 1.5rem;
     position: relative;
     display: inline-block;
     transition: transform 0.5s ease-in-out;
@@ -90,11 +100,16 @@ input, select {
 #form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .col-form-label-sm{
     font-size: x-small;
     display: flex;
     flex-direction: column;
+}
+
+.toggledInput{
+    width: 12rem;
 }
