@@ -1,5 +1,8 @@
 ﻿@page "/Songs"
 @using RMD.GUI.Pages.Components.Modals;
+@using RMD.Data.Models;
+@using RMD.Business.Services
+@inject ISongService SongService
 
 <PageTitle>RMD | Songs</PageTitle>
 
@@ -76,6 +79,20 @@
 
 </div>
 
+@if (songs == null)
+{
+	<p>Loading...</p>
+}
+else if (!songs.Value.Any())
+{
+	<ErrorModalEmptyDb/>
+}
+
+@if (!string.IsNullOrWhiteSpace(songs?.Error))
+{
+	<p class="text-danger">@songs.Error</p>
+}
+
 <div class="table-container">
 	<table class="table table-bordered table-dark table-striped table-hover">
 		<thead class="thead-light">
@@ -125,184 +142,41 @@
 				</th>
 
 				<th>
+					Låt Url
+				</th>
+
+				<th>
 					Favoritt
 				</th>
 			</tr>
 
 		</thead>
 
-		<tbody>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>1</td>
-				<td>Barbie Girl (Extended Mix)</td>
-				<td>Rob Mayth</td>
-				<td>None</td>
-				<td>06:44</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>14</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
+			@*
+				Check songs.Value for content.
+				If songs is null, an empty collection is provided to avoid runtime errors.
+			*@	
 
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>2</td>
-				<td>Milky Way (Teenagerz Remix)</td>
-				<td>Solar Patrol</td>
-				<td>Teenagerz</td>
-				<td>05:38</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>2</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>3</td>
-				<td>Heartbeat (Club Mix)</td>
-				<td>DJ Manian</td>
-				<td>DJ Gollum</td>
-				<td>03:45</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>11</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>4</td>
-				<td>Forever Young (Extended Mix)</td>
-				<td>Groove Coverage</td>
-				<td>DJ Gollum</td>
-				<td>06:12</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>15</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>5</td>
-				<td>Castles In The Sky (DJ Manian Remix)</td>
-				<td>Ian Van Dahl</td>
-				<td>DJ Manian</td>
-				<td>05:20</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-				<td>✅</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>6</td>
-				<td>Heaven (Cascada Remix)</td>
-				<td>DJ Sammy</td>
-				<td>Cascada</td>
-				<td>03:35</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>7</td>
-				<td>Everytime We Touch (Club Mix)</td>
-				<td>Cascada</td>
-				<td>DJ Manian</td>
-				<td>05:28</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>20</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>8</td>
-				<td>Reason (Original Mix)</td>
-				<td>Nightcore</td>
-				<td>Rob Mayth</td>
-				<td>04:18</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>9</td>
-				<td>Bad Boy (Club Mix)</td>
-				<td>Cascada</td>
-				<td>Rob Mayth</td>
-				<td>04:54</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>5</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>10</td>
-				<td>Through The Eyes Of A Child (Extended Mix)</td>
-				<td>DJ Hixxy</td>
-				<td>DJ Gollum</td>
-				<td>06:01</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-				<td>❌</td>
-				<td>✅</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>11</td>
-				<td>Rave Heaven (Extended Mix)</td>
-				<td>Master Blaster</td>
-				<td>Rob Mayth</td>
-				<td>05:47</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td> </td>
-				<td> </td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>12</td>
-				<td>Dancing In The Rain (Club Mix)</td>
-				<td>DJ Splash</td>
-				<td>Rocco & Bass-T</td>
-				<td>04:26</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>2</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td>⭐</td>
-			</tr>
-		</tbody>
+			@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>()) 
+			{
+			<tbody>
+				<tr @onclick="() => isSelected = !isSelected">
+					<td>@song.SongId</td>
+					<td>@song.Title</td>
+					<td>@song.Artist</td>
+					<td>@song.RemixArtist</td>
+					<td>@song.Length</td>
+					<td>@song.Genre</td>
+					<td>@song.ExtendedMix</td>
+					<td>@song.Played</td>
+					<td>@song.PlayedInEp</td>
+					<td>@song.Stored</td>
+					<td>@song.Wanted</td>
+					<td>@song.WantedSongUrl</td>
+					<td>@song.Favorite</td>
+				</tr>
+			</tbody>
+			}
 	</table>
 </div>
 
@@ -331,6 +205,8 @@
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
+	private Result<IEnumerable<Song>>? songs;
+
 
 	private void ToggleEditModal()
 	{
@@ -340,6 +216,11 @@
 	private void ToggleDeleteModal()
 	{
 		deleteModalVisible = !deleteModalVisible;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		songs = await SongService.GetAllSongsAsync();
 	}
 
 }
