@@ -54,7 +54,7 @@
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
+			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" @onchange="async _ => await FilterFavorite(true)">
 			<label class="form-check-label">Favoritt</label>
 		</div>
 	</div>
@@ -110,7 +110,7 @@ else if (!songs.Value.Any())
 				</th>
 
 				<th>
-					Remixartist
+					Remixer
 				</th>
 
 				<th>
@@ -122,6 +122,10 @@ else if (!songs.Value.Any())
 				</th>
 
 				<th>
+					Favoritt
+				</th>
+
+				<th>
 					Extended
 				</th>
 
@@ -130,7 +134,7 @@ else if (!songs.Value.Any())
 				</th>
 
 				<th>
-					Ep
+					Episode
 				</th>
 
 				<th>
@@ -144,68 +148,59 @@ else if (!songs.Value.Any())
 				<th>
 					Låt Url
 				</th>
-
-				<th>
-					Favoritt
-				</th>
 			</tr>
 
 		</thead>
 
-			@*
+		@*
 				Check songs.Value for content.
 				If songs is null, an empty collection is provided to avoid runtime errors.
 			*@	
 
-			@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>()) 
-			{
+		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
 			<tbody>
 				<tr @onclick="() => isSelected = !isSelected">
 					<td>@song.SongId</td>
-					<td>@song.Title</td>
+					<td class="text-truncate"
+					style="max-width: 200px"
+					title="@song.Title"
+					>@song.Title</td>
 					<td>@song.Artist</td>
 					<td>@song.RemixArtist</td>
 					<td>@song.Length</td>
 					<td>@song.Genre</td>
-					<td>@song.ExtendedMix</td>
-					<td>@song.Played</td>
+					<td>@(song.Favorite ? "⭐" : "❌")</td>
+					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
+					<td>@(song.Played ? "✅" : "❌")</td>
 					<td>@song.PlayedInEp</td>
-					<td>@song.Stored</td>
-					<td>@song.Wanted</td>
-					<td>@song.WantedSongUrl</td>
-					<td>@song.Favorite</td>
+					<td>@(song.Stored ? "✅" : "❌")</td>
+					<td>@(song.Wanted ? "✅" : "❌")</td>
+
+					<td class="text-truncate" style="max-width: 200px">
+						<a href="@song.WantedSongUrl"
+						target="_blank"
+						rel="noopener nonreferrer"
+						title="@song.WantedSongUrl">
+							@song.WantedSongUrl
+						</a>
+					</td>
+
+
 				</tr>
 			</tbody>
-			}
+		}
 	</table>
 </div>
 
-
-<nav aria-label="Page navigation">
-	<ul class="pagination">
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Tilbake">
-				<span aria-hidden="true">&laquo;</span>
-				<span class="sr-only">Tilbake</span>
-			</a>
-		</li>
-		<li class="page-item"><a class="page-link" href="#">1</a></li>
-		<li class="page-item"><a class="page-link" href="#">2</a></li>
-		<li class="page-item"><a class="page-link" href="#">3</a></li>
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Videre">
-				<span class="sr-only">Videre</span>
-				<span aria-hidden="true">&raquo;</span>
-			</a>
-		</li>
-	</ul>
-</nav>
 
 @code {
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
 	private Result<IEnumerable<Song>>? songs;
+	private IEnumerable<Song> filteredSongs = new List<Song>();
+	private bool? favoriteFilter = null;
+	private bool isFiltering = false;
 
 
 	private void ToggleEditModal()
@@ -218,9 +213,39 @@ else if (!songs.Value.Any())
 		deleteModalVisible = !deleteModalVisible;
 	}
 
+	private async Task LoadFilteredSongsAsync()
+	{
+		var result = await SongService.GetAllSongsWithFiltersAsync(
+			ExtendedMix: null,
+			RadioMix: null,
+			Favorite: favoriteFilter,
+			Played: null,
+			Stored: null,
+			Wanted: null
+		);
+
+		isFiltering = true;
+
+		filteredSongs = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
+	}
+
+
 	protected override async Task OnInitializedAsync()
 	{
 		songs = await SongService.GetAllSongsAsync();
+	}
+
+	private async Task FilterFavorite(bool? value)
+	{
+		favoriteFilter = value;
+		await LoadFilteredSongsAsync();
+	}
+
+	private void ClearFilters()
+	{
+		isFiltering = false;
+		filteredSongs = Enumerable.Empty<Song>();
+		favoriteFilter = null;
 	}
 
 }
