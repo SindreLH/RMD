@@ -20,7 +20,12 @@
 <div class="search-button-checkbox-wrapper">
 
 	<div class="input-group mb-3 searchbar">
-		<input type="text" class="form-control search" placeholder="Søk etter låt" aria-label="Søk etter låt">
+		<input type="text"
+		class="form-control search"
+		placeholder="Søk etter låt"
+		aria-label="Søk etter låt"
+		@bind="searchString"
+		@bind:event="oninput"/>
 		<span class="input-group-text" id="basic-addon2">
 			<i class="bi bi-search"></i>
 		</span>
@@ -28,34 +33,34 @@
 
 	<div class="checkboxes">
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="spilt">
-			<label class="form-check-label">Avspilt</label>
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async _ => await FilterPlayed(true)" />
+			<label class="form-check-label" for="playedFilter">Avspilt</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="lagret">
+			<input class="form-check-input" type="checkbox" id="storedFilter" @onchange="async _ => await FilterStored(true)">
 			<label class="form-check-label">Lagret</label>
 		</div>
 
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="ønsket">
+			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="async _ => await FilterWanted(true)">
 			<label class="form-check-label">Ønsket</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="extended">
+			<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="async _ => await FilterExtendedMix(true)">
 			<label class="form-check-label">Extended Mix</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
-			<label class="form-check-label">Radio Mix</label>
+			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="async _ => await FilterFavorite(true)">
+			<label class="form-check-label">Favoritt</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" @onchange="async _ => await FilterFavorite(true)">
-			<label class="form-check-label">Favoritt</label>
+			<input class="form-check-input" type="checkbox" id="resetFilter" @onchange="ClearFilters">
+			<label class="form-check-label">Nullstill filter</label>
 		</div>
 	</div>
 
@@ -175,11 +180,10 @@ else if (!songs.Value.Any())
 					<td>@song.PlayedInEp</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>
 					<td>@(song.Wanted ? "✅" : "❌")</td>
-
 					<td class="text-truncate" style="max-width: 200px">
 						<a href="@song.WantedSongUrl"
 						target="_blank"
-						rel="noopener nonreferrer"
+						rel="noopener noreferrer"
 						title="@song.WantedSongUrl">
 							@song.WantedSongUrl
 						</a>
@@ -194,13 +198,28 @@ else if (!songs.Value.Any())
 
 
 @code {
+	private Result<IEnumerable<Song>>? songs;
+	private IEnumerable<Song> filteredSongs = new List<Song>();
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
-	private Result<IEnumerable<Song>>? songs;
-	private IEnumerable<Song> filteredSongs = new List<Song>();
-	private bool? favoriteFilter = null;
 	private bool isFiltering = false;
+	private bool? favoriteFilter = null;
+	private bool? extendedMixFilter = null;
+	private bool? playedFilter = null;
+	private bool? storedFilter = null;
+	private bool? wantedFilter = null;
+
+	private string _searchString = string.Empty;
+	private string searchString
+	{
+		get => _searchString;
+		set
+		{
+			_searchString = value;
+			_ = LoadFilteredSongsAsync();
+		}
+	}
 
 
 	private void ToggleEditModal()
@@ -216,23 +235,40 @@ else if (!songs.Value.Any())
 	private async Task LoadFilteredSongsAsync()
 	{
 		var result = await SongService.GetAllSongsWithFiltersAsync(
-			ExtendedMix: null,
+			ExtendedMix: extendedMixFilter,
 			RadioMix: null,
 			Favorite: favoriteFilter,
-			Played: null,
-			Stored: null,
-			Wanted: null
+			Played: playedFilter,
+			Stored: storedFilter,
+			Wanted: wantedFilter
 		);
 
 		isFiltering = true;
+		var allSongs = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
 
-		filteredSongs = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
+		// filteredSongs = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
+		filteredSongs = ApplySearchFilter(allSongs);
 	}
 
+	private IEnumerable<Song> ApplySearchFilter(IEnumerable<Song> songs)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return songs;
+
+		return songs.Where(song =>
+			(!string.IsNullOrEmpty(song.Title) && song.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase)) ||
+			(!string.IsNullOrEmpty(song.Artist) && song.Artist.Contains(searchString, StringComparison.OrdinalIgnoreCase)));
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
 		songs = await SongService.GetAllSongsAsync();
+	}
+
+	private async Task FilterExtendedMix(bool? value)
+	{
+		extendedMixFilter = value;
+		await LoadFilteredSongsAsync();
 	}
 
 	private async Task FilterFavorite(bool? value)
@@ -241,11 +277,38 @@ else if (!songs.Value.Any())
 		await LoadFilteredSongsAsync();
 	}
 
-	private void ClearFilters()
+	private async Task FilterPlayed(bool? value)
+	{
+		playedFilter = value;
+		await LoadFilteredSongsAsync();
+	}
+
+	private async Task FilterStored(bool? value)
+	{
+		storedFilter = value;
+		await LoadFilteredSongsAsync();
+	}
+
+	private async Task FilterWanted(bool? value)
+	{
+		wantedFilter = value;
+		await LoadFilteredSongsAsync();
+	}
+
+	private async Task ClearFilters()
 	{
 		isFiltering = false;
 		filteredSongs = Enumerable.Empty<Song>();
+
 		favoriteFilter = null;
+		extendedMixFilter = null;
+		playedFilter = null;
+		wantedFilter = null;
+		storedFilter = null;
+
+		searchString = string.Empty;
+
+		songs = await SongService.GetAllSongsAsync();
 	}
 
 }
