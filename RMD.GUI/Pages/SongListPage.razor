@@ -46,10 +46,9 @@
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="storedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Stored, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label">Lagret</label>
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Played, ((ChangeEventArgs)e).Value is true)" />
+			<label class="form-check-label" for="playedFilter">Avspilt</label>
 		</div>
-
 
 		<div class="form-check form-check-inline">
 			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Wanted, ((ChangeEventArgs)e).Value is true)" />
@@ -65,11 +64,6 @@
 			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="async e => await SetTableFilters(SongFilterType.Favorite, ((ChangeEventArgs)e).Value is true)" />
 			<label class="form-check-label">Favoritt</label>
 		</div>
-
-		@* <div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="resetFilter" @onchange="ClearFilters">
-			<label class="form-check-label">Nullstill filter</label>
-		</div> *@
 	</div>
 
 	@if (isSelected)
@@ -255,47 +249,28 @@
 		songs = await SongService.GetAllSongsAsync();
 	}
 
-	private async Task ClearFilters()
-	{
-		isFiltering = false;
-		filteredSongs = Enumerable.Empty<Song>();
-
-		favoriteFilter = null;
-		extendedMixFilter = null;
-		playedFilter = null;
-		wantedFilter = null;
-		storedFilter = null;
-
-		searchString = string.Empty;
-
-		await InvokeAsync(async () =>
-		{
-			songs = await SongService.GetAllSongsAsync();
-		});
-	}
-
-	private async Task SetTableFilters(SongFilterType filterType, bool value)
+	private async Task SetTableFilters(SongFilterType filterType, bool isChecked)
 	{
 		switch (filterType)
 		{
 			case SongFilterType.Played:
-				playedFilter = value;
+				playedFilter = isChecked ? true : null;
 				break; 
 
 			case SongFilterType.Stored:
-				storedFilter = value;
+				storedFilter = isChecked ? true : null;
 				break;
 
 			case SongFilterType.Wanted:
-				wantedFilter = value;
+				wantedFilter = isChecked ? true : null;
 				break;
 
 			case SongFilterType.Favorite:
-				favoriteFilter = value;
+				favoriteFilter = isChecked ? true : null;
 				break;
 
 			case SongFilterType.ExtendedMix:
-				extendedMixFilter = value;
+				extendedMixFilter = isChecked ? true : null;
 				break;
 		}
 
