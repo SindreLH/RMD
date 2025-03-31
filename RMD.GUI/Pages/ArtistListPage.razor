@@ -1,4 +1,8 @@
 ﻿@page "/Artists"
+@using RMD.Business.Services
+@using RMD.Data.Models
+@using RMD.GUI.Pages.Components.Modals
+@inject IArtistService ArtistService
 
 <PageTitle>RMD | Artists</PageTitle>
 
@@ -14,138 +18,30 @@
 
 
 <div class="grid_container">
+@foreach (var artist in artists?.Value ?? Enumerable.Empty<Artist>())
+{
 	<div class="artist_card">
-		<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Rob Mayth</h3>
+		<img src="@artist.ProfilePicUrl"
+		alt="Artist Press Picture"
+		class="artist_profile_pic" />
+		<h3>@artist.Name</h3>
 	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/Lh6FWGY1_6Hp2yCwNRxtvqUkismHmZfjLsJ579BIy0A/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTk1MzI1/LTE1NjYwNjczNDkt/ODE3OC5qcGVn.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Special D</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.scdn.co/image/ab67616100005174462d73741b2c2a0abc214f7f"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>89ers</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i1.sndcdn.com/avatars-zpuDY6JWVBbvulPK-0AT21g-t1080x1080.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Timster</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://viberate-upload.ams3.cdn.digitaloceanspaces.com/prod/entity/artist/basslouder-0KB2M"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Basslouder</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/aKC2MSXzFkzMTPec0i1ssTVgz9W8R3Z1CpbjtCqBmr4/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI0NTcy/MC0xMTUzNzg3ODYz/LmpwZWc.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Discotronic</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://lh3.googleusercontent.com/GVeSJC45vKQYWx3e2-T0c-tmIWRhj5V2zyx1n3FCudAm82lJfN8XQQ74IAoEDTMPg7kcbmMR4UZpgR8=w544-h544-l90-rj"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>DJ Splash</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://f4.bcbits.com/img/0016486522_25.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Lazerzf!ne</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxcHhodIqbqTgvrr081LAf0yQLww6-2dxPPQ&s"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Jacq & Konstruktor</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Nanobii</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Tube Tonic & DJ Shandar</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>CLAWS</h3>
-	</div>
-
-
-
-	<div class="artist_card">
-		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Nanobii</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Tube Tonic & DJ Shandar</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>CLAWS</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Nanobii</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Tube Tonic & DJ Shandar</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>CLAWS</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://cdns-images.dzcdn.net/images/artist/eeb5e0ab6b61766f610f6c4ce4d46db5/1900x1900-000000-80-0-0.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Nanobii</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://i.discogs.com/PIbEf3JX3Nzgp2ctBCPLtwSClZln0qYNp_q1oNigwXU/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYwMzE5/NC0xNDk4NTI0ODgw/LTc0NTUuanBlZw.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>Tube Tonic & DJ Shandar</h3>
-	</div>
-	<div class="artist_card">
-		<img src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		<h3>CLAWS</h3>
-	</div>
+}
 </div>
-
 
 @code {
 	private bool isSelected = false;
+	private bool emptyDbModalVisible = false;
+	private Result<IEnumerable<Artist>>? artists;
+
+	protected override async Task OnInitializedAsync()
+	{
+		artists = await ArtistService.GetAllArtistsAsync();
+
+		if (artists?.Value == null || !artists.Value.Any())
+		{
+			emptyDbModalVisible = true;
+		}
+	}
+
 }
