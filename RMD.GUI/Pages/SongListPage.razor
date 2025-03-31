@@ -1,5 +1,8 @@
 ﻿@page "/Songs"
 @using RMD.GUI.Pages.Components.Modals;
+@using RMD.Data.Models;
+@using RMD.Business.Services
+@inject ISongService SongService
 
 <PageTitle>RMD | Songs</PageTitle>
 
@@ -13,45 +16,45 @@
 	<WarningModalSongDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
 }
 
+@if (emptyDbModalVisible)
+{
+	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
+}
 
 <div class="search-button-checkbox-wrapper">
 
 	<div class="input-group mb-3 searchbar">
-		<input type="text" class="form-control search" placeholder="Søk etter låt" aria-label="Søk etter låt">
-		<span class="input-group-text" id="basic-addon2">
-			<i class="bi bi-search"></i>
-		</span>
+		<input
+		type="text"
+		class="form-control search"
+		placeholder="Søk etter låt"
+		value="@searchString"
+		@oninput="OnSearchInputChanged"/>
 	</div>
 
 	<div class="checkboxes">
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="spilt">
-			<label class="form-check-label">Avspilt</label>
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Played, ((ChangeEventArgs)e).Value is true)" />
+			<label class="form-check-label" for="playedFilter">Avspilt</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="lagret">
-			<label class="form-check-label">Lagret</label>
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Stored, ((ChangeEventArgs)e).Value is true)" />
+			<label class="form-check-label" for="playedFilter">Lagret</label>
 		</div>
 
-
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="ønsket">
+			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Wanted, ((ChangeEventArgs)e).Value is true)" />
 			<label class="form-check-label">Ønsket</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="extended">
+			<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="async e => await SetTableFilters(SongFilterType.ExtendedMix, ((ChangeEventArgs)e).Value is true)" />
 			<label class="form-check-label">Extended Mix</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
-			<label class="form-check-label">Radio Mix</label>
-		</div>
-
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="inclineCheckbox1" value="radio">
+			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="async e => await SetTableFilters(SongFilterType.Favorite, ((ChangeEventArgs)e).Value is true)" />
 			<label class="form-check-label">Favoritt</label>
 		</div>
 	</div>
@@ -76,6 +79,16 @@
 
 </div>
 
+@if (songs == null)
+{
+	<p>Loading songs...</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(songs?.Error))
+{
+	<p class="text-danger">@songs.Error</p>
+}
+
 <div class="table-container">
 	<table class="table table-bordered table-dark table-striped table-hover">
 		<thead class="thead-light">
@@ -93,7 +106,7 @@
 				</th>
 
 				<th>
-					Remixartist
+					Remixer
 				</th>
 
 				<th>
@@ -105,6 +118,10 @@
 				</th>
 
 				<th>
+					Favoritt
+				</th>
+
+				<th>
 					Extended
 				</th>
 
@@ -113,7 +130,7 @@
 				</th>
 
 				<th>
-					Ep
+					Episode
 				</th>
 
 				<th>
@@ -125,221 +142,161 @@
 				</th>
 
 				<th>
-					Favoritt
+					Låt Url
 				</th>
 			</tr>
 
 		</thead>
 
-		<tbody>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>1</td>
-				<td>Barbie Girl (Extended Mix)</td>
-				<td>Rob Mayth</td>
-				<td>None</td>
-				<td>06:44</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>14</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
-
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>2</td>
-				<td>Milky Way (Teenagerz Remix)</td>
-				<td>Solar Patrol</td>
-				<td>Teenagerz</td>
-				<td>05:38</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>2</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>3</td>
-				<td>Heartbeat (Club Mix)</td>
-				<td>DJ Manian</td>
-				<td>DJ Gollum</td>
-				<td>03:45</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>11</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>4</td>
-				<td>Forever Young (Extended Mix)</td>
-				<td>Groove Coverage</td>
-				<td>DJ Gollum</td>
-				<td>06:12</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>15</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>5</td>
-				<td>Castles In The Sky (DJ Manian Remix)</td>
-				<td>Ian Van Dahl</td>
-				<td>DJ Manian</td>
-				<td>05:20</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-				<td>✅</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>6</td>
-				<td>Heaven (Cascada Remix)</td>
-				<td>DJ Sammy</td>
-				<td>Cascada</td>
-				<td>03:35</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>7</td>
-				<td>Everytime We Touch (Club Mix)</td>
-				<td>Cascada</td>
-				<td>DJ Manian</td>
-				<td>05:28</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td>20</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>8</td>
-				<td>Reason (Original Mix)</td>
-				<td>Nightcore</td>
-				<td>Rob Mayth</td>
-				<td>04:18</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-				<td>❌</td>
-				<td>✅</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>9</td>
-				<td>Bad Boy (Club Mix)</td>
-				<td>Cascada</td>
-				<td>Rob Mayth</td>
-				<td>04:54</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td>✅</td>
-				<td>5</td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>10</td>
-				<td>Through The Eyes Of A Child (Extended Mix)</td>
-				<td>DJ Hixxy</td>
-				<td>DJ Gollum</td>
-				<td>06:01</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td> </td>
-				<td>❌</td>
-				<td>✅</td>
-				<td>⭐</td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>11</td>
-				<td>Rave Heaven (Extended Mix)</td>
-				<td>Master Blaster</td>
-				<td>Rob Mayth</td>
-				<td>05:47</td>
-				<td>Hands Up</td>
-				<td>✅</td>
-				<td> </td>
-				<td> </td>
-				<td>✅</td>
-				<td>❌</td>
-				<td> </td>
-			</tr>
-			<tr @onclick="() => isSelected = !isSelected">
-				<td>12</td>
-				<td>Dancing In The Rain (Club Mix)</td>
-				<td>DJ Splash</td>
-				<td>Rocco & Bass-T</td>
-				<td>04:26</td>
-				<td>Hands Up</td>
-				<td>❌</td>
-				<td>❌</td>
-				<td>2</td>
-				<td>❌</td>
-				<td>✅</td>
-				<td>⭐</td>
-			</tr>
-		</tbody>
+		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
+			<tbody>
+				<tr @onclick="() => isSelected = !isSelected">
+					<td>@song.SongId</td>
+					<td class="text-truncate"
+					style="max-width: 200px"
+					title="@song.Title"
+					>@song.Title</td>
+					<td>@song.Artist</td>
+					<td>@song.RemixArtist</td>
+					<td>@song.Length</td>
+					<td>@song.Genre</td>
+					<td>@(song.Favorite ? "⭐" : "❌")</td>
+					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
+					<td>@(song.Played ? "✅" : "❌")</td>
+					<td>@song.PlayedInEp</td>
+					<td>@(song.Stored ? "✅" : "❌")</td>
+					<td>@(song.Wanted ? "✅" : "❌")</td>
+					<td class="text-truncate" style="max-width: 200px">
+						<a href="@song.WantedSongUrl"
+						target="_blank"
+						rel="noopener noreferrer"
+						title="@song.WantedSongUrl">
+							@song.WantedSongUrl
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		}
 	</table>
 </div>
 
 
-<nav aria-label="Page navigation">
-	<ul class="pagination">
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Tilbake">
-				<span aria-hidden="true">&laquo;</span>
-				<span class="sr-only">Tilbake</span>
-			</a>
-		</li>
-		<li class="page-item"><a class="page-link" href="#">1</a></li>
-		<li class="page-item"><a class="page-link" href="#">2</a></li>
-		<li class="page-item"><a class="page-link" href="#">3</a></li>
-		<li class="page-item">
-			<a class="page-link" href="#" aria-label="Videre">
-				<span class="sr-only">Videre</span>
-				<span aria-hidden="true">&raquo;</span>
-			</a>
-		</li>
-	</ul>
-</nav>
-
 @code {
+	private Result<IEnumerable<Song>>? songs;
+	private IEnumerable<Song> filteredSongs = new List<Song>();
+
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
+	private bool emptyDbModalVisible = false;
+
+	private string searchString = string.Empty;
+	private bool isFiltering = false;
+	private bool? favoriteFilter = null;
+	private bool? extendedMixFilter = null;
+	private bool? playedFilter = null;
+	private bool? storedFilter = null;
+	private bool? wantedFilter = null;
+
+	public enum SongFilterType
+	{
+		Played,
+		Stored,
+		Wanted, 
+		ExtendedMix,
+		Favorite
+	}
+
 
 	private void ToggleEditModal()
 	{
 		editModalVisible = !editModalVisible;
 	}
 
+	private void ToggleEmptyDbModal()
+	{
+		emptyDbModalVisible = !emptyDbModalVisible;
+
+	}
+
 	private void ToggleDeleteModal()
 	{
 		deleteModalVisible = !deleteModalVisible;
+	}
+
+	private async Task OnSearchInputChanged(ChangeEventArgs e)
+	{
+		searchString = e.Value?.ToString() ?? "";
+		await LoadFilteredSongsAsync();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		songs = await SongService.GetAllSongsAsync();
+
+		if (songs?.Value == null || !songs.Value.Any())
+		{
+			emptyDbModalVisible = true;
+		}
+	}
+
+	private async Task LoadFilteredSongsAsync()
+	{
+		var result = await SongService.GetAllSongsWithFiltersAsync(
+			ExtendedMix: extendedMixFilter,
+			RadioMix: null,
+			Favorite: favoriteFilter,
+			Played: playedFilter,
+			Stored: storedFilter,
+			Wanted: wantedFilter
+		);
+
+		isFiltering = true;
+
+		IEnumerable<Song> filtered = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
+
+		if (!string.IsNullOrWhiteSpace(searchString))
+		{
+			string lowerSearch = searchString.ToLower();
+
+			filtered = filtered.Where(song =>
+				(song.Title?.ToLower().Contains(lowerSearch) ?? false) ||
+				(song.Artist?.ToLower().Contains(lowerSearch) ?? false) ||
+				(song.RemixArtist?.ToLower().Contains(lowerSearch) ?? false)
+			);
+		}
+
+		filteredSongs = filtered.ToList();
+
+		emptyDbModalVisible = !filteredSongs.Any();
+	}
+
+	private async Task SetTableFilters(SongFilterType filterType, bool isChecked)
+	{
+		switch (filterType)
+		{
+			case SongFilterType.Played:
+				playedFilter = isChecked ? true : null;
+				break; 
+
+			case SongFilterType.Stored:
+				storedFilter = isChecked ? true : null;
+				break;
+
+			case SongFilterType.Wanted:
+				wantedFilter = isChecked ? true : null;
+				break;
+
+			case SongFilterType.Favorite:
+				favoriteFilter = isChecked ? true : null;
+				break;
+
+			case SongFilterType.ExtendedMix:
+				extendedMixFilter = isChecked ? true : null;
+				break;
+		}
+
+		await LoadFilteredSongsAsync();
 	}
 
 }

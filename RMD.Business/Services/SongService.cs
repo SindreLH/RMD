@@ -10,15 +10,18 @@ namespace RMD.Business.Services
 	{
 		Task<Result<Song>> CreateNewSongAsync(SongDto newSongDto);
 		Task<Result<Song>> GetSongByTitleAsync(string songTitle);
-		Task<Result<IEnumerable<Song>>> GetAllSongsAsync(
+
+		Task<Result<IEnumerable<Song>>> GetAllSongsAsync();
+		Task<Result<IEnumerable<Song>>> GetAllSongsWithFiltersAsync(
 			bool? ExtendedMix,
 			bool? RadioMix,
+			bool? Favorite,
 			bool? Played,
 			bool? Stored,
 			bool? Wanted);
 
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
-		Task<Result<Song>>	UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
+		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
 	}
 
 	public class SongService : ISongService
@@ -71,13 +74,14 @@ namespace RMD.Business.Services
 
 		}
 
-		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync(
-			bool? extendedMix,
-			bool? radioMix,
-			bool? played,
-			bool? stored,
-			bool? wanted
-			)
+
+		public async Task<Result<IEnumerable<Song>>> GetAllSongsWithFiltersAsync(
+		bool? extendedMix,
+		bool? radioMix,
+		bool? favorite,
+		bool? played,
+		bool? stored,
+		bool? wanted)
 		{
 			try
 			{
@@ -92,10 +96,31 @@ namespace RMD.Business.Services
 				songs = songs
 					.Where(x => !extendedMix.HasValue || x.ExtendedMix == extendedMix.Value)
 					.Where(x => !radioMix.HasValue || x.RadioMix == radioMix.Value)
+					.Where(x => !favorite.HasValue || x.Favorite == favorite.Value)
 					.Where(x => !played.HasValue || x.Played == played.Value)
 					.Where(x => !stored.HasValue || x.Stored == stored.Value)
 					.Where(x => !wanted.HasValue || x.Wanted == wanted.Value)
 					.ToList();
+
+				return Result<IEnumerable<Song>>.Success(songs);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING ALL songs from the database." + ex.Message);
+			}
+		}
+
+		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync()
+		{
+			try
+			{
+				var songs = await _context.Songs.ToListAsync();
+
+				if (songs == null || !songs.Any())
+				{
+					return Result<IEnumerable<Song>>.Failure("No songs were found in the database.");
+				}
 
 				return Result<IEnumerable<Song>>.Success(songs);
 			}

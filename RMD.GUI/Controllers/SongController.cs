@@ -46,6 +46,39 @@ namespace RMD.GUI.Controllers
             return Ok(result.Value);
         }
 
+		/// <summary>
+		/// Gets every single song from the database.
+		/// </summary>
+		/// <returns>
+		/// A list of songs.
+		/// </returns>
+		/// <param name="extendedMix">The song is DJ friendly and suited for mixing.</param>
+		/// <param name="radioMix">The song is most suited for radio air play.</param>
+		/// <param name="favorite">The song is a personal favorite.</param>
+		/// <param name="played">The song has been played in a mixtape.</param>
+		/// <param name="stored">The song has been stored in the record collection.</param>
+		/// <param name="wanted">The song is not stored in the record collection, but it is wanted.</param>
+		/// <Remarks>
+		/// Possible error messages include:
+		/// - "No songs were found in the database."
+		/// - "An unknown error occured while fetching artists from the database."
+		/// </Remarks>
+		[HttpGet(Name = "GetAllSongsWithFilters")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+		public async Task<IActionResult> GetAllSongs()
+		{
+
+			var result = await _songService.GetAllSongsAsync();
+
+			if (!result.IsSuccess)
+			{
+				return NotFound(result.Error);
+			}
+
+			return Ok(result.Value);
+		}
+
 
 		/// <summary>
 		/// Creates a new song entity and stores it in the database.
@@ -98,19 +131,20 @@ namespace RMD.GUI.Controllers
 		/// - "No songs were found in the database."
 		/// - "An unknown error occured while fetching artists from the database."
 		/// </Remarks>
-		[HttpGet(Name = "GetAllSongs")]
+		[HttpGet(Name = "GetAllSongsWithFilters")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-		public async Task<IActionResult> GetAllSongs(
+		public async Task<IActionResult> GetAllSongsWithFilters(
 			bool? extendedMix = null,
 			bool? radioMix = null,
+			bool? favorite = null,
 			bool? played = null,
 			bool? stored = null,
 			bool? wanted = null
 			)
 		{
 
-			var result = await _songService.GetAllSongsAsync(extendedMix, radioMix, played, stored, wanted);
+			var result = await _songService.GetAllSongsWithFiltersAsync(extendedMix, radioMix, favorite, played, stored, wanted);
 
 			if (!result.IsSuccess)
 			{
