@@ -24,19 +24,8 @@
 		type="text"
 		class="form-control search"
 		placeholder="Søk etter låt"
-		@bind="@searchString"
-		@bind:event="oninput"
-		/>
-
-		@* <input type="text"
-		class="form-control search"
-		placeholder="Søk etter låt"
-		aria-label="Søk etter låt"
-		@bind="searchString"
-		@bind:event="oninput"/>
-		<span class="input-group-text" id="basic-addon2">
-			<i class="bi bi-search"></i>
-		</span> *@
+		value="@searchString"
+		@oninput="OnSearchInputChanged"/>
 	</div>
 
 	<div class="checkboxes">
@@ -46,8 +35,8 @@
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Played, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label" for="playedFilter">Avspilt</label>
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Stored, ((ChangeEventArgs)e).Value is true)" />
+			<label class="form-check-label" for="playedFilter">Lagret</label>
 		</div>
 
 		<div class="form-check form-check-inline">
@@ -155,10 +144,10 @@
 
 		</thead>
 
-		@*
-				Check songs.Value for content.
-				If songs is null, an empty collection is provided to avoid runtime errors.
-			*@	
+		@if (emptyDbModalVisible)
+		{
+			<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
+		}
 
 		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
 			<tbody>
@@ -186,8 +175,6 @@
 							@song.WantedSongUrl
 						</a>
 					</td>
-
-
 				</tr>
 			</tbody>
 		}
@@ -198,9 +185,12 @@
 @code {
 	private Result<IEnumerable<Song>>? songs;
 	private IEnumerable<Song> filteredSongs = new List<Song>();
+
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
+	private bool emptyDbModalVisible = false;
+
 	private string searchString = string.Empty;
 	private bool isFiltering = false;
 	private bool? favoriteFilter = null;
@@ -208,6 +198,7 @@
 	private bool? playedFilter = null;
 	private bool? storedFilter = null;
 	private bool? wantedFilter = null;
+
 	public enum SongFilterType
 	{
 		Played,
@@ -218,15 +209,36 @@
 	}
 
 
-
 	private void ToggleEditModal()
 	{
 		editModalVisible = !editModalVisible;
 	}
 
+	private void ToggleEmptyDbModal()
+	{
+		emptyDbModalVisible = !emptyDbModalVisible;
+
+	}
+
 	private void ToggleDeleteModal()
 	{
 		deleteModalVisible = !deleteModalVisible;
+	}
+
+	private async Task OnSearchInputChanged(ChangeEventArgs e)
+	{
+		searchString = e.Value?.ToString() ?? "";
+		await LoadFilteredSongsAsync();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		songs = await SongService.GetAllSongsAsync();
+
+		if (songs?.Value == null || !songs.Value.Any())
+		{
+			emptyDbModalVisible = true;
+		}
 	}
 
 	private async Task LoadFilteredSongsAsync()
@@ -241,12 +253,23 @@
 		);
 
 		isFiltering = true;
-		filteredSongs = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
-	}
 
-	protected override async Task OnInitializedAsync()
-	{
-		songs = await SongService.GetAllSongsAsync();
+		IEnumerable<Song> filtered = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
+
+		if (!string.IsNullOrWhiteSpace(searchString))
+		{
+			string lowerSearch = searchString.ToLower();
+
+			filtered = filtered.Where(song =>
+				(song.Title?.ToLower().Contains(lowerSearch) ?? false) ||
+				(song.Artist?.ToLower().Contains(lowerSearch) ?? false) ||
+				(song.RemixArtist?.ToLower().Contains(lowerSearch) ?? false)
+			);
+		}
+
+		filteredSongs = filtered.ToList();
+
+		emptyDbModalVisible = !filteredSongs.Any();
 	}
 
 	private async Task SetTableFilters(SongFilterType filterType, bool isChecked)

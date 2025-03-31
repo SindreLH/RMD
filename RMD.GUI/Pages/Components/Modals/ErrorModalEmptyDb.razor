@@ -10,13 +10,13 @@
 		<h4>Ingen data</h4>
 
 		<div class="text_container">
-			<p>Databasen inneholder ikke data.</p>
+			<p>Fant ingen data. Prøv å nullstille alle filtre.</p>
 			<p>Legg til en artist eller låt og prøv å laste siden på nytt.</p>
 		</div>
 		
 
 		<div class="close_button">
-			<button type="button" class="btn btn-secondary">Lukk
+			<button type="button" class="btn btn-secondary" @onclick="CloseEmptyDbModal">Lukk
 			</button>
 		</div>
 	</div>
@@ -26,5 +26,11 @@
 
 
 @code {
+	[Parameter] public bool IsVisible { get; set; }
+	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
+	private void CloseEmptyDbModal()
+	{
+		OnClose.InvokeAsync(false);
+	}
 }
