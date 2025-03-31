@@ -1,28 +1,33 @@
 ﻿@page "/Modal3"
 
+@if (IsVisible)
+{
+	<div class="modal-backdrop">
+		<div class="parent_container">
+			<div class="main_container">
 
-<div class="parent_container">
-	<div class="main_container">
+				<i class="bi bi-exclamation-triangle"></i>
 
-		<i class="bi bi-exclamation-triangle"></i>
+				<h3>Feilmelding</h3>
+				<h4>Ingen data</h4>
 
-		<h3>Feilmelding</h3>
-		<h4>Ingen data</h4>
+				<div class="text_container">
+					<p>Fant ingen data. Prøv å nullstille alle filtre.</p>
+					<p>Legg til en artist eller låt og prøv å laste siden på nytt.</p>
+				</div>
 
-		<div class="text_container">
-			<p>Fant ingen data. Prøv å nullstille alle filtre.</p>
-			<p>Legg til en artist eller låt og prøv å laste siden på nytt.</p>
-		</div>
-		
 
-		<div class="close_button">
-			<button type="button" class="btn btn-secondary" @onclick="CloseEmptyDbModal">Lukk
-			</button>
+				<div class="close_button">
+					<button type="button" class="btn btn-secondary" @onclick="CloseEmptyDbModal">
+						Lukk
+					</button>
+				</div>
+			</div>
+
 		</div>
 	</div>
-
-</div>
-
+	
+}
 
 
 @code {

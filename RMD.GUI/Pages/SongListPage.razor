@@ -16,6 +16,10 @@
 	<WarningModalSongDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
 }
 
+@if (emptyDbModalVisible)
+{
+	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
+}
 
 <div class="search-button-checkbox-wrapper">
 
@@ -143,11 +147,6 @@
 			</tr>
 
 		</thead>
-
-		@if (emptyDbModalVisible)
-		{
-			<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
-		}
 
 		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
 			<tbody>
