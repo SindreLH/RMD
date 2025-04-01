@@ -9,30 +9,47 @@
 <div class="search-button-wrapper">
 
 	<div class="input-group mb-3 searchbar">
-		<input type="text" class="form-control search" placeholder="Søk etter artist" aria-label="Søk etter artist">
-		<span class="input-group-text" id="basic-addon2">
-			<i class="bi bi-search"></i>
-		</span>
+		<input 
+		type="text"
+		class="form-control search" 
+		placeholder="Søk etter artist" 
+		aria-label="Søk etter artist"
+		value="@searchString"
+		@oninput="OnSearchInputChanged"/>
 	</div>
 </div>
 
 
 <div class="grid_container">
-@foreach (var artist in artists?.Value ?? Enumerable.Empty<Artist>())
-{
-	<div class="artist_card">
-		<img src="@artist.ProfilePicUrl"
-		alt="Artist Press Picture"
-		class="artist_profile_pic" />
-		<h3>@artist.Name</h3>
-	</div>
-}
+	@foreach (var artist in (isFiltering ? filteredArtists : artists?.Value ?? Enumerable.Empty<Artist>()))
+	{
+		<div class="artist_card">
+			@if(string.IsNullOrWhiteSpace(artist.ProfilePicUrl))
+			{
+				<img src="images/no_artist_image.png"
+				alt="Default artist icon"
+				class="artist_profile_pic" />
+			}
+			else
+			{
+				<img src="@artist.ProfilePicUrl"
+				alt="Artist Press Picture"
+				class="artist_profile_pic" />
+			}
+			<h3 class="text-truncate" style="max-width: 200px" title="@artist.Name">@artist.Name</h3>
+		</div>
+	}
 </div>
 
 @code {
-	private bool isSelected = false;
-	private bool emptyDbModalVisible = false;
 	private Result<IEnumerable<Artist>>? artists;
+	private IEnumerable<Artist> filteredArtists = new List<Artist>();
+
+	private bool isSelected = false;
+	private bool isFiltering = false;
+	private bool emptyDbModalVisible = false;
+
+	private string searchString = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -42,6 +59,38 @@
 		{
 			emptyDbModalVisible = true;
 		}
+	}
+
+	private async Task OnSearchInputChanged(ChangeEventArgs e)
+	{
+		searchString = e.Value?.ToString() ?? "";
+		await LoadFilteredArtistsAsync();
+	}
+
+	private async Task LoadFilteredArtistsAsync()
+	{
+		var result = await ArtistService.GetAllArtistsAsync();
+
+		if (string.IsNullOrWhiteSpace(searchString))
+		{
+			isFiltering = false;
+			filteredArtists = new List<Artist>();
+			emptyDbModalVisible = false;
+		}
+
+		isFiltering = true;
+
+		IEnumerable<Artist> filtered = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
+
+		string lowerSearch = searchString.ToLower();
+
+		filtered = filtered.Where(artist =>
+			(artist.Name?.ToLower().Contains(lowerSearch) ?? false)
+		);
+
+		filteredArtists = filtered.ToList();
+
+		emptyDbModalVisible = !filteredArtists.Any();
 	}
 
 }
