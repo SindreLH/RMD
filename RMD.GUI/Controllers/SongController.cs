@@ -63,7 +63,7 @@ namespace RMD.GUI.Controllers
 		/// - "No songs were found in the database."
 		/// - "An unknown error occured while fetching artists from the database."
 		/// </Remarks>
-		[HttpGet(Name = "GetAllSongsWithFilters")]
+		[HttpGet("allsongs", Name = "allsongs")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 		public async Task<IActionResult> GetAllSongs()
@@ -131,7 +131,7 @@ namespace RMD.GUI.Controllers
 		/// - "No songs were found in the database."
 		/// - "An unknown error occured while fetching artists from the database."
 		/// </Remarks>
-		[HttpGet(Name = "GetAllSongsWithFilters")]
+		[HttpGet("filteredsongs", Name = "filteredsongs")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Song>))]
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
 		public async Task<IActionResult> GetAllSongsWithFilters(
