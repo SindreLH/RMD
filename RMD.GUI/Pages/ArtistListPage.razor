@@ -17,8 +17,21 @@
 		value="@searchString"
 		@oninput="OnSearchInputChanged"/>
 	</div>
+
+
+	<div class="checkboxes">
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="alphabetical"
+			@bind="sortAlphabetically" />
+			<label class="form-check-label" for="alphabetical">Alfabetisk</label>
+		</div>
+	</div>
 </div>
 
+@if (emptyDbModalVisible)
+{
+	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
+}
 
 <div class="grid_container">
 	@foreach (var artist in (isFiltering ? filteredArtists : artists?.Value ?? Enumerable.Empty<Artist>()))
@@ -44,53 +57,153 @@
 @code {
 	private Result<IEnumerable<Artist>>? artists;
 	private IEnumerable<Artist> filteredArtists = new List<Artist>();
+	private IEnumerable<Artist> alphabeticallySorted = new List<Artist>();
+
+	private List<Artist> allArtists = new();
 
 	private bool isSelected = false;
 	private bool isFiltering = false;
 	private bool emptyDbModalVisible = false;
+	private bool sortAlphabetically
+	{
+		get => _sortAlphabetically;
+		set
+		{
+			if (_sortAlphabetically != value)
+			{
+				_sortAlphabetically = value;
+				_ = UpdateArtistListDisplayAsync();
+			}
+		}
+	}
+	private bool _sortAlphabetically;
 
 	private string searchString = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		artists = await ArtistService.GetAllArtistsAsync();
+		var result = await ArtistService.GetAllArtistsAsync();
 
-		if (artists?.Value == null || !artists.Value.Any())
+		if (result.IsSuccess)
 		{
-			emptyDbModalVisible = true;
+			allArtists = result.Value.ToList();
+			artists = Result<IEnumerable<Artist>>.Success(allArtists);
 		}
+		else
+		{
+			artists = Result<IEnumerable<Artist>>.Success(new List<Artist>());
+		}
+
+
+		emptyDbModalVisible = !allArtists.Any();
 	}
 
 	private async Task OnSearchInputChanged(ChangeEventArgs e)
 	{
 		searchString = e.Value?.ToString() ?? "";
-		await LoadFilteredArtistsAsync();
+		await ApplyFilteringAndSortingAsync();
 	}
 
-	private async Task LoadFilteredArtistsAsync()
+	private async Task OnSortChanged(ChangeEventArgs e)
+	{
+		if (sortAlphabetically)
+		{
+			var result = await ArtistService.GetAllArtistsAsync();
+			var baseList = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
+
+			if (isFiltering)
+			{
+				filteredArtists = filteredArtists.OrderBy(a => a.Name).ToList();
+			}
+			else
+			{
+				artists = Result<IEnumerable<Artist>>.Success(baseList.OrderBy(a => a.Name).ToList());
+			}
+		}
+		else
+		{
+			artists = await ArtistService.GetAllArtistsAsync();
+			if (isFiltering)
+			{
+				await ApplyFilteringAndSortingAsync();
+			}
+		}
+	}
+
+	private async Task ApplyFilteringAndSortingAsync()
 	{
 		var result = await ArtistService.GetAllArtistsAsync();
+		var baseList = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
 
-		if (string.IsNullOrWhiteSpace(searchString))
+		bool hasFilter = !string.IsNullOrWhiteSpace(searchString);
+		isFiltering = hasFilter;
+
+		if (hasFilter)
 		{
-			isFiltering = false;
-			filteredArtists = new List<Artist>();
-			emptyDbModalVisible = false;
+			string lowerSearch = searchString.ToLower();
+			baseList = baseList.Where(artist =>
+				artist.Name?.ToLower().Contains(lowerSearch) ?? false
+			);
 		}
 
-		isFiltering = true;
+		if (sortAlphabetically)
+		{
+			baseList = baseList.OrderBy(a => a.Name);
+		}
 
-		IEnumerable<Artist> filtered = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
+		var finalList = baseList.ToList();
+		emptyDbModalVisible = !finalList.Any();
 
-		string lowerSearch = searchString.ToLower();
-
-		filtered = filtered.Where(artist =>
-			(artist.Name?.ToLower().Contains(lowerSearch) ?? false)
-		);
-
-		filteredArtists = filtered.ToList();
-
-		emptyDbModalVisible = !filteredArtists.Any();
+		if (isFiltering)
+		{
+			filteredArtists = finalList;
+		}
+		else
+		{
+			artists = Result<IEnumerable<Artist>>.Success(finalList);
+		}
 	}
 
+	private void ToggleEmptyDbModal()
+	{
+		emptyDbModalVisible = !emptyDbModalVisible;
+
+	}
+
+	private async Task UpdateArtistListDisplayAsync()
+	{
+		if (!sortAlphabetically)
+		{
+			// Reset everything to the original list
+			isFiltering = false;
+			filteredArtists = new List<Artist>();
+			artists = Result<IEnumerable<Artist>>.Success(allArtists);
+			emptyDbModalVisible = !allArtists.Any();
+			return;
+		}
+
+		// If sorting is enabled, apply filtering (if any), and sort alphabetically
+		isFiltering = !string.IsNullOrWhiteSpace(searchString);
+		IEnumerable<Artist> baseList = allArtists;
+
+		if (isFiltering)
+		{
+			string lowerSearch = searchString.ToLower();
+			baseList = baseList.Where(artist =>
+				artist.Name?.ToLower().Contains(lowerSearch) ?? false
+			);
+		}
+
+		var sorted = baseList.OrderBy(a => a.Name).ToList();
+		emptyDbModalVisible = !sorted.Any();
+
+		if (isFiltering)
+		{
+			filteredArtists = sorted;
+		}
+		else
+		{
+			artists = Result<IEnumerable<Artist>>.Success(sorted);
+		}
+	}
 }
