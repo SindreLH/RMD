@@ -139,7 +139,7 @@ h3 {
 @media (max-width: 450px) {
     .grid_container {
         grid-template-columns: 1fr;
-        padding: 1rem;
+        padding: 2rem;
         margin:0;
     }
 
