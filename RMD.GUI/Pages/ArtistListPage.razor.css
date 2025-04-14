@@ -136,7 +136,7 @@ h3 {
 
 /*Breakpoint for mobile */
 
-@media (max-width: 450px) {
+@media (max-width: 412px) {
     .grid_container {
         grid-template-columns: 1fr;
         padding: 2rem;
