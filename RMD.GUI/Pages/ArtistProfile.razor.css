@@ -173,3 +173,90 @@ th {
 .table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 10px;
 }
+
+@media (max-width: 412px) {
+    .header_wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header_contents{
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    h3 {
+        margin-top: 0;
+        font-weight: 750;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: -2px;
+        color: white;
+    }
+
+    h4{
+        font-size: 1.8rem;
+    }
+
+    .table_and_box {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+    }
+    
+    .info_box{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .table-container{
+        
+        width: 100%;
+        margin-bottom: 5rem;
+    }
+
+    .table{
+       max-width: 100%;
+    }
+
+    p, a{
+        font-size: 17px;
+    }
+
+    .info_box_buttons{
+        margin-top: 0;
+        padding-top: 0;
+        width: auto;
+        height: auto;
+        /*border: solid black 1px;*/
+
+    }
+
+    .button_wrapper {
+        padding: 0;
+        /*border: solid black 1px;*/
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: auto;
+        /*height: auto;*/
+    }
+
+    .btn{ 
+        margin-left: -10px;
+        margin-top: -12px;
+        width: 17rem;
+    }
+
+ 
+
+
+    
+}
+
+
