@@ -1,4 +1,5 @@
 ﻿@page "/Modal5"
+@using RMD.Data.Models
 
 <div class="modal-backdrop">
     <div class="container_parent">
@@ -12,12 +13,12 @@
                 <div id="reg_song_part_a">
                     <div id="form-group">
                         <label>Tittel</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" @bind="editableSong.Title" />
                     </div>
 
                     <div id="form-group">
                         <label>Remixartist</label>
-                        <select name="remixartist" id="remixartist" class="form-control">
+                        <select name="remixartist" id="remixartist" class="form-control" @bind="editableSong.RemixArtist">
                             <option value="rob_mayth">Rob Mayth</option>
                             <option value="lazerzf!ne">Lazerzf!ne</option>
                             <option value="tube_tonic_&_dj_shandar">Tube Tonic & DJ Shandar</option>
@@ -27,7 +28,7 @@
 
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label for="artist">Artist</label>
-                        <select name="artist" id="artist" class="form-control">
+                        <select name="artist" id="artist" class="form-control" @bind="editableSong.Artist">
                             <option value="rob_mayth">Rob Mayth</option>
                             <option value="lazerzf!ne">Lazerzf!ne</option>
                             <option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
@@ -37,12 +38,12 @@
 
                     <div id="form-group">
                         <label>Lengde (MMSS)</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" @bind="editableSong.Length" />
                     </div>
 
                     <div id="form-group">
                         <label>Sjanger</label>
-                        <select name="sjanger" id="sjanger" class="form-control">
+                        <select name="sjanger" id="sjanger" class="form-control" @bind="editableSong.Genre">
                             <option value="hands_up">Hands Up</option>
                             <option value="hard_trance">Hard Trance</option>
                             <option value="hardstyle">Hardstyle</option>
@@ -54,13 +55,13 @@
                 <div id="reg_song_part_b">
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.ExtendedMix">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
                         <label class="col-form-label-sm">Mix med intro og outro.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Favorite">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
                         <label class="col-form-label-sm">Låten har favorittstatus.</label>
                     </div>
@@ -88,7 +89,7 @@
                         <div class="toggledInput">
                             <div id="form-group">
                                 <label>Mixtape vol.</label>
-                                <input type="number" class="form-control number_ticker" />
+                                <input type="number" class="form-control number_ticker" @bind="editableSong.PlayedInEp" />
                                 <label class="col-form-label-sm">Låten er spilt i ep</label>
                             </div>
                         </div>
@@ -99,7 +100,7 @@
                         <div class="toggledInput">
                             <div id="form-group">
                                 <label>Låtkilde</label>
-                                <input type="text" class="form-control number_ticker" />
+                                <input type="text" class="form-control number_ticker" @bind="editableSong.WantedSongUrl"/>
                                 <label class="col-form-label-sm">URL til låten</label>
                             </div>
                         </div>
@@ -109,14 +110,15 @@
             </div>
 
             <div class="button_container">
+                
                 <div class="cancel_button">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">
                         Avbryt
                     </button>
                 </div>
 
                 <div class="save_button">
-                    <button type="button" class="btn btn-success">
+                    <button type="button" class="btn btn-success" @onclick="SaveChangesAsync">
                         Lagre endringer
                     </button>
                 </div>
@@ -133,11 +135,57 @@
 
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
-    [Parameter] public bool IsVisible { get; set; }
-    [Parameter] public EventCallback<bool> OnClose { get; set; }
 
-    private void CloseDeleteModal()
+    [Parameter] public bool IsVisible { get; set; }
+
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public EventCallback<Song> OnSave { get; set; }
+
+    [Parameter] public Song? Song { get; set; }
+
+    // Init to string.empty because required
+    private Song editableSong = new()
+    {
+        Title = string.Empty,
+        Length = string.Empty,
+        Genre = string.Empty,
+        Artist = string.Empty
+    };
+
+
+    private async Task SaveChangesAsync()
+    {
+        if (editableSong != null)
+        {
+            await OnSave.InvokeAsync(editableSong);
+        }
+    }
+
+    private void CloseEditModal()
     {
         OnClose.InvokeAsync(false);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Song != null)
+        {
+            editableSong = new Song
+                {
+                    SongId = Song.SongId,
+                    Title = Song.Title,
+                    Artist = Song.Artist,
+                    RemixArtist = Song.RemixArtist,
+                    Length = Song.Length,
+                    Genre = Song.Genre,
+                    Favorite = Song.Favorite,
+                    ExtendedMix = Song.ExtendedMix,
+                    Played = Song.Played,
+                    PlayedInEp = Song.PlayedInEp,
+                    Stored = Song.Stored,
+                    Wanted = Song.Wanted,
+                    WantedSongUrl = Song.WantedSongUrl
+                };
+        }
     }
 }

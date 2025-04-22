@@ -8,7 +8,10 @@
 
 @if (editModalVisible)
 {
-	<EditSongModal IsVisible = "editModalVisible" onclose="ToggleEditModal"/>
+	<EditSongModal IsVisible = "editModalVisible" 
+		onclose="ToggleEditModal"
+		Song="selectedSong"
+		OnSave="OnSongEdited"/>
 }
 
 @if (deleteModalVisible)
@@ -150,7 +153,7 @@
 
 		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
 			<tbody>
-				<tr @onclick="() => isSelected = !isSelected">
+				<tr @onclick="() => SelectSong(song)">
 					<td>@song.SongId</td>
 					<td class="text-truncate"
 					style="max-width: 200px"
@@ -190,6 +193,7 @@
 	private bool deleteModalVisible = false;
 	private bool emptyDbModalVisible = false;
 
+	private Song? selectedSong;
 	private string searchString = string.Empty;
 	private bool isFiltering = false;
 	private bool? favoriteFilter = null;
@@ -207,6 +211,12 @@
 		Favorite
 	}
 
+
+	private void SelectSong(Song song)
+	{
+		selectedSong = song;
+		isSelected = true;
+	}
 
 	private void ToggleEditModal()
 	{
@@ -299,4 +309,36 @@
 		await LoadFilteredSongsAsync();
 	}
 
+	private async Task OnSongEdited(Song updatedSong)
+	{
+		var dto = new RMD.Data.Models.DTO.SongDto
+			{
+				Title = updatedSong.Title,
+				Artist = updatedSong.Artist,
+				RemixArtist = updatedSong.RemixArtist,
+				Length = updatedSong.Length,
+				Genre = updatedSong.Genre,
+				ExtendedMix = updatedSong.ExtendedMix,
+				RadioMix = updatedSong.RadioMix,
+				Played = updatedSong.Played,
+				PlayedInEp = updatedSong.PlayedInEp,
+				Stored = updatedSong.Stored,
+				Wanted = updatedSong.Wanted,
+			};
+
+		var result = await SongService.UpdateSongByIdAsync(updatedSong.SongId, dto);
+
+		if (result.IsSuccess)
+		{
+			// Optionally reload songs from service
+			songs = await SongService.GetAllSongsAsync();
+			isSelected = false;
+			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
+	}
 }

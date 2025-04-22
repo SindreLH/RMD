@@ -114,6 +114,7 @@ namespace RMD.Business.Services
 				artist.Nationality = updatedArtistDto.Nationality;
 				artist.FacebookUrl = updatedArtistDto.FacebookUrl;
 				artist.SoundcloudUrl = updatedArtistDto.SoundcloudUrl;
+				artist.DiscogsUrl = updatedArtistDto.DiscogsUrl;
 				artist.ProfilePicUrl = updatedArtistDto.ProfilePicUrl;
 
 				_context.Artists.Update(artist);
