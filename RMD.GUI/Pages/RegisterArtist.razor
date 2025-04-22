@@ -3,13 +3,19 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
+@using RMD.GUI.Pages.Components.Modals
 @inject IArtistService ArtistService
 @page "/AddArtist"
 
 <PageTitle>RMD | Add new artist</PageTitle>
-
+@if (warningModalDuplicateVisible)
+{
+	<ErrorModalDuplicate IsVisible="true" OnClose="CloseModal" />
+}
 <div class="container_parent">
 	<div class="main_form_container">
+
+		
 
 		<h3>Registrer artist</h3>
 
@@ -118,6 +124,8 @@
 
 
 @code {
+	private bool warningModalDuplicateVisible = false;
+
 	private ArtistDto newArtistDto = new ArtistDto
 	{
 
@@ -128,7 +136,6 @@
 
 	private async Task SaveArtist()
 	{
-		Console.WriteLine("Debug: SaveArtist method triggered!");
 
 		var result = await ArtistService.CreateNewArtistAsync(newArtistDto);
 
@@ -142,18 +149,28 @@
 				SoundcloudUrl = "",
 				ProfilePicUrl = "",
 				DiscogsUrl = ""
-			
+
 			};
 
-			Console.WriteLine("Artist successfully saved!");
+			warningModalDuplicateVisible = false;
 		}
 
 		else
 		{
 			Console.WriteLine($"Error: {result.Error}");
+
+			if(result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+			{
+				warningModalDuplicateVisible = true;
+			}
 		}
 
 
+	}
+
+	private void CloseModal()
+	{
+		warningModalDuplicateVisible = false;
 	}
 
 
