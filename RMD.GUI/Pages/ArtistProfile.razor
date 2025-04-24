@@ -1,5 +1,8 @@
-﻿@page "/Artist"
+﻿@page "/Artist/{ArtistId:int}"
 @using RMD.GUI.Pages.Components.Modals;
+@using RMD.Data.Models
+@using RMD.Business.Services;
+@inject IArtistService ArtistService;
 
 <PageTitle>RMD | Artist Page</PageTitle>
 
@@ -16,9 +19,9 @@
 
 	<div class="header_contents">
 		<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
-			 alt="Artist Press Picture"
-			 class="artist_profile_pic" />
-		
+		alt="Artist Press Picture"
+		class="artist_profile_pic" />
+
 		<h3>Rob Mayth</h3>
 	</div>
 </div>
@@ -34,7 +37,7 @@
 					</th>
 
 					<th style="max-width: 20px">
-					
+
 						Lengde
 					</th>
 				</tr>
@@ -74,7 +77,7 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 
 	<div class="info_box">
 
@@ -137,9 +140,19 @@
 
 
 @code {
+	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
+	private bool editArtistModalVisible = false;
 
+	private Artist? selectedArtist;
+	[Parameter] public int ArtistId { get; set; }
+	private ArtistProfile? artistProfile;
+
+	protected override async Task OnInitializedAsync()
+	{
+		artistProfile = await ArtistService.GetAllArtistsAsync();
+	}
 
 	private void ToggleEditModal()
 	{
@@ -149,5 +162,11 @@
 	private void ToggleDeleteModal()
 	{
 		deleteModalVisible = !deleteModalVisible;
+	}
+
+	private void SelectArtist(Artist artist)
+	{
+		selectedArtist = artist;
+		isSelected = true;
 	}
 }

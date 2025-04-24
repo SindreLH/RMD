@@ -74,6 +74,26 @@ namespace RMD.Business.Services
 			}
 		}
 
+		public async Task<Result<Artist>> GetArtistById(int artistId)
+		{
+			try
+			{
+				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
+
+				if(artist == null)
+				{
+					return Result<Artist>.Failure($"No artist with ID: {artistId} exists in the database.");
+				}
+
+				return Result<Artist>.Success(artist);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Artist>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
+			}
+		}
+
 		public async Task<Result<bool>> DeleteArtistByIdAsync(int artistId)
 		{
 			try
