@@ -6,6 +6,11 @@
 
 <PageTitle>RMD | Artists</PageTitle>
 
+@if (emptyDbModalVisible)
+{
+	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
+}
+
 <div class="search-button-wrapper">
 
 	<div class="input-group mb-3 searchbar">
@@ -35,7 +40,8 @@
 
 <div class="grid_container">
 	@foreach (var artist in (isFiltering ? filteredArtists : artists?.Value ?? Enumerable.Empty<Artist>()))
-	{
+	{	
+		<a href="/Artist/@artist.ArtistId">
 		<div class="artist_card">
 			@if(string.IsNullOrWhiteSpace(artist.ProfilePicUrl))
 			{
@@ -51,6 +57,7 @@
 			}
 			<h3 class="text-truncate" style="max-width: 200px" title="@artist.Name">@artist.Name</h3>
 		</div>
+		</a>
 	}
 </div>
 
@@ -206,4 +213,6 @@
 			artists = Result<IEnumerable<Artist>>.Success(sorted);
 		}
 	}
+
+	
 }

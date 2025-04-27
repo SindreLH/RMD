@@ -1,33 +1,44 @@
 ﻿@page "/Modal4"
 
-<div class="modal-backdrop">
-	<div class="parent_container">
-	<div class="main_container">
+@* not working  *@
+@if (IsVisible)
+{
+	<div class="modal-backdrop">
+		<div class="parent_container">
+			<div class="main_container">
 
-		<i class="bi bi-exclamation-triangle"></i>
+				<i class="bi bi-exclamation-triangle"></i>
 
-		<h3>Feilmelding</h3>
-		<h4>Duplikat</h4>
+				<h3>Feilmelding</h3>
+				<h4>Duplikat</h4>
 
-		<div class="text_container">
-			<p>Du prøver å legge til et duplikat.</p>
-			<p>"Artist eller låt" finnes allerede i databasen.</p>
-		</div>
+				<div class="text_container">
+					<p>Du prøver å legge til et duplikat.</p>
+					<p>"Artist eller låt" finnes allerede i databasen.</p>
+				</div>
 
 
-		<div class="close_button">
-			<button type="button" class="btn btn-secondary">
-				Lukk
-			</button>
+				<div class="close_button">
+					<button type="button" class="btn btn-secondary" @onclick="CloseDuplicateEntryModal">
+						Lukk
+					</button>
+				</div>
+			</div>
+
 		</div>
 	</div>
 
-	</div>
-</div>
+}
 
 
 
 
 @code {
+	[Parameter] public bool IsVisible { get; set; }
+	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
+	private void CloseDuplicateEntryModal()
+	{
+		OnClose.InvokeAsync(false);
+	}
 }

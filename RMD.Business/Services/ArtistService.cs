@@ -15,6 +15,7 @@ namespace RMD.Business.Services
 		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
 		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, ArtistDto updatedArtistDto);
 		Task<Result<Artist>> CreateNewArtistAsync(ArtistDto newArtist);
+		Task<Result<Artist>> GetArtistById(int ArtistId);
 	}
 
 	public class ArtistService : IArtistService
@@ -74,6 +75,26 @@ namespace RMD.Business.Services
 			}
 		}
 
+		public async Task<Result<Artist>> GetArtistById(int artistId)
+		{
+			try
+			{
+				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
+
+				if(artist == null)
+				{
+					return Result<Artist>.Failure($"No artist with ID: {artistId} exists in the database.");
+				}
+
+				return Result<Artist>.Success(artist);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Artist>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
+			}
+		}
+
 		public async Task<Result<bool>> DeleteArtistByIdAsync(int artistId)
 		{
 			try
@@ -114,6 +135,7 @@ namespace RMD.Business.Services
 				artist.Nationality = updatedArtistDto.Nationality;
 				artist.FacebookUrl = updatedArtistDto.FacebookUrl;
 				artist.SoundcloudUrl = updatedArtistDto.SoundcloudUrl;
+				artist.DiscogsUrl = updatedArtistDto.DiscogsUrl;
 				artist.ProfilePicUrl = updatedArtistDto.ProfilePicUrl;
 
 				_context.Artists.Update(artist);

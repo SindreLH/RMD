@@ -1,7 +1,10 @@
-﻿@page "/Artist"
+﻿@page "/Artist/{ArtistId:int}"
 @using RMD.GUI.Pages.Components.Modals;
+@using RMD.Data.Models
+@using RMD.Business.Services;
+@inject IArtistService ArtistService;
 
-<PageTitle>RMD | Artist Page</PageTitle>
+<PageTitle>RMD | @artist?.Name - Artist Page</PageTitle>
 
 @if (editModalVisible)
 {
@@ -12,14 +15,22 @@
 	<WarningModalArtistDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
 }
 
+@if(artist == null)
+{
+	<p style="color: red;">No artist at this ID...</p>
+	return;
+}
+
 <div class="header_wrapper">
 
 	<div class="header_contents">
-		<img src="https://pbs.twimg.com/profile_images/484646219168636928/x1DqJCOb_400x400.jpeg"
+
+		<img src="@(artist?.ProfilePicUrl ?? "images/no_artist_image.png")"
 			 alt="Artist Press Picture"
 			 class="artist_profile_pic" />
 		
-		<h3>Rob Mayth</h3>
+
+		<h3>@artist?.Name</h3>
 	</div>
 </div>
 
@@ -29,12 +40,15 @@
 		<table class="table table-bordered table-dark table-striped table-hover">
 			<thead class="thead-light">
 				<tr>
-					<th style="max-width: 130px">
+					<th>
 						Tittel
 					</th>
 
-					<th style="max-width: 20px">
-					
+					<th>
+						Remixartist
+					</th>
+
+					<th>
 						Lengde
 					</th>
 				</tr>
@@ -43,38 +57,15 @@
 
 			<tbody>
 				<tr>
-					<td class="text-truncate" style="max-width: 20px">Barbie Girl (Club Mix)Barbie GirBarbie Girl (Club Mix)Barbie Girl (Club Mix)Barbie Girl (Club Mix)l (Club Mix)Barbie Girl (Club Mix)</td>
-					<td>04:04</td>
-				</tr>
-
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">iPower</td>
-					<td>02:34</td>>
-				</tr>
-
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Another Night (Extended Mix)</td>
-					<td>03:59</td>
-				</tr>
-
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Another Night 2k12 (Club Mix)</td>
-					<td>04:23</td>
-				</tr>
-
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Can I Get A Witness (Remix)</td>
-					<td>03:20</td>
-				</tr>
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Can I Get A Witness (Remix)</td>
-					<td>03:20</td>
+					<td class="text-truncate" style="max-width: 20px">Load artists songs here</td>
+					<td class="text-truncate" style="max-width: 20px">Remix Artist here</td>
+					<td>Track length</td>
 				</tr>
 
 			</tbody>
 		</table>
 	</div>
-	
+
 
 	<div class="info_box">
 
@@ -84,13 +75,13 @@
 			<h4><b>Artistinformasjon</b></h4>
 
 			<div class="text_control">
-				<p><b>🇩🇪 Tyskland</b></p>
+				<p><b>@artist?.Nationality</b></p>
 			</div>
 			<div class="text_control">
 				<p><b>🙌Hands Up</b></p>
 			</div>
 			<div class="text_control">
-				<a href="https://www.facebook.com/rob_mayth">
+				<a href="@artist?.FacebookUrl">
 					<img src="images/fb_icon.png" class="socials_icons" />
 					Facebook
 				</a>
@@ -98,7 +89,7 @@
 				<br>
 			</div>
 			<div class="text_control">
-				<a href="https://www.soundcloud/rob_mayth">
+				<a href="@artist?.SoundcloudUrl">
 					<img src="images/sc_icon.png" class="socials_icons" />
 					Soundcloud
 				</a>
@@ -106,7 +97,7 @@
 				<br>
 			</div>
 			<div class="text_control">
-				<a href="https://www.discogs/rob_mayth">
+				<a href="@artist?.DiscogsUrl">
 					<img src="images/discogs_icon.png" class="socials_icons" />
 					Discogs
 				</a>
@@ -137,9 +128,32 @@
 
 
 @code {
+	private bool isLoading = false;
+	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
+	private bool editArtistModalVisible = false;
 
+	private Artist? artist;
+	[Parameter] public int ArtistId { get; set; }
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var result = await ArtistService.GetArtistById(ArtistId);
+
+		if (result.IsSuccess)
+		{
+			artist = result.Value;
+			isLoading = false;
+		}
+
+		else
+		{
+			isLoading = true;
+			Console.WriteLine("No artist found by this ID.");
+		}
+	}
 
 	private void ToggleEditModal()
 	{

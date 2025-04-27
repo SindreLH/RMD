@@ -3,13 +3,19 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
+@using RMD.GUI.Pages.Components.Modals
 @inject ISongService SongService 
 @page "/AddSong"
 
 <PageTitle>RMD | Add a new song</PageTitle>
-
+@if (warningModalDuplicateVisible)
+{
+    <ErrorModalDuplicate IsVisible="true" OnClose="CloseModal" />
+}
 <div class="container_parent">
     <div class="main_form_container">
+
+        
 
         <h3>Registrer låt</h3>
 
@@ -168,12 +174,6 @@
             <div class="validation-container-song">
                   <ValidationSummary class="fade-in"/>
             </div>
-          
-
-
-            
-            
-
         </EditForm>
     </div>
 
@@ -187,6 +187,7 @@
 
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
+    private bool warningModalDuplicateVisible = false;
 
     private SongDto newSongDto = new SongDto
     {
@@ -197,6 +198,11 @@
         Length = String.Empty,
         Genre = String.Empty,
     };
+
+    private void CloseModal()
+    {
+        warningModalDuplicateVisible = false;
+    }
 
     private async Task SaveSong()
     {
@@ -230,11 +236,18 @@
                     WantedSongUrl = String.Empty
                 };
 
+            warningModalDuplicateVisible = false;
+
             Console.WriteLine("Song successfully saved!");
         }
         else
         {
             Console.WriteLine($"Error: {result.Error}");
+
+            if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+            {
+                warningModalDuplicateVisible = true;
+            }
         }
     }
 
