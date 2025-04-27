@@ -3,6 +3,7 @@ using RMD.Data.Context;
 using RMD.Data.Models;
 using RMD.Data.Models.DTO;
 using System.Linq.Expressions;
+using System.Numerics;
 
 namespace RMD.Business.Services
 {
@@ -22,6 +23,8 @@ namespace RMD.Business.Services
 
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
+		//Task<Result<IEnumerable<Song>>> GetSongByArtistId(int artistId);
+		
 	}
 
 	public class SongService : ISongService
@@ -130,6 +133,20 @@ namespace RMD.Business.Services
 				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING ALL songs from the database." + ex.Message);
 			}
 		}
+
+
+		//public async Task<Result<IEnumerable<Song>>> GetSongByArtistId(int artistId)
+		//{
+		//	var songs = await _context.Songs.ToListAsync();
+
+		//	if (songs == null || !songs.Any())
+		//	{
+		//		return Result<IEnumerable<Song>>.Failure("No songs were found in the database.");
+		//	}
+
+		//	songs = songs
+		//		.Where(x => x.Artist == x.Artist.).ToList();
+		//}
 
 		public async Task<Result<Song>> GetSongByTitleAsync(string songTitle)
 		{
