@@ -17,6 +17,8 @@ namespace RMD.Data.Models
         public string? ProfilePicUrl { get; set; }
         public string? DiscogsUrl { get; set; }
 
+        public ICollection<Song> Songs { get; set; } = new List<Song>();
+
         public Artist()
         {
             Nationality = String.Empty;

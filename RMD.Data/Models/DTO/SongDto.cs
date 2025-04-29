@@ -10,8 +10,8 @@ namespace RMD.Data.Models.DTO
 
 		public string? RemixArtist { get; set; }
 
-		[Required(ErrorMessage = "An artist is required.")]
-		public required string Artist { get; set; }
+		//[Required(ErrorMessage = "An artist is required.")]
+		//public required string Artist { get; set; }
 
 		[Required(ErrorMessage = "Song length is required.")]
 		public required string Length { get; set; }
@@ -28,5 +28,9 @@ namespace RMD.Data.Models.DTO
 		public bool Wanted { get; set; }
 		public string? WantedSongUrl { get; set; }
 		public bool Favorite { get; set; }
+
+
+		[Required(ErrorMessage = "Artist must be selected.")]
+		public int? ArtistId { get; set; }
 	}
 }

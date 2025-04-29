@@ -159,7 +159,7 @@
 					style="max-width: 200px"
 					title="@song.Title"
 					>@song.Title</td>
-					<td>@song.Artist</td>
+					<td>@song.Artist?.Name</td>
 					<td>@song.RemixArtist</td>
 					<td>@song.Length</td>
 					<td>@song.Genre</td>
@@ -271,7 +271,7 @@
 
 			filtered = filtered.Where(song =>
 				(song.Title?.ToLower().Contains(lowerSearch) ?? false) ||
-				(song.Artist?.ToLower().Contains(lowerSearch) ?? false) ||
+				(song.Artist?.Name?.ToLower().Contains(lowerSearch) ?? false) ||
 				(song.RemixArtist?.ToLower().Contains(lowerSearch) ?? false)
 			);
 		}
@@ -314,7 +314,7 @@
 		var dto = new RMD.Data.Models.DTO.SongDto
 			{
 				Title = updatedSong.Title,
-				Artist = updatedSong.Artist,
+				ArtistId = updatedSong.ArtistId,
 				RemixArtist = updatedSong.RemixArtist,
 				Length = updatedSong.Length,
 				Genre = updatedSong.Genre,
@@ -324,6 +324,7 @@
 				PlayedInEp = updatedSong.PlayedInEp,
 				Stored = updatedSong.Stored,
 				Wanted = updatedSong.Wanted,
+				WantedSongUrl = updatedSong.WantedSongUrl
 			};
 
 		var result = await SongService.UpdateSongByIdAsync(updatedSong.SongId, dto);
