@@ -11,7 +11,7 @@ using RMD.Data.Context;
 namespace RMD.Data.Migrations
 {
     [DbContext(typeof(RMDContext))]
-    [Migration("20250310214026_InitialCreate")]
+    [Migration("20250428005939_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -87,9 +87,8 @@ namespace RMD.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SongId"));
 
-                    b.Property<string>("Artist")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("ExtendedMix")
                         .HasColumnType("bit");
@@ -133,13 +132,15 @@ namespace RMD.Data.Migrations
 
                     b.HasKey("SongId");
 
+                    b.HasIndex("ArtistId");
+
                     b.ToTable("Songs");
 
                     b.HasData(
                         new
                         {
                             SongId = 1,
-                            Artist = "Artist",
+                            ArtistId = 1,
                             ExtendedMix = true,
                             Favorite = true,
                             Genre = "Hands Up",
@@ -153,6 +154,22 @@ namespace RMD.Data.Migrations
                             Wanted = false,
                             WantedSongUrl = "https://www.soundcloud.com/RejackHS"
                         });
+                });
+
+            modelBuilder.Entity("RMD.Data.Models.Song", b =>
+                {
+                    b.HasOne("RMD.Data.Models.Artist", "Artist")
+                        .WithMany("Songs")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+                });
+
+            modelBuilder.Entity("RMD.Data.Models.Artist", b =>
+                {
+                    b.Navigation("Songs");
                 });
 #pragma warning restore 612, 618
         }

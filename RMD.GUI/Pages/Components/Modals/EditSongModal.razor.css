@@ -157,9 +157,8 @@ input, select {
         display: flex;
         flex-direction: column;
         justify-content: center;
-       /* max-width: 100%;
+        /* max-width: 100%;
         height: auto;*/
-
     }
 
     .bi-pencil-square {
@@ -170,7 +169,7 @@ input, select {
         max-width: 100%;
         height: auto;
     }
-    
+
     .main_form_container {
         z-index: 1050;
         margin-top: 3rem;
@@ -207,16 +206,23 @@ input, select {
         /*width: 40rem;*/
         max-width: 100%;
         height: auto;
-        
     }
 
-    input{
+    input {
         width: 18rem;
         /*max-width: 100%;
         height: auto;*/
     }
 
-    select{
+    select {
+        width: 18rem;
+    }
+
+    .select-wrapper {
+        width: 18rem;
+    }
+
+    .input-select-wrapper {
         width: 18rem;
     }
 
@@ -266,13 +272,11 @@ input, select {
 
 
     .button_container {
-       /* display: flex;
+        /* display: flex;
         flex-direction: column;
         align-items: center;*/
-       display: flex; 
-       flex-direction: column;
-      
- 
+        display: flex;
+        flex-direction: column;
     }
 
     .btn {
@@ -291,15 +295,14 @@ input, select {
 
     /*.cancel_button {
         margin-top: 2rem;*/
-       /* margin-right: 2rem;*/
-       /* position: relative;*/
-        /*display: inline-block;*/
+    /* margin-right: 2rem;*/
+    /* position: relative;*/
+    /*display: inline-block;*/
     /*}*/
 
     .save_button {
         margin-top: 2rem;
         margin-left: 0rem;
         margin-bottom: 2rem;
-
     }
 }

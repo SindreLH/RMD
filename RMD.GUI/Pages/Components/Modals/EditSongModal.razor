@@ -1,5 +1,9 @@
 ﻿@page "/Modal5"
 @using RMD.Data.Models
+@using RMD.Data.Models.DTO
+@using RMD.Business.Services
+
+@inject IArtistService ArtistService
 
 <div class="modal-backdrop">
     <div class="container_parent">
@@ -18,22 +22,32 @@
 
                     <div id="form-group">
                         <label>Remixartist</label>
-                        <select name="remixartist" id="remixartist" class="form-control" @bind="editableSong.RemixArtist">
-                            <option value="rob_mayth">Rob Mayth</option>
-                            <option value="lazerzf!ne">Lazerzf!ne</option>
-                            <option value="tube_tonic_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-                            <option value="masterblaster">Master Blaster</option>
-                        </select>
+
+                        <InputSelect @bind-Value="editableSong.RemixArtist" class="form-control" style="width: 18rem;">
+                            <option value="">Velg remixartist</option>
+
+                            @foreach (var artist in allArtists)
+                            {
+                                <option value="@artist.Name">@artist.Name</option>
+                            }
+
+                        </InputSelect>
+                        
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <label for="artist">Artist</label>
-                        <select name="artist" id="artist" class="form-control" @bind="editableSong.Artist">
-                            <option value="rob_mayth">Rob Mayth</option>
-                            <option value="lazerzf!ne">Lazerzf!ne</option>
-                            <option value="tube_tonixc_&_dj_shandar">Tube Tonic & DJ Shandar</option>
-                            <option value="masterblaster">Master Blaster</option>
-                        </select>
+                    <div id="form-group" style="margin-bottom: 15px;">
+                        <label>Artist</label>
+                        
+                        <InputSelect @bind-Value="editableSong.ArtistId" class="form-control" style="width: 18rem;">
+                            <option value="">Velg artist</option>
+
+                            @foreach (var artist in allArtists)
+                            {
+                                <option value="@artist.ArtistId">@artist.Name</option>
+                            }
+
+                        </InputSelect>
+
                     </div>
 
                     <div id="form-group">
@@ -44,10 +58,13 @@
                     <div id="form-group">
                         <label>Sjanger</label>
                         <select name="sjanger" id="sjanger" class="form-control" @bind="editableSong.Genre">
-                            <option value="hands_up">Hands Up</option>
-                            <option value="hard_trance">Hard Trance</option>
-                            <option value="hardstyle">Hardstyle</option>
-                            <option value="trance">Trance</option>
+                            <option value="Hands Up">Hands Up</option>
+                            <option value="Hard Trance">Hard Trance</option>
+                            <option value="Hardstyle">Hardstyle</option>
+                            <option value="Jumpstyle">Jumpstyle</option>
+                            <option value="Trance">Trance</option>
+                            <option value="Happy Hardcore">Happy Hardcore</option>
+                            <option value="UK Hardcore">UK Hardcore</option>
                         </select>
                     </div>
                 </div>
@@ -67,24 +84,24 @@
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="playedIsToggled">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Played">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
                         <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Stored">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
                         <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="wantedIsToggled">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Wanted">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
                         <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
                     </div>
 
-                    @if (playedIsToggled)
+                    @if (editableSong.Played)
                     {
                         <div class="toggledInput">
                             <div id="form-group">
@@ -95,7 +112,7 @@
                         </div>
                     }
 
-                    @if (wantedIsToggled)
+                    @if (editableSong.Wanted)
                     {
                         <div class="toggledInput">
                             <div id="form-group">
@@ -110,7 +127,7 @@
             </div>
 
             <div class="button_container">
-                
+
                 <div class="cancel_button">
                     <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">
                         Avbryt
@@ -133,9 +150,6 @@
 
 @code {
 
-    private bool playedIsToggled = false;
-    private bool wantedIsToggled = false;
-
     [Parameter] public bool IsVisible { get; set; }
 
     [Parameter] public EventCallback<bool> OnClose { get; set; }
@@ -143,15 +157,37 @@
 
     [Parameter] public Song? Song { get; set; }
 
+    private List<Artist> allArtists = new();
+
     // Init to string.empty because required
     private Song editableSong = new()
     {
         Title = string.Empty,
+        RemixArtist = null,
         Length = string.Empty,
         Genre = string.Empty,
-        Artist = string.Empty
+        ArtistId = 0,
+
+        SongId = 0,
+        Stored = false,
+        Wanted = false, 
+        Played = false,
+        ExtendedMix = false,
+        Favorite = false,
+        WantedSongUrl = string.Empty,
+       
+
     };
 
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ArtistService.GetAllArtistsAsync();
+
+        if (result.IsSuccess)
+        {
+            allArtists = result.Value.ToList();
+        }
+    }
 
     private async Task SaveChangesAsync()
     {
@@ -175,6 +211,7 @@
                     SongId = Song.SongId,
                     Title = Song.Title,
                     Artist = Song.Artist,
+                    ArtistId = Song.ArtistId,
                     RemixArtist = Song.RemixArtist,
                     Length = Song.Length,
                     Genre = Song.Genre,

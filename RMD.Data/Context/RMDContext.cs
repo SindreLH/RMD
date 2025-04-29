@@ -24,7 +24,7 @@ namespace RMD.Data.Context
 					SongId=1, 
 					Title="Hands Up Track (Test Remix)", 
 					RemixArtist="Test",
-					Artist="Artist",
+					ArtistId=1,
 					Length="02:23",
 					Genre="Hands Up",
 					ExtendedMix=true,

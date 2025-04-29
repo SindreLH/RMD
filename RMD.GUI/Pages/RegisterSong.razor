@@ -5,6 +5,7 @@
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
 @inject ISongService SongService 
+@inject IArtistService ArtistService
 @page "/AddSong"
 
 <PageTitle>RMD | Add a new song</PageTitle>
@@ -15,7 +16,7 @@
 <div class="container_parent">
     <div class="main_form_container">
 
-        
+
 
         <h3>Registrer låt</h3>
 
@@ -31,47 +32,29 @@
                     <div id="form-group">
                         <label>Remixartist</label>
                         <InputSelect @bind-Value="newSongDto.RemixArtist" class="form-control">
-                            <option value="">
+                            <option value="">Velg remixartist</option>
 
-                            </option>
+                            @foreach (var artist in allArtists)
+                            {
+                                <option value="@artist.Name">@artist.Name</option>
+                            }
 
-                            <option value="Rob Mayth">
-                                Rob Mayth
-                            </option>
-
-                            <option value="Lazerzf!ne">
-                                Lazerzf!ne
-                            </option>
-
-                            <option value="Tube Tonic & DJ Shandar">
-                                Tube Tonic & DJ Shandar
-                            </option>
-
-                            <option value="Master Blaster">
-                                Master Blaster
-                            </option>
                         </InputSelect>
+                        <ValidationMessage For="@(() => newSongDto.RemixArtist)" />
                     </div>
 
                     <div id="form-group" style="margin-bottom: 15px;">
                         <label>Artist</label>
-                        <InputSelect @bind-Value="newSongDto.Artist" class="form-control">
-                            <option value="Rob Mayth">
-                                Rob Mayth
-                            </option>
+                        <InputSelect @bind-Value="newSongDto.ArtistId" class="form-control">
+                            <option value="">Velg artist</option>
 
-                            <option value="Lazerzf!ne">
-                                Lazerzf!ne
-                            </option>
+                            @foreach (var artist in allArtists)
+                            {
+                                <option value="@artist.ArtistId">@artist.Name</option>
+                            }
 
-                            <option value="Tube Tonic & DJ Shandar">
-                                Tube Tonic & DJ Shandar
-                            </option>
-
-                            <option value="Master Blaster">
-                                Master Blaster
-                            </option>
                         </InputSelect>
+                        <ValidationMessage For="@(() => newSongDto.ArtistId)" />
                     </div>
 
 
@@ -83,21 +66,13 @@
                     <div id="form-group">
                         <label>Sjanger</label>
                         <InputSelect @bind-Value="newSongDto.Genre" class="form-control">
-                            <option value="Hands Up">
-                                Hands Up
-                            </option>
-
-                            <option value="Hard Trance">
-                                Hard Trance
-                            </option>
-
-                            <option value="Hardstyle">
-                                Hardstyle
-                            </option>
-
-                            <option value="Trance">
-                                Trance
-                            </option>
+                            <option value="Hands Up">Hands Up</option>
+                            <option value="Hard Trance">Hard Trance</option>
+                            <option value="Hardstyle">Hardstyle</option>
+                            <option value="Jumpstyle">Jumpstyle</option>
+                            <option value="Trance">Trance</option>
+                            <option value="Happy Hardcore">Happy Hardcore</option>
+                            <option value="UK Hardcore">UK Hardcore</option>
                         </InputSelect>
                     </div>
                 </div>
@@ -117,9 +92,9 @@
 
                     <div class="form-check form-switch">
                         <input class="form-check-input"
-                               type="checkbox"
-                               id="playedSwitch"
-                               @bind="playedIsToggled" />
+                        type="checkbox"
+                        id="playedSwitch"
+                        @bind="playedIsToggled" />
                         <label class="form-check-label" for="playedSwitch">Spilt</label>
                         <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
                     </div>
@@ -133,9 +108,9 @@
 
                     <div class="form-check form-switch">
                         <input class="form-check-input"
-                               type="checkbox"
-                               id="wantedSwitch"
-                               @bind="wantedIsToggled" />
+                        type="checkbox"
+                        id="wantedSwitch"
+                        @bind="wantedIsToggled" />
                         <label class="form-check-label" for="wantedSwitch">Ønsket</label>
                         <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
                     </div>
@@ -172,12 +147,12 @@
             </div>
 
             <div class="validation-container-song">
-                  <ValidationSummary class="fade-in"/>
+                <ValidationSummary class="fade-in"/>
             </div>
         </EditForm>
     </div>
 
-    
+
 
 </div>
 
@@ -189,15 +164,27 @@
     private bool wantedIsToggled = false;
     private bool warningModalDuplicateVisible = false;
 
+    private List<Artist> allArtists = new();
+
     private SongDto newSongDto = new SongDto
     {
         //Init required members
         Title = String.Empty,
         RemixArtist = String.Empty,
-        Artist = String.Empty,
+        ArtistId = 0, 
         Length = String.Empty,
         Genre = String.Empty,
     };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ArtistService.GetAllArtistsAsync();
+
+        if (result.IsSuccess)
+        {
+            allArtists = result.Value.ToList();
+        }
+    }
 
     private void CloseModal()
     {
@@ -224,7 +211,7 @@
                 {
                     Title = String.Empty,
                     RemixArtist = String.Empty,
-                    Artist = String.Empty,
+                    ArtistId = null,
                     Length = String.Empty,
                     Genre = String.Empty,
                     ExtendedMix = false,

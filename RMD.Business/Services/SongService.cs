@@ -49,11 +49,17 @@ namespace RMD.Business.Services
 					return Result<Song>.Failure($"A song with the name {newSongDto.Title} already exists in the database.");
 				}
 
+
+				var artist = await _context.Artists.FindAsync(newSongDto.ArtistId);
+				if(artist == null)
+				{
+					return Result<Song>.Failure("Artist not found.");
+				}
+
 				var newSong = new Song
 				{
 					Title = newSongDto.Title,
 					RemixArtist = newSongDto.RemixArtist,
-					Artist = newSongDto.Artist,
 					Length = newSongDto.Length,
 					Genre = newSongDto.Genre,
 					ExtendedMix = newSongDto.ExtendedMix,
@@ -63,7 +69,11 @@ namespace RMD.Business.Services
 					Stored = newSongDto.Stored,
 					Wanted = newSongDto.Wanted,
 					WantedSongUrl = newSongDto.WantedSongUrl,
-					Favorite = newSongDto.Favorite
+					Favorite = newSongDto.Favorite,
+
+					ArtistId = newSongDto.ArtistId.Value,
+					Artist = artist,
+
 				};
 
 				await _context.Songs.AddAsync(newSong);
@@ -205,7 +215,7 @@ namespace RMD.Business.Services
 
 				song.Title = updatedSongDto.Title;
 				song.RemixArtist = updatedSongDto.RemixArtist;
-				song.Artist = updatedSongDto.Artist;
+				song.ArtistId = updatedSongDto.ArtistId.Value;
 				song.Length = updatedSongDto.Length;
 				song.Genre = updatedSongDto.Genre;
 				song.ExtendedMix = updatedSongDto.ExtendedMix;
@@ -214,6 +224,7 @@ namespace RMD.Business.Services
 				song.PlayedInEp = updatedSongDto.PlayedInEp;
 				song.Stored = updatedSongDto.Stored;
 				song.Wanted = updatedSongDto.Wanted;
+				song.WantedSongUrl = updatedSongDto.WantedSongUrl;
 
 				_context.Songs.Update(song);
 				await _context.SaveChangesAsync();

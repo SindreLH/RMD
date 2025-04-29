@@ -38,7 +38,6 @@ namespace RMD.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     RemixArtist = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Artist = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Length = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExtendedMix = table.Column<bool>(type: "bit", nullable: false),
@@ -48,11 +47,18 @@ namespace RMD.Data.Migrations
                     Stored = table.Column<bool>(type: "bit", nullable: false),
                     Wanted = table.Column<bool>(type: "bit", nullable: false),
                     WantedSongUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Favorite = table.Column<bool>(type: "bit", nullable: false)
+                    Favorite = table.Column<bool>(type: "bit", nullable: false),
+                    ArtistId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Songs", x => x.SongId);
+                    table.ForeignKey(
+                        name: "FK_Songs_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "ArtistId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -66,18 +72,23 @@ namespace RMD.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Songs",
-                columns: new[] { "SongId", "Artist", "ExtendedMix", "Favorite", "Genre", "Length", "Played", "PlayedInEp", "RadioMix", "RemixArtist", "Stored", "Title", "Wanted", "WantedSongUrl" },
-                values: new object[] { 1, "Artist", true, true, "Hands Up", "02:23", true, 18, false, "Test", true, "Hands Up Track (Test Remix)", false, "https://www.soundcloud.com/RejackHS" });
+                columns: new[] { "SongId", "ArtistId", "ExtendedMix", "Favorite", "Genre", "Length", "Played", "PlayedInEp", "RadioMix", "RemixArtist", "Stored", "Title", "Wanted", "WantedSongUrl" },
+                values: new object[] { 1, 1, true, true, "Hands Up", "02:23", true, 18, false, "Test", true, "Hands Up Track (Test Remix)", false, "https://www.soundcloud.com/RejackHS" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_ArtistId",
+                table: "Songs",
+                column: "ArtistId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Artists");
+                name: "Songs");
 
             migrationBuilder.DropTable(
-                name: "Songs");
+                name: "Artists");
         }
     }
 }

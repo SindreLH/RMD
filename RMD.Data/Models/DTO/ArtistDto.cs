@@ -21,5 +21,7 @@ namespace RMD.Data.Models.DTO
 
 
 		public string? DiscogsUrl { get; set; }
+
+		public int ArtistId { get; set; }
 	}
 }

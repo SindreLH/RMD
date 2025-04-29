@@ -14,9 +14,9 @@ namespace RMD.Data.Models
 
         public string? RemixArtist { get; set; }
 
-		[Required]
-        public required string Artist { get; set; }
-		//public ICollection<Artist> Artist { get; set; } = new List<Artist>();
+		//[Required]
+  //      public required string Artist { get; set; }
+		
 		[Required]
         public required string Length { get; set; }
 
@@ -30,6 +30,11 @@ namespace RMD.Data.Models
         public bool Wanted { get; set; }
         public string? WantedSongUrl { get; set; }
         public bool Favorite { get; set; }
+
+		public int ArtistId { get; set; }
+
+        [Required]
+        public Artist Artist { get; set; } = null!;
 
 		public Song()
         {
