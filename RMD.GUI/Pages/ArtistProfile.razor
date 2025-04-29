@@ -36,93 +36,93 @@
 </div>
 
 @if(artistHasNoSongs == false){
-<div class="table_and_box">
-	<div class="table-container">
-		<table class="table table-bordered table-dark table-striped table-hover">
-			<thead class="thead-light">
-				<tr>
-					<th>
-						Tittel
-					</th>
+	<div class="table_and_box">
+		<div class="table-container">
+			<table class="table table-bordered table-dark table-striped table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th>
+							Tittel
+						</th>
 
-					<th>
-						Remixartist
-					</th>
+						<th>
+							Remixartist
+						</th>
 
-					<th>
-						Lengde
-					</th>
-				</tr>
+						<th>
+							Lengde
+						</th>
+					</tr>
 
-			</thead>
+				</thead>
 
-			<tbody>
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Load artists songs here</td>
-					<td class="text-truncate" style="max-width: 20px">Remix Artist here</td>
-					<td>Track length</td>
-				</tr>
+				<tbody>
+					<tr>
+						<td class="text-truncate" style="max-width: 20px">Load artists songs here</td>
+						<td class="text-truncate" style="max-width: 20px">Remix Artist here</td>
+						<td>Track length</td>
+					</tr>
 
-			</tbody>
-		</table>
-</div>
-
-	<div class="info_box">
-
-
-		<div class="info_box_text">
-
-			<h4><b>Artistinformasjon</b></h4>
-
-			<div class="text_control">
-				<p><b>@artist?.Nationality</b></p>
-			</div>
-			<div class="text_control">
-				<p><b>🙌Hands Up</b></p>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.FacebookUrl">
-					<img src="images/fb_icon.png" class="socials_icons" />
-					Facebook
-				</a>
-				<br>
-				<br>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.SoundcloudUrl">
-					<img src="images/sc_icon.png" class="socials_icons" />
-					Soundcloud
-				</a>
-				<br>
-				<br>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.DiscogsUrl">
-					<img src="images/discogs_icon.png" class="socials_icons" />
-					Discogs
-				</a>
-			</div>
+				</tbody>
+			</table>
 		</div>
 
-		<div class="info_box_buttons">
+		<div class="info_box">
 
-			<div class="button_wrapper">
-				<div class="edit_button">
-					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
-						<i class="bi bi-pencil"></i> Rediger artist
-					</button>
+
+			<div class="info_box_text">
+
+				<h4><b>Artistinformasjon</b></h4>
+
+				<div class="text_control">
+					<p><b>@artist?.Nationality</b></p>
 				</div>
-
-				<div class="delete_button">
-					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
-						<i class="bi bi-trash3"></i> Fjern artist
-					</button>
+				<div class="text_control">
+					<p><b>🙌Hands Up</b></p>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.FacebookUrl">
+						<img src="images/fb_icon.png" class="socials_icons" />
+						Facebook
+					</a>
+					<br>
+					<br>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.SoundcloudUrl">
+						<img src="images/sc_icon.png" class="socials_icons" />
+						Soundcloud
+					</a>
+					<br>
+					<br>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.DiscogsUrl">
+						<img src="images/discogs_icon.png" class="socials_icons" />
+						Discogs
+					</a>
 				</div>
 			</div>
-		</div>
 
+			<div class="info_box_buttons">
+
+				<div class="button_wrapper">
+					<div class="edit_button">
+						<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
+							<i class="bi bi-pencil"></i> Rediger artist
+						</button>
+					</div>
+
+					<div class="delete_button">
+						<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
+							<i class="bi bi-trash3"></i> Fjern artist
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
 	</div>
-</div>
 }
 
 @code {
@@ -138,24 +138,6 @@
 
 	private Result<IEnumerable<Song>>? songs;
 
-
-	protected override async Task OnParametersSetAsync()
-	{
-		var result = await ArtistService.GetArtistById(ArtistId);
-
-		if (result.IsSuccess)
-		{
-			artist = result.Value;
-			isLoading = false;
-		}
-
-		else
-		{
-			isLoading = true;
-			Console.WriteLine("No artist found by this ID.");
-		}
-	}
-
 	private void ToggleEditModal()
 	{
 		editModalVisible = !editModalVisible;
@@ -166,13 +148,10 @@
 		deleteModalVisible = !deleteModalVisible;
 	}
 
-	// protected override async Task OnInitializedAsync()
-	// {
-	// 	songs = await SongService.GetSongByArtistId();
 
-	// 	if (songs?.Value == null || !songs.Value.Any())
-	// 	{
-	// 		artistHasNoSongs = true;
-	// 	}
-	// }
+
+	protected override async Task OnInitializedAsync()
+	{
+		// Todo: Wait until GetSongByArtistId method is implemented in SongService.cs
+	}
 }

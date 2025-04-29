@@ -23,8 +23,8 @@ namespace RMD.Business.Services
 
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
-		//Task<Result<IEnumerable<Song>>> GetSongByArtistId(int artistId);
-		
+		Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId);
+
 	}
 
 	public class SongService : ISongService
@@ -144,19 +144,35 @@ namespace RMD.Business.Services
 			}
 		}
 
+		public async Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId)
+		{
 
-		//public async Task<Result<IEnumerable<Song>>> GetSongByArtistId(int artistId)
-		//{
-		//	var songs = await _context.Songs.ToListAsync();
+			try
+			{
+				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
+				var songs = await _context.Songs.Where(x => x.ArtistId.Equals(artistId)).ToListAsync();
 
-		//	if (songs == null || !songs.Any())
-		//	{
-		//		return Result<IEnumerable<Song>>.Failure("No songs were found in the database.");
-		//	}
+				if (artist == null)
+				{
+					return Result<ICollection<Song>>.Failure($"No songs could be found because no artist with ID: {artistId} exists in the database.");
+				}
 
-		//	songs = songs
-		//		.Where(x => x.Artist == x.Artist.).ToList();
-		//}
+
+				if (!songs.Any())
+				{
+					return Result<ICollection<Song>>.Failure($"The artist with ID: {artistId} does not hold any songs. Register a song and attach this artist.");
+				}
+
+
+				return Result<ICollection<Song>>.Success(songs);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<ICollection<Song>>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
+			}
+
+		}
 
 		public async Task<Result<Song>> GetSongByTitleAsync(string songTitle)
 		{
