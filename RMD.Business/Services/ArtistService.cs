@@ -15,6 +15,7 @@ namespace RMD.Business.Services
 		Task<Result<bool>> DeleteArtistByIdAsync(int artistId);
 		Task<Result<Artist>> UpdateArtistByIdAsync(int artistId, ArtistDto updatedArtistDto);
 		Task<Result<Artist>> CreateNewArtistAsync(ArtistDto newArtist);
+		Task<Result<Artist>> GetArtistById(int artistId);
 	}
 
 	public class ArtistService : IArtistService

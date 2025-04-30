@@ -240,6 +240,7 @@ namespace RMD.Business.Services
 				song.PlayedInEp = updatedSongDto.PlayedInEp;
 				song.Stored = updatedSongDto.Stored;
 				song.Wanted = updatedSongDto.Wanted;
+				song.Favorite = updatedSongDto.Favorite;
 				song.WantedSongUrl = updatedSongDto.WantedSongUrl;
 
 				_context.Songs.Update(song);

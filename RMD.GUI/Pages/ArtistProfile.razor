@@ -148,10 +148,20 @@
 		deleteModalVisible = !deleteModalVisible;
 	}
 
-
-
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnParametersSetAsync()
 	{
-		// Todo: Wait until GetSongByArtistId method is implemented in SongService.cs
+		var result = await ArtistService.GetArtistById(ArtistId);
+
+		if (result.IsSuccess)
+		{
+			artist = result.Value;
+			isLoading = false;
+		}
+
+		else
+		{
+			isLoading = true;
+			Console.WriteLine("No artist found by this ID.");
+		}
 	}
 }

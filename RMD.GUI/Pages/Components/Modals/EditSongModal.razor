@@ -30,7 +30,6 @@
                             {
                                 <option value="@artist.Name">@artist.Name</option>
                             }
-
                         </InputSelect>
                         
                     </div>
@@ -72,31 +71,31 @@
                 <div id="reg_song_part_b">
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.ExtendedMix">
+                        <input class="form-check-input" type="checkbox" id="extendedMixCheckbox" @bind="editableSong.ExtendedMix">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
                         <label class="col-form-label-sm">Mix med intro og outro.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Favorite">
+                        <input class="form-check-input" type="checkbox" id="favoriteCheckbox" @bind="editableSong.Favorite"/>
                         <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
                         <label class="col-form-label-sm">Låten har favorittstatus.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Played">
+                        <input class="form-check-input" type="checkbox" id="playedCheckbox" @bind="editableSong.Played">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
                         <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Stored">
+                        <input class="form-check-input" type="checkbox" id="storedCheckbox" @bind="editableSong.Stored">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
                         <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @bind="editableSong.Wanted">
+                        <input class="form-check-input" type="checkbox" id="wantedCheckbox" @bind="editableSong.Wanted">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
                         <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
                     </div>
@@ -106,7 +105,7 @@
                         <div class="toggledInput">
                             <div id="form-group">
                                 <label>Mixtape vol.</label>
-                                <input type="number" class="form-control number_ticker" @bind="editableSong.PlayedInEp" />
+                                <input type="number" class="form-control number_ticker" @bind="editableSong.PlayedInEp"/>
                                 <label class="col-form-label-sm">Låten er spilt i ep</label>
                             </div>
                         </div>
@@ -175,8 +174,6 @@
         ExtendedMix = false,
         Favorite = false,
         WantedSongUrl = string.Empty,
-       
-
     };
 
     protected override async Task OnInitializedAsync()
