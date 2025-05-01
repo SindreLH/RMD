@@ -35,37 +35,48 @@
 	</div>
 </div>
 
-@if(artistHasNoSongs == false){
-	<div class="table_and_box">
-		<div class="table-container">
-			<table class="table table-bordered table-dark table-striped table-hover">
-				<thead class="thead-light">
-					<tr>
-						<th>
-							Tittel
-						</th>
+<div class="table_and_box">
+	<div class="table-container">
+		<table class="table table-bordered table-dark table-striped table-hover">
+			<thead class="thead-light">
+				<tr>
+					<th>
+						Tittel
+					</th>
 
-						<th>
-							Remixartist
-						</th>
+					<th>
+						Remixartist
+					</th>
 
-						<th>
-							Lengde
-						</th>
-					</tr>
+					<th>
+						Lengde
+					</th>
+				</tr>
 
-				</thead>
+			</thead>
 
-				<tbody>
-					<tr>
-						<td class="text-truncate" style="max-width: 20px">Load artists songs here</td>
-						<td class="text-truncate" style="max-width: 20px">Remix Artist here</td>
-						<td>Track length</td>
-					</tr>
+			@if (artistHasNoSongs == false)
+			{
+				@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>())
+				{
+					<tbody>
+						<tr>
+							<td class="text-truncate" style="max-width: 20px">@song.Title</td>
+							<td class="text-truncate" style="max-width: 20px">@song.RemixArtist</td>
+							<td>@song.Length</td>
+						</tr>
 
-				</tbody>
-			</table>
-		</div>
+					</tbody>
+				}
+			}
+
+			else @if (artistHasNoSongs == true)
+			{
+				<p style="z-index: 1050">Please add songs and attach them to this artist...</p>
+			}
+
+		</table>
+	</div>
 
 		<div class="info_box">
 
@@ -132,6 +143,7 @@
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
 	private bool editArtistModalVisible = false;
+	private bool emptyDbModalVisible = false;
 
 	private Artist? artist;
 	[Parameter] public int ArtistId { get; set; }
@@ -163,5 +175,37 @@
 			isLoading = true;
 			Console.WriteLine("No artist found by this ID.");
 		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		var songsByArtist = await SongService.GetSongsByArtistIdAsync(ArtistId);
+		artistHasNoSongs = false;
+		isLoading = false;
+
+
+		if (!songsByArtist.IsSuccess)
+		{
+			artistHasNoSongs = true;
+			isLoading = true;
+			Console.WriteLine(songsByArtist.Error);
+			return;
+		}
+
+		songs = Result<IEnumerable<Song>>.Success(songsByArtist.Value);
+
+		
+
+		if(songs.Value == null)
+		{
+			isLoading = true;
+			artistHasNoSongs = true;
+			Console.WriteLine(songs.Error);
+			return;
+		}
+
+
+
 	}
 }
