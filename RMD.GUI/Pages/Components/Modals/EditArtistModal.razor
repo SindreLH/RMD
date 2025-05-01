@@ -27,57 +27,57 @@
 
                             <div class="info_child">
                                 <label for="artistNationality">Land </label>
-                                <select name="country" id="country" class="form-control" @bind="editableArtist.Nationality">
+                                <InputSelect @bind-Value="editableArtist.Nationality" class="form-control">
                                     <option value="" disabled selected>Nasjonalitet</option>
                                     <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
-                                    <option value="Norway" class="fw-bold"> 🇳🇴 Norge</option>
-                                    <option value="Sweden" class="fw-bold"> 🇸🇪 Sverige</option>
-                                    <option value="Denmark" class="fw-bold"> 🇩🇰 Danmark</option>
-                                    <option value="Finland" class="fw-bold"> 🇫🇮 Finland</option>
-                                    <option value="Germany" class="fw-bold"> 🇩🇪 Tyskland</option>
-                                    <option value="Iceland" class="fw-bold"> 🇮🇸 Island</option>
-                                    <option value="Australia" class="fw-bold"> 🇦🇺 Australia</option>
-                                    <option value="United States" class="fw-bold"> 🇺🇸 USA</option>
-                                    <option value="Netherlands" class="fw-bold"> 🇳🇱 Nederland</option>
-                                    <option value="United Kingdom" class="fw-bold"> 🇬🇧 Storbritannia</option>
-                                    <option value="Turkey"> 🇹🇷 Tyrkia</option>
-                                    <option value="Thailand"> 🇹🇭 Thailand</option>
-                                    <option value="Taiwan"> 🇹🇼 Taiwan</option>
-                                    <option value="Switzerland"> 🇨🇭 Sveits</option>
-                                    <option value="Spain"> 🇪🇸 Spania</option>
-                                    <option value="South Africa"> 🇿🇦 Sør-Afrika</option>
-                                    <option value="Slovenia"> 🇸🇮 Slovenia</option>
-                                    <option value="Slovakia"> 🇸🇰 Slovakia</option>
-                                    <option value="Russian Federation"> 🇷🇺 Russland</option>
-                                    <option value="Romania"> 🇷🇴 Romania</option>
-                                    <option value="Portugal"> 🇵🇹 Portugal</option>
-                                    <option value="Poland"> 🇵🇱 Polen</option>
-                                    <option value="Peru"> 🇵🇪 Peru</option>
-                                    <option value="New Zealand"> 🇳🇿 New Zealand</option>
-                                    <option value="Mexico"> 🇲🇽 Mexico</option>
-                                    <option value="Lithuania"> 🇱🇹 Litauen</option>
-                                    <option value="Liechtenstein"> 🇱🇮 Liechtenstein</option>
-                                    <option value="Latvia"> 🇱🇻 Latvia</option>
-                                    <option value="Korea, Republic of"> 🇰🇷 Sør-Korea</option>
-                                    <option value="Japan"> 🇯🇵 Japan</option>
+                                    <option value="🇳🇴 Norge" class="fw-bold"> 🇳🇴 Norge</option>
+                                    <option value="🇸🇪 Sverige" class="fw-bold"> 🇸🇪 Sverige</option>
+                                    <option value="🇩🇰 Danmark" class="fw-bold"> 🇩🇰 Danmark</option>
+                                    <option value="🇫🇮 Finland" class="fw-bold"> 🇫🇮 Finland</option>
+                                    <option value="🇩🇪 Tyskland" class="fw-bold"> 🇩🇪 Tyskland</option>
+                                    <option value="🇮🇸 Island" class="fw-bold"> 🇮🇸 Island</option>
+                                    <option value="🇦🇺 Australia" class="fw-bold"> 🇦🇺 Australia</option>
+                                    <option value="🇺🇸 USA" class="fw-bold"> 🇺🇸 USA</option>
+                                    <option value="🇳🇱 Nederland" class="fw-bold"> 🇳🇱 Nederland</option>
+                                    <option value="🇬🇧 Storbritannia" class="fw-bold"> 🇬🇧 Storbritannia</option>
+                                    <option value="🇹🇷 Tyrkia"> 🇹🇷 Tyrkia</option>
+                                    <option value="🇹🇭 Thailand"> 🇹🇭 Thailand</option>
+                                    <option value="🇹🇼 Taiwan"> 🇹🇼 Taiwan</option>
+                                    <option value="🇨🇭 Sveits"> 🇨🇭 Sveits</option>
+                                    <option value="🇪🇸 Spania"> 🇪🇸 Spania</option>
+                                    <option value="🇿🇦 Sør-Afrika"> 🇿🇦 Sør-Afrika</option>
+                                    <option value="🇸🇮 Slovenia"> 🇸🇮 Slovenia</option>
+                                    <option value="🇸🇰 Slovakia"> 🇸🇰 Slovakia</option>
+                                    <option value="🇷🇺 Russland"> 🇷🇺 Russland</option>
+                                    <option value="🇷🇴 Romania"> 🇷🇴 Romania</option>
+                                    <option value="🇵🇹 Portugal"> 🇵🇹 Portugal</option>
+                                    <option value="🇵🇱 Polen"> 🇵🇱 Polen</option>
+                                    <option value="🇵🇪 Peru"> 🇵🇪 Peru</option>
+                                    <option value="🇳🇿 New Zealand"> 🇳🇿 New Zealand</option>
+                                    <option value="🇲🇽 Mexico"> 🇲🇽 Mexico</option>
+                                    <option value="🇱🇹 Litauen"> 🇱🇹 Litauen</option>
+                                    <option value="🇱🇮 Liechtenstein"> 🇱🇮 Liechtenstein</option>
+                                    <option value="🇱🇻 Latvia"> 🇱🇻 Latvia</option>
+                                    <option value="🇰🇷 Sør-Korea"> 🇰🇷 Sør-Korea</option>
+                                    <option value="🇯🇵 Japan"> 🇯🇵 Japan</option>
                                     <option value="Italy"> 🇮🇹 Italia</option>
-                                    <option value="Israel"> 🇮🇱 Israel</option>
-                                    <option value="Ireland"> 🇮🇪 Irland</option>
-                                    <option value="Hungary"> 🇭🇺 Ungarn</option>
-                                    <option value="Greenland"> 🇬🇱 Grønland</option>
-                                    <option value="Greece"> 🇬🇷 Hellas</option>
-                                    <option value="Georgia"> 🇬🇪 Georgia</option>
-                                    <option value="France"> 🇫🇷 Frankrike</option>
-                                    <option value="Estonia"> 🇪🇪 Estland</option>
-                                    <option value="Czech Republic"> 🇨🇿 Tsjekkia</option>
-                                    <option value="Croatia"> 🇭🇷 Kroatia</option>
-                                    <option value="Canada"> 🇨🇦 Canada</option>
-                                    <option value="Belgium"> 🇧🇪 Belgia</option>
-                                    <option value="Belarus"> 🇧🇾 Hviterussland</option>
-                                    <option value="Austria"> 🇦🇹 Østerrike</option>
-                                    <option value="Argentina"> 🇦🇷 Argentina</option>
-                                    <option value="Ukraine"> 🇺🇦 Ukraina</option>
-                                </select>
+                                    <option value="🇮🇹 Italia"> 🇮🇱 Israel</option>
+                                    <option value="🇮🇪 Irland"> 🇮🇪 Irland</option>
+                                    <option value="🇭🇺 Ungarn"> 🇭🇺 Ungarn</option>
+                                    <option value="🇬🇱 Grønland"> 🇬🇱 Grønland</option>
+                                    <option value="🇬🇷 Hellas"> 🇬🇷 Hellas</option>
+                                    <option value="🇬🇪 Georgia"> 🇬🇪 Georgia</option>
+                                    <option value="🇫🇷 Frankrike"> 🇫🇷 Frankrike</option>
+                                    <option value="🇪🇪 Estland"> 🇪🇪 Estland</option>
+                                    <option value="🇨🇿 Tsjekkia"> 🇨🇿 Tsjekkia</option>
+                                    <option value="🇭🇷 Kroatia"> 🇭🇷 Kroatia</option>
+                                    <option value="🇨🇦 Canada"> 🇨🇦 Canada</option>
+                                    <option value="🇧🇪 Belgia"> 🇧🇪 Belgia</option>
+                                    <option value="🇧🇾 Hviterussland"> 🇧🇾 Hviterussland</option>
+                                    <option value="🇦🇹 Østerrike"> 🇦🇹 Østerrike</option>
+                                    <option value="🇦🇷 Argentina"> 🇦🇷 Argentina</option>
+                                    <option value="🇺🇦 Ukraina"> 🇺🇦 Ukraina</option>
+                                </InputSelect>
                             </div>
                         </div>
 
