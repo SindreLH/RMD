@@ -89,7 +89,7 @@
 					<p><b>@artist?.Nationality</b></p>
 				</div>
 				<div class="text_control">
-					<p><b>🙌Hands Up</b></p>
+				<p><b>🎵@artist?.Songs?.FirstOrDefault()?.Genre</b></p>
 				</div>
 				<div class="text_control">
 					<a href="@artist?.FacebookUrl">
@@ -134,7 +134,6 @@
 
 		</div>
 	</div>
-}
 
 @code {
 	private bool isLoading = false;
