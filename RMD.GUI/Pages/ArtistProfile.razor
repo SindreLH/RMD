@@ -9,7 +9,10 @@
 
 @if (editModalVisible)
 {
-	<EditArtistModal IsVisible="editModalVisible" OnClose="ToggleEditModal"/>
+	<EditArtistModal IsVisible="editModalVisible" 
+	OnClose="ToggleEditModal"
+	OnSave="OnArtistEdited"
+	Artist="artist"/>
 }
 
 @if(deleteModalVisible){
@@ -78,62 +81,62 @@
 		</table>
 	</div>
 
-		<div class="info_box">
+	<div class="info_box">
 
 
-			<div class="info_box_text">
+		<div class="info_box_text">
 
-				<h4><b>Artistinformasjon</b></h4>
+			<h4><b>Artistinformasjon</b></h4>
 
-				<div class="text_control">
-					<p><b>@artist?.Nationality</b></p>
-				</div>
-				<div class="text_control">
+			<div class="text_control">
+				<p><b>@artist?.Nationality</b></p>
+			</div>
+			<div class="text_control">
 				<p><b>🎵@artist?.Songs?.FirstOrDefault()?.Genre</b></p>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.FacebookUrl">
-						<img src="images/fb_icon.png" class="socials_icons" />
-						Facebook
-					</a>
-					<br>
-					<br>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.SoundcloudUrl">
-						<img src="images/sc_icon.png" class="socials_icons" />
-						Soundcloud
-					</a>
-					<br>
-					<br>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.DiscogsUrl">
-						<img src="images/discogs_icon.png" class="socials_icons" />
-						Discogs
-					</a>
-				</div>
 			</div>
-
-			<div class="info_box_buttons">
-
-				<div class="button_wrapper">
-					<div class="edit_button">
-						<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
-							<i class="bi bi-pencil"></i> Rediger artist
-						</button>
-					</div>
-
-					<div class="delete_button">
-						<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
-							<i class="bi bi-trash3"></i> Fjern artist
-						</button>
-					</div>
-				</div>
+			<div class="text_control">
+				<a href="@artist?.FacebookUrl">
+					<img src="images/fb_icon.png" class="socials_icons" />
+					Facebook
+				</a>
+				<br>
+				<br>
 			</div>
-
+			<div class="text_control">
+				<a href="@artist?.SoundcloudUrl">
+					<img src="images/sc_icon.png" class="socials_icons" />
+					Soundcloud
+				</a>
+				<br>
+				<br>
+			</div>
+			<div class="text_control">
+				<a href="@artist?.DiscogsUrl">
+					<img src="images/discogs_icon.png" class="socials_icons" />
+					Discogs
+				</a>
+			</div>
 		</div>
+
+		<div class="info_box_buttons">
+
+			<div class="button_wrapper">
+				<div class="edit_button">
+					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
+						<i class="bi bi-pencil"></i> Rediger artist
+					</button>
+				</div>
+
+				<div class="delete_button">
+					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
+						<i class="bi bi-trash3"></i> Fjern artist
+					</button>
+				</div>
+			</div>
+		</div>
+
 	</div>
+</div>
 
 @code {
 	private bool isLoading = false;
@@ -148,6 +151,34 @@
 	[Parameter] public int ArtistId { get; set; }
 
 	private Result<IEnumerable<Song>>? songs;
+
+	private async Task OnArtistEdited(Artist updatedArtist)
+	{
+		var dto = new RMD.Data.Models.DTO.ArtistDto
+			{
+				Name = updatedArtist.Name,
+				Nationality = updatedArtist.Nationality,
+				FacebookUrl = updatedArtist.FacebookUrl,
+				SoundcloudUrl = updatedArtist.SoundcloudUrl,
+				ProfilePicUrl = updatedArtist.ProfilePicUrl,
+				DiscogsUrl = updatedArtist.DiscogsUrl
+			};
+
+		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
+
+		if (result.IsSuccess)
+		{
+			// // Optionally reload songs from service
+			// artist = await ArtistService.GetAllArtistsAsync();
+			isSelected = false;
+			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
+	}
 
 	private void ToggleEditModal()
 	{
@@ -194,7 +225,7 @@
 
 		songs = Result<IEnumerable<Song>>.Success(songsByArtist.Value);
 
-		
+
 
 		if(songs.Value == null)
 		{
