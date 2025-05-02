@@ -16,7 +16,11 @@
 
 @if (deleteModalVisible)
 {
-	<WarningModalSongDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+	<WarningModalSongDeletion IsVisible="deleteModalVisible" 
+		OnClose="ToggleDeleteModal"
+		Song="selectedSong"
+		OnDelete="OnSongDeleted"
+		/>
 }
 
 @if (emptyDbModalVisible)
