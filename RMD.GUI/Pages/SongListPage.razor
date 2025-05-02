@@ -9,9 +9,9 @@
 @if (editModalVisible)
 {
 	<EditSongModal IsVisible = "editModalVisible" 
-		onclose="ToggleEditModal"
-		Song="selectedSong"
-		OnSave="OnSongEdited"/>
+	onclose="ToggleEditModal"
+	Song="selectedSong"
+	OnSave="OnSongEdited"/>
 }
 
 @if (deleteModalVisible)
@@ -95,69 +95,28 @@
 	<table class="table table-bordered table-dark table-striped table-hover">
 		<thead class="thead-light">
 			<tr>
-				<th>
-					#
-				</th>
-
-				<th>
-					Tittel
-				</th>
-
-				<th>
-					Artist
-				</th>
-
-				<th>
-					Remixer
-				</th>
-
-				<th>
-					Lengde
-				</th>
-
-				<th>
-					Sjanger
-				</th>
-
-				<th>
-					Favoritt
-				</th>
-
-				<th>
-					Extended
-				</th>
-
-				<th>
-					Spilt
-				</th>
-
-				<th>
-					Episode
-				</th>
-
-				<th>
-					Lagret
-				</th>
-
-				<th>
-					Ønsket
-				</th>
-
-				<th>
-					Kilde
-				</th>
+				<th>#</th>
+				<th>Tittel</th>
+				<th>Artist</th>
+				<th>Remixer</th>
+				<th>Lengde</th>
+				<th>Sjanger</th>
+				<th>Favoritt</th>
+				<th>Extended</th>
+				<th>Spilt</th>
+				<th>Episode</th>
+				<th>Lagret</th>
+				<th>Ønsket</th>
+				<th>Kilde</th>
 			</tr>
-
 		</thead>
 
-		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
-			<tbody>
-				<tr @onclick="() => SelectSong(song)">
+		<tbody>
+			@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>()))
+			{
+				<tr @onclick="() => SelectSong(song)" class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
 					<td>@song.SongId</td>
-					<td class="text-truncate"
-					style="max-width: 200px"
-					title="@song.Title"
-					>@song.Title</td>
+					<td class="text-truncate" style="max-width: 200px" title="@song.Title">@song.Title</td>
 					<td>@song.Artist?.Name</td>
 					<td>@song.RemixArtist</td>
 					<td>@song.Length</td>
@@ -169,16 +128,13 @@
 					<td>@(song.Stored ? "✅" : "❌")</td>
 					<td>@(song.Wanted ? "✅" : "❌")</td>
 					<td class="text-truncate" style="max-width: 200px">
-						<a href="@song.WantedSongUrl"
-						target="_blank"
-						rel="noopener noreferrer"
-						title="@song.WantedSongUrl">
+						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
 							@song.WantedSongUrl
 						</a>
 					</td>
 				</tr>
-			</tbody>
-		}
+			}
+		</tbody>
 	</table>
 </div>
 
@@ -213,8 +169,18 @@
 
 	private void SelectSong(Song song)
 	{
-		selectedSong = song;
-		isSelected = true;
+
+		if(selectedSong?.SongId == song.SongId)
+		{
+			selectedSong = null;
+			isSelected = false;
+		}
+
+		else
+		{
+			selectedSong = song;
+			isSelected = true;
+		}
 	}
 
 	private void ToggleEditModal()
@@ -334,6 +300,29 @@
 			songs = await SongService.GetAllSongsAsync();
 			isSelected = false;
 			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
+	}
+
+	private async Task OnSongDeleted(Song selectedSong)
+	{
+		var result = await SongService.DeleteSongByIdAsync(selectedSong.SongId);
+
+		if (result.IsSuccess)
+		{
+			songs = await SongService.GetAllSongsAsync();
+
+			if (isFiltering)
+			{
+				await LoadFilteredSongsAsync();
+			}
+
+			isSelected = false;
+			deleteModalVisible = false;
 		}
 		else
 		{

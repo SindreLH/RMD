@@ -20,9 +20,11 @@
 .table-container {
 	margin-top: 5rem;
 	margin-bottom: 3rem;
-	max-height: 34rem;
+	height: auto;
+	max-width: 100%;
+	width: 100%;
 	overflow-y: auto;
-	height: 30rem;
+	max-height: 35rem;
 	border-radius: 20px;
 }
 
@@ -33,6 +35,9 @@
 	border-spacing: 0;
 	border-radius: 20px;
 	overflow-y: auto;
+	height: auto;
+	width: 100%;
+	max-width: 100%;
 }
 
 	.table td:first-child, .table th:first-child {
@@ -70,6 +75,12 @@ th {
 	border-bottom-right-radius: 2px;
 }
 
+.table.table .selected-row {
+	background-color: #45c465 !important;
+	color: #45c465;
+	transition: background-color 0.3s ease-in-out, color 0.3s ease;
+}
+
 .searchbar{
 	width: 20rem;
 }
@@ -100,10 +111,11 @@ th {
 	flex-direction: row;
 	width: 20rem;
 	justify-content: space-between;
-	margin-left: 69rem;
+	margin-left: 65%;
 }
 
 .edit_button, .delete_button {
+	padding-top: -30rem;
 	width: 150px;
 }
 
@@ -134,43 +146,59 @@ th {
 	transition: 0.5s ease-in-out;
 }
 
-
-
 @media (max-width: 412px) {
 
-	html, body{
+	html, body {
 		max-width: 100%;
 		padding: 0;
 		margin: 0;
 	}
 
-	.checkboxes{
+	.checkboxes {
 		display: flex;
-		flex-direction: column; 
+		flex-direction: column;
 	}
 
 	.table-container {
-		position: sticky;
-		margin-top: 15rem;
+		/*position: sticky;
+	margin-top: 15rem;*/
+
+		margin-top: 5rem;
+		margin-bottom: 3rem;
+		width: 100%;
+		overflow-x: auto; /* Add horizontal scroll */
+		border-radius: 20px;
 	}
 
 	.table {
-		overflow-x: auto;
-		position: sticky;
-		font-size: 0.5rem;
+		/*overflow-x: auto;
+	position: sticky;
+	font-size: 0.5rem;
+*/
+
+		width: max-content; /* Allow table to expand beyond container */
+		min-width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		border-radius: 20px;
+		opacity: 80%;
 	}
 
-	th{
+	th {
 		position: relative;
 	}
 
-		.table th,
-		.table td {
-			padding: 0.7rem;
-			text-align: left;
-			white-space: nowrap;
-			font-size: 0.8rem;
-		}
+	.table th,
+	.table td {
+		/*padding: 0.7rem;
+		text-align: left;
+		white-space: nowrap;
+		font-size: 0.8rem;*/
+
+		white-space: nowrap; /* Prevent text wrapping */
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 
 	.search-button-checkbox-wrapper {
 		flex-direction: column;
@@ -184,12 +212,12 @@ th {
 
 	.checkboxes {
 		/*flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-left: 0;*/
+	gap: 0.5rem;
+	margin-left: 0;*/
 
 		justify-content: center;
 		gap: 0.5rem;
-		margin-left:0;
+		margin-left: 0;
 		width: 100%;
 	}
 
