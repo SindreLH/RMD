@@ -107,10 +107,10 @@
 				<th>Sjanger</th>
 				<th>Favoritt</th>
 				<th>Extended</th>
-				<th>Spilt</th>
+				@* <th>Spilt</th> *@
 				<th>Episode</th>
 				<th>Lagret</th>
-				<th>Ønsket</th>
+				@* <th>Ønsket</th> *@
 				<th>Kilde</th>
 			</tr>
 		</thead>
@@ -127,10 +127,10 @@
 					<td>@song.Genre</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
 					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					<td>@(song.Played ? "✅" : "❌")</td>
+					@* <td>@(song.Played ? "✅" : "❌")</td> *@
 					<td>@song.PlayedInEp</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>
-					<td>@(song.Wanted ? "✅" : "❌")</td>
+					@* <td>@(song.Wanted ? "✅" : "❌")</td> *@
 					<td class="text-truncate" style="max-width: 200px">
 						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
 							@song.WantedSongUrl
@@ -289,6 +289,7 @@
 				Genre = updatedSong.Genre,
 				ExtendedMix = updatedSong.ExtendedMix,
 				RadioMix = updatedSong.RadioMix,
+				Favorite = updatedSong.Favorite,
 				Played = updatedSong.Played,
 				PlayedInEp = updatedSong.PlayedInEp,
 				Stored = updatedSong.Stored,

@@ -4,6 +4,7 @@
 @using RMD.Business.Services;
 @inject IArtistService ArtistService;
 @inject ISongService SongService;
+@inject NavigationManager Navigation;
 
 <PageTitle>RMD | @artist?.Name - Artist Page</PageTitle>
 
@@ -16,14 +17,13 @@
 }
 
 @if(deleteModalVisible){
-	<WarningModalArtistDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+	<WarningModalArtistDeletion IsVisible="deleteModalVisible" 
+	OnClose="ToggleDeleteModal"
+	Artist="artist"
+	OnDelete="OnArtistDeleted"
+	/>
 }
 
-@if(artist == null)
-{
-	<p style="color: red;">No artist at this ID...</p>
-	return;
-}
 
 <div class="header_wrapper">
 
@@ -73,12 +73,27 @@
 				}
 			}
 
-			else @if (artistHasNoSongs == true)
-			{
-				<p style="z-index: 1050">Please add songs and attach them to this artist...</p>
-			}
-
+			
 		</table>
+
+		@if (artistHasNoSongs == true)
+		{
+			<div class="load_container">
+					<div class="load_contents">
+						<p class="load_text">This artist has no tracks...</p>
+					</div>
+				</div>
+		}
+
+		@if (artist == null)
+			{
+				<div class="load_container">
+					<div class="load_contents">
+						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+						<p class="load_text">Loading artist's tracks...</p>
+					</div>
+				</div>
+			}
 	</div>
 
 	<div class="info_box">
@@ -146,6 +161,7 @@
 	private bool deleteModalVisible = false;
 	private bool editArtistModalVisible = false;
 	private bool emptyDbModalVisible = false;
+	private Result<IEnumerable<Artist>>? artists;
 
 	private Artist? artist;
 	[Parameter] public int ArtistId { get; set; }
@@ -236,6 +252,26 @@
 		}
 
 
+
+	}
+
+	private async Task OnArtistDeleted(Artist artist)
+	{
+		var result = await ArtistService.DeleteArtistByIdAsync(artist.ArtistId);
+
+		if (result.IsSuccess)
+		{
+			artists = await ArtistService.GetAllArtistsAsync();
+
+			deleteModalVisible = false;
+			isLoading = false;
+
+			Navigation.NavigateTo("/Artists");
+		}
+		else
+		{
+			Console.WriteLine(result.Error);
+		}
 
 	}
 }
