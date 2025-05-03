@@ -61,6 +61,16 @@
 	}
 </div>
 
+@if (artists == null)
+{
+	<div class="load_container">
+		<div class="load_contents">
+			<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+			<p class="load_text">Laster inn alle artister...</p>
+		</div>
+	</div>
+}
+
 @code {
 	private Result<IEnumerable<Artist>>? artists;
 	private IEnumerable<Artist> filteredArtists = new List<Artist>();
