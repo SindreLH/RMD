@@ -9,14 +9,18 @@
 @if (editModalVisible)
 {
 	<EditSongModal IsVisible = "editModalVisible" 
-		onclose="ToggleEditModal"
-		Song="selectedSong"
-		OnSave="OnSongEdited"/>
+	onclose="ToggleEditModal"
+	Song="selectedSong"
+	OnSave="OnSongEdited"/>
 }
 
 @if (deleteModalVisible)
 {
-	<WarningModalSongDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+	<WarningModalSongDeletion IsVisible="deleteModalVisible" 
+		OnClose="ToggleDeleteModal"
+		Song="selectedSong"
+		OnDelete="OnSongDeleted"
+		/>
 }
 
 @if (emptyDbModalVisible)
@@ -79,7 +83,6 @@
 		</div>
 	}
 
-
 </div>
 
 @if (songs == null)
@@ -96,91 +99,60 @@
 	<table class="table table-bordered table-dark table-striped table-hover">
 		<thead class="thead-light">
 			<tr>
-				<th>
-					#
-				</th>
-
-				<th>
-					Tittel
-				</th>
-
-				<th>
-					Artist
-				</th>
-
-				<th>
-					Remixer
-				</th>
-
-				<th>
-					Lengde
-				</th>
-
-				<th>
-					Sjanger
-				</th>
-
-				<th>
-					Favoritt
-				</th>
-
-				<th>
-					Extended
-				</th>
-
-				<th>
-					Spilt
-				</th>
-
-				<th>
-					Episode
-				</th>
-
-				<th>
-					Lagret
-				</th>
-
-				<th>
-					Ønsket
-				</th>
-
-				<th>
-					Låt Url
-				</th>
+				<th>#</th>
+				<th>Tittel</th>
+				<th>Artist</th>
+				<th>Remixer</th>
+				<th>Lengde</th>
+				<th>Sjanger</th>
+				<th>Favoritt</th>
+				<th>Extended</th>
+				@* <th>Spilt</th> *@
+				<th>Episode</th>
+				<th>Lagret</th>
+				@* <th>Ønsket</th> *@
+				<th>Kilde</th>
 			</tr>
-
 		</thead>
 
-		@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>())){
-			<tbody>
-				<tr @onclick="() => SelectSong(song)">
+		<tbody>
+			@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>()))
+			{
+				<tr @onclick="() => SelectSong(song)" class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
 					<td>@song.SongId</td>
-					<td class="text-truncate"
-					style="max-width: 200px"
-					title="@song.Title"
-					>@song.Title</td>
+					<td class="text-truncate" style="max-width: 200px" title="@song.Title">@song.Title</td>
 					<td>@song.Artist?.Name</td>
 					<td>@song.RemixArtist</td>
 					<td>@song.Length</td>
 					<td>@song.Genre</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
 					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					<td>@(song.Played ? "✅" : "❌")</td>
+					@* <td>@(song.Played ? "✅" : "❌")</td> *@
 					<td>@song.PlayedInEp</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>
-					<td>@(song.Wanted ? "✅" : "❌")</td>
+					@* <td>@(song.Wanted ? "✅" : "❌")</td> *@
 					<td class="text-truncate" style="max-width: 200px">
-						<a href="@song.WantedSongUrl"
-						target="_blank"
-						rel="noopener noreferrer"
-						title="@song.WantedSongUrl">
+						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
 							@song.WantedSongUrl
 						</a>
 					</td>
 				</tr>
-			</tbody>
-		}
+			}
+		</tbody>
 	</table>
+
+
+
+	@if (songs == null)
+	{
+		<div class="load_container">
+			<div class="load_contents">
+				<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+				<p class="load_text">Laster inn låter...</p>
+			</div>
+		</div>
+	}
+
 </div>
 
 
@@ -214,8 +186,18 @@
 
 	private void SelectSong(Song song)
 	{
-		selectedSong = song;
-		isSelected = true;
+
+		if(selectedSong?.SongId == song.SongId)
+		{
+			selectedSong = null;
+			isSelected = false;
+		}
+
+		else
+		{
+			selectedSong = song;
+			isSelected = true;
+		}
 	}
 
 	private void ToggleEditModal()
@@ -242,6 +224,9 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+
+		await Task.Delay(300);
+
 		songs = await SongService.GetAllSongsAsync();
 
 		if (songs?.Value == null || !songs.Value.Any())
@@ -320,6 +305,7 @@
 				Genre = updatedSong.Genre,
 				ExtendedMix = updatedSong.ExtendedMix,
 				RadioMix = updatedSong.RadioMix,
+				Favorite = updatedSong.Favorite,
 				Played = updatedSong.Played,
 				PlayedInEp = updatedSong.PlayedInEp,
 				Stored = updatedSong.Stored,
@@ -335,6 +321,29 @@
 			songs = await SongService.GetAllSongsAsync();
 			isSelected = false;
 			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
+	}
+
+	private async Task OnSongDeleted(Song selectedSong)
+	{
+		var result = await SongService.DeleteSongByIdAsync(selectedSong.SongId);
+
+		if (result.IsSuccess)
+		{
+			songs = await SongService.GetAllSongsAsync();
+
+			if (isFiltering)
+			{
+				await LoadFilteredSongsAsync();
+			}
+
+			isSelected = false;
+			deleteModalVisible = false;
 		}
 		else
 		{

@@ -4,23 +4,26 @@
 @using RMD.Business.Services;
 @inject IArtistService ArtistService;
 @inject ISongService SongService;
+@inject NavigationManager Navigation;
 
 <PageTitle>RMD | @artist?.Name - Artist Page</PageTitle>
 
 @if (editModalVisible)
 {
-	<EditArtistModal IsVisible="editModalVisible" OnClose="ToggleEditModal"/>
+	<EditArtistModal IsVisible="editModalVisible" 
+	OnClose="ToggleEditModal"
+	OnSave="OnArtistEdited"
+	Artist="artist"/>
 }
 
 @if(deleteModalVisible){
-	<WarningModalArtistDeletion IsVisible="deleteModalVisible" OnClose="ToggleDeleteModal"/>
+	<WarningModalArtistDeletion IsVisible="deleteModalVisible" 
+	OnClose="ToggleDeleteModal"
+	Artist="artist"
+	OnDelete="OnArtistDeleted"
+	/>
 }
 
-@if(artist == null)
-{
-	<p style="color: red;">No artist at this ID...</p>
-	return;
-}
 
 <div class="header_wrapper">
 
@@ -35,7 +38,6 @@
 	</div>
 </div>
 
-@if(artistHasNoSongs == false){
 <div class="table_and_box">
 	<div class="table-container">
 		<table class="table table-bordered table-dark table-striped table-hover">
@@ -56,16 +58,43 @@
 
 			</thead>
 
-			<tbody>
-				<tr>
-					<td class="text-truncate" style="max-width: 20px">Load artists songs here</td>
-					<td class="text-truncate" style="max-width: 20px">Remix Artist here</td>
-					<td>Track length</td>
-				</tr>
+			@if (artistHasNoSongs == false)
+			{
+				@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>())
+				{
+					<tbody>
+						<tr>
+							<td class="text-truncate" style="max-width: 20px">@song.Title</td>
+							<td class="text-truncate" style="max-width: 20px">@song.RemixArtist</td>
+							<td>@song.Length</td>
+						</tr>
 
-			</tbody>
+					</tbody>
+				}
+			}
+
+			
 		</table>
-</div>
+
+		@if (artistHasNoSongs == true)
+		{
+			<div class="load_container">
+					<div class="load_contents">
+						<p class="load_text">Denne artisten har ingen låter enda...</p>
+					</div>
+				</div>
+		}
+
+		@if (artist == null)
+			{
+				<div class="load_container">
+					<div class="load_contents">
+						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+						<p class="load_text">Laster inn låter...</p>
+					</div>
+				</div>
+			}
+	</div>
 
 	<div class="info_box">
 
@@ -78,7 +107,7 @@
 				<p><b>@artist?.Nationality</b></p>
 			</div>
 			<div class="text_control">
-				<p><b>🙌Hands Up</b></p>
+				<p><b>🎵@artist?.Songs?.FirstOrDefault()?.Genre</b></p>
 			</div>
 			<div class="text_control">
 				<a href="@artist?.FacebookUrl">
@@ -123,7 +152,6 @@
 
 	</div>
 </div>
-}
 
 @code {
 	private bool isLoading = false;
@@ -132,12 +160,51 @@
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
 	private bool editArtistModalVisible = false;
+	private bool emptyDbModalVisible = false;
+	private Result<IEnumerable<Artist>>? artists;
 
 	private Artist? artist;
 	[Parameter] public int ArtistId { get; set; }
 
 	private Result<IEnumerable<Song>>? songs;
 
+	private async Task OnArtistEdited(Artist updatedArtist)
+	{
+		var dto = new RMD.Data.Models.DTO.ArtistDto
+			{
+				Name = updatedArtist.Name,
+				Nationality = updatedArtist.Nationality,
+				FacebookUrl = updatedArtist.FacebookUrl,
+				SoundcloudUrl = updatedArtist.SoundcloudUrl,
+				ProfilePicUrl = updatedArtist.ProfilePicUrl,
+				DiscogsUrl = updatedArtist.DiscogsUrl
+			};
+
+		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
+
+		if (result.IsSuccess)
+		{
+			// // Optionally reload songs from service
+			// artist = await ArtistService.GetAllArtistsAsync();
+			isSelected = false;
+			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
+	}
+
+	private void ToggleEditModal()
+	{
+		editModalVisible = !editModalVisible;
+	}
+
+	private void ToggleDeleteModal()
+	{
+		deleteModalVisible = !deleteModalVisible;
+	}
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -156,23 +223,57 @@
 		}
 	}
 
-	private void ToggleEditModal()
+	protected override async Task OnInitializedAsync()
 	{
-		editModalVisible = !editModalVisible;
+
+		await Task.Delay(300);
+
+		var songsByArtist = await SongService.GetSongsByArtistIdAsync(ArtistId);
+		artistHasNoSongs = false;
+		isLoading = false;
+
+
+		if (!songsByArtist.IsSuccess)
+		{
+			artistHasNoSongs = true;
+			isLoading = true;
+			Console.WriteLine(songsByArtist.Error);
+			return;
+		}
+
+		songs = Result<IEnumerable<Song>>.Success(songsByArtist.Value);
+
+
+
+		if(songs.Value == null)
+		{
+			isLoading = true;
+			artistHasNoSongs = true;
+			Console.WriteLine(songs.Error);
+			return;
+		}
+
+
+
 	}
 
-	private void ToggleDeleteModal()
+	private async Task OnArtistDeleted(Artist artist)
 	{
-		deleteModalVisible = !deleteModalVisible;
+		var result = await ArtistService.DeleteArtistByIdAsync(artist.ArtistId);
+
+		if (result.IsSuccess)
+		{
+			artists = await ArtistService.GetAllArtistsAsync();
+
+			deleteModalVisible = false;
+			isLoading = false;
+
+			Navigation.NavigateTo("/Artists");
+		}
+		else
+		{
+			Console.WriteLine(result.Error);
+		}
+
 	}
-
-	// protected override async Task OnInitializedAsync()
-	// {
-	// 	songs = await SongService.GetSongByArtistId();
-
-	// 	if (songs?.Value == null || !songs.Value.Any())
-	// 	{
-	// 		artistHasNoSongs = true;
-	// 	}
-	// }
 }

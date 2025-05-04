@@ -42,24 +42,34 @@
 	@foreach (var artist in (isFiltering ? filteredArtists : artists?.Value ?? Enumerable.Empty<Artist>()))
 	{	
 		<a href="/Artist/@artist.ArtistId">
-		<div class="artist_card">
-			@if(string.IsNullOrWhiteSpace(artist.ProfilePicUrl))
-			{
-				<img src="images/no_artist_image.png"
-				alt="Default artist icon"
-				class="artist_profile_pic" />
-			}
-			else
-			{
-				<img src="@artist.ProfilePicUrl"
-				alt="Artist Press Picture"
-				class="artist_profile_pic" />
-			}
-			<h3 class="text-truncate" style="max-width: 200px" title="@artist.Name">@artist.Name</h3>
-		</div>
+			<div class="artist_card">
+				@if(string.IsNullOrWhiteSpace(artist.ProfilePicUrl))
+				{
+					<img src="images/no_artist_image.png"
+					alt="Default artist icon"
+					class="artist_profile_pic" />
+				}
+				else
+				{
+					<img src="@artist.ProfilePicUrl"
+					alt="Artist Press Picture"
+					class="artist_profile_pic" />
+				}
+				<h3 class="text-truncate" style="max-width: 200px" title="@artist.Name">@artist.Name</h3>
+			</div>
 		</a>
 	}
 </div>
+
+@if (artists == null)
+{
+	<div class="load_container">
+		<div class="load_contents">
+			<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+			<p class="load_text">Laster inn artister...</p>
+		</div>
+	</div>
+}
 
 @code {
 	private Result<IEnumerable<Artist>>? artists;
@@ -89,6 +99,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		await Task.Delay(300);
+
 		var result = await ArtistService.GetAllArtistsAsync();
 
 		if (result.IsSuccess)
@@ -213,6 +225,5 @@
 			artists = Result<IEnumerable<Artist>>.Success(sorted);
 		}
 	}
-
 	
 }

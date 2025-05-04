@@ -1,6 +1,8 @@
 ﻿@page "/Modal4"
+@using RMD.Business.Services
+@inject IArtistService ArtistService
+@inject ISongService SongService
 
-@* not working  *@
 @if (IsVisible)
 {
 	<div class="modal-backdrop">
@@ -14,7 +16,7 @@
 
 				<div class="text_container">
 					<p>Du prøver å legge til et duplikat.</p>
-					<p>"Artist eller låt" finnes allerede i databasen.</p>
+					<p><strong>@ArtistName </strong> - <strong>@Title</strong> finnes allerede i databasen.</p>
 				</div>
 
 
@@ -37,8 +39,11 @@
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
+	[Parameter] public string? Title { get; set; }
+	[Parameter] public string? ArtistName { get; set; }
+
 	private void CloseDuplicateEntryModal()
 	{
-		OnClose.InvokeAsync(false);
+		OnClose.InvokeAsync(true);
 	}
 }

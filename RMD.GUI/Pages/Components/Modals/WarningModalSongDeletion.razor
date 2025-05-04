@@ -1,4 +1,5 @@
 ﻿@page "/Modal1"
+@using RMD.Data.Models
 
 @if (IsVisible)
 {
@@ -12,7 +13,7 @@
 				<h4>Sletting</h4>
 
 				<div class="text_container">
-					<p>Ønsker du virkelig å slette "Låt" fra databasen?</p>
+					<p>Ønsker du å slette <strong>"@Song?.Title" av @Song?.Artist.Name</strong> fra databasen?</p>
 					<p>Handlingen kan ikke angres.</p>
 				</div>
 
@@ -24,7 +25,7 @@
 					</div>
 
 					<div class="delete_button">
-						<button type="button" class="btn btn-danger">
+						<button type="button" class="btn btn-danger" @onclick="DeleteSong">
 							Slett låt
 						</button>
 					</div>
@@ -39,10 +40,17 @@
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
+	[Parameter] public EventCallback<Song> OnDelete { get; set; }
+	[Parameter] public Song? Song { get; set; }
 
 	private void CloseDeleteModal()
 	{
 		OnClose.InvokeAsync(false);
+	}
+
+	private void DeleteSong()
+	{
+		OnDelete.InvokeAsync(Song);
 	}
 }
 
