@@ -63,6 +63,7 @@
 	overflow-y: auto;
 	max-height: 35rem;
 	border-radius: 20px;
+	cursor: pointer;
 }
 
 .table {

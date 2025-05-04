@@ -4,6 +4,7 @@
 
 .load_container {
     display: flex;
+    margin-top: 1rem;
     flex-direction: column;
     align-content: center;
     width: 100%;
