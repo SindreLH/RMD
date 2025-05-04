@@ -9,10 +9,17 @@
 @page "/AddSong"
 
 <PageTitle>RMD | Add a new song</PageTitle>
+
 @if (warningModalDuplicateVisible)
 {
-    <ErrorModalDuplicate IsVisible="true" OnClose="CloseModal" />
+    <ErrorModalDuplicate 
+        IsVisible="true" 
+        OnClose="CloseModal" 
+        Title="@attemptedTitle"
+        ArtistName="@attemptedArtistName"
+        />
 }
+
 <div class="container_parent">
     <div class="main_form_container">
 
@@ -163,6 +170,8 @@
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
     private bool warningModalDuplicateVisible = false;
+    private string? attemptedTitle;
+    private string? attemptedArtistName;
 
     private List<Artist> allArtists = new();
 
@@ -223,7 +232,7 @@
                     WantedSongUrl = String.Empty
                 };
 
-            warningModalDuplicateVisible = false;
+         
 
             Console.WriteLine("Song successfully saved!");
         }
@@ -233,6 +242,11 @@
 
             if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
             {
+                attemptedTitle = newSongDto.Title;
+
+                attemptedArtistName = allArtists
+                    .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
+
                 warningModalDuplicateVisible = true;
             }
         }

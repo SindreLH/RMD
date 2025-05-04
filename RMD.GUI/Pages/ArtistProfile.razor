@@ -226,6 +226,8 @@
 	protected override async Task OnInitializedAsync()
 	{
 
+		await Task.Delay(300);
+
 		var songsByArtist = await SongService.GetSongsByArtistIdAsync(ArtistId);
 		artistHasNoSongs = false;
 		isLoading = false;

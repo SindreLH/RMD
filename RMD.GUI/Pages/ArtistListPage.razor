@@ -99,6 +99,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		await Task.Delay(300);
+
 		var result = await ArtistService.GetAllArtistsAsync();
 
 		if (result.IsSuccess)

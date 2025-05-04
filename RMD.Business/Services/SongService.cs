@@ -42,15 +42,16 @@ namespace RMD.Business.Services
 			{
 
 				var existingSong = await _context.Songs.
-					Where(x => x.Title == newSongDto.Title).FirstOrDefaultAsync();
+					Where(x => x.Title == newSongDto.Title && x.ArtistId == newSongDto.ArtistId).FirstOrDefaultAsync();
 
 				if (existingSong != null)
 				{
-					return Result<Song>.Failure($"A song with the name {newSongDto.Title} already exists in the database.");
+					return Result<Song>.Failure($"A song with the name {newSongDto.Title} by this artist already exists in the database.");
 				}
 
 
 				var artist = await _context.Artists.FindAsync(newSongDto.ArtistId);
+
 				if(artist == null)
 				{
 					return Result<Song>.Failure("Artist not found.");
@@ -72,7 +73,7 @@ namespace RMD.Business.Services
 					Favorite = newSongDto.Favorite,
 
 					ArtistId = newSongDto.ArtistId.Value,
-					Artist = artist,
+					Artist = artist
 
 				};
 

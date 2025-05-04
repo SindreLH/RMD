@@ -5,12 +5,16 @@
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
 @inject IArtistService ArtistService
+@inject ISongService SongService
 @page "/AddArtist"
 
 <PageTitle>RMD | Add new artist</PageTitle>
+
 @if (warningModalDuplicateVisible)
 {
-	<ErrorModalDuplicate IsVisible="true" OnClose="CloseModal" />
+	<ErrorModalDuplicate IsVisible="true" 
+		OnClose="CloseModal"
+		ArtistName="@attemptedArtistName"/>
 }
 <div class="container_parent">
 	<div class="main_form_container">
@@ -125,7 +129,8 @@
 
 @code {
 	private bool warningModalDuplicateVisible = false;
-
+	private string? attemptedArtistName;
+	private List<Artist> allArtists = new();
 	private ArtistDto newArtistDto = new ArtistDto
 	{
 
@@ -163,15 +168,17 @@
 
 			if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
 			{
+				attemptedArtistName = newArtistDto.Name;
+
 				warningModalDuplicateVisible = true;
 			}
+			}
 		}
-	}
 
 	private void CloseModal()
 	{
 		warningModalDuplicateVisible = false;
 	}
-
-
 }
+
+	
