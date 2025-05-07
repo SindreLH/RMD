@@ -7,6 +7,7 @@ using RMD.Data.Context;
 using RMD.GUI.Data;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using ApexCharts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ISongService, SongService>();
+
+builder.Services.AddApexCharts();
 
 //Registering DbContext and getting connection string from appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");

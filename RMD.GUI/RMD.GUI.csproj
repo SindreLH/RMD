@@ -39,6 +39,7 @@
 	<!--EFC Versions were set to 6.0.12 here-->
 
 	<ItemGroup>
+	  <PackageReference Include="Blazor-ApexCharts" Version="6.0.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
       <PrivateAssets>all</PrivateAssets>

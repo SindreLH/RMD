@@ -162,39 +162,9 @@
 	private bool editArtistModalVisible = false;
 	private bool emptyDbModalVisible = false;
 	private Result<IEnumerable<Artist>>? artists;
-
+	private Result<IEnumerable<Song>>? songs;
 	private Artist? artist;
 	[Parameter] public int ArtistId { get; set; }
-
-	private Result<IEnumerable<Song>>? songs;
-
-	private async Task OnArtistEdited(Artist updatedArtist)
-	{
-		var dto = new RMD.Data.Models.DTO.ArtistDto
-			{
-				Name = updatedArtist.Name,
-				Nationality = updatedArtist.Nationality,
-				FacebookUrl = updatedArtist.FacebookUrl,
-				SoundcloudUrl = updatedArtist.SoundcloudUrl,
-				ProfilePicUrl = updatedArtist.ProfilePicUrl,
-				DiscogsUrl = updatedArtist.DiscogsUrl
-			};
-
-		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
-
-		if (result.IsSuccess)
-		{
-			// // Optionally reload songs from service
-			// artist = await ArtistService.GetAllArtistsAsync();
-			isSelected = false;
-			editModalVisible = false;
-		}
-		else
-		{
-			// Handle error
-			Console.WriteLine(result.Error);
-		}
-	}
 
 	private void ToggleEditModal()
 	{
@@ -275,5 +245,33 @@
 			Console.WriteLine(result.Error);
 		}
 
+	}
+
+	private async Task OnArtistEdited(Artist updatedArtist)
+	{
+		var dto = new RMD.Data.Models.DTO.ArtistDto
+			{
+				Name = updatedArtist.Name,
+				Nationality = updatedArtist.Nationality,
+				FacebookUrl = updatedArtist.FacebookUrl,
+				SoundcloudUrl = updatedArtist.SoundcloudUrl,
+				ProfilePicUrl = updatedArtist.ProfilePicUrl,
+				DiscogsUrl = updatedArtist.DiscogsUrl
+			};
+
+		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
+
+		if (result.IsSuccess)
+		{
+			// // Optionally reload songs from service
+			// artist = await ArtistService.GetAllArtistsAsync();
+			isSelected = false;
+			editModalVisible = false;
+		}
+		else
+		{
+			// Handle error
+			Console.WriteLine(result.Error);
+		}
 	}
 }
