@@ -19,11 +19,35 @@
 
 		<div class="graphs_container">
 			<div class="chart">
-				
+				<ApexChart TItem="MyData"
+				Options = "ChartOptions">
+
+					<ApexPointSeries TItem="MyData"
+					Items="Data"
+					Name="New Songs"
+					SeriesType="SeriesType.Bar"
+					XValue="e => e.Category"
+					YValue="e => e.NewSongs" />
+
+					<ApexPointSeries TItem="MyData"
+					Items="Data"
+					Name="New Artists"
+					SeriesType="SeriesType.Bar"
+					XValue="e => e.Category"
+					YValue="e => e.NewArtists" />
+				</ApexChart>
 			</div>
 
 			<div class="chart">
-				
+				<ApexChart TItem="PieChartData"
+				Options="PieChartOptions">
+					<ApexPointSeries TItem="PieChartData"
+					Items="PieChartDataList"
+					SeriesType="SeriesType.Pie"
+					YValue="e => e.Value"
+					XValue="e => e.Label" />
+				</ApexChart>
+
 			</div>
 
 		</div>
@@ -151,5 +175,112 @@
 </div>
 
 @code {
-	
+	private ApexChartOptions<MyData> ChartOptions { get; set; } = new();
+	private List<MyData> Data { get; set; } = new();
+
+	private ApexChartOptions<PieChartData> PieChartOptions { get; set; } = new();
+	private List<PieChartData> PieChartDataList { get; set; } = new();
+
+
+	public class PieChartData
+	{
+		public string? Label { get; set; }
+		public int Value { get; set; }
+	}
+
+	public class MyData
+	{
+		public string? Category { get; set; }
+		public int NewSongs { get; set; }
+		public int NewArtists { get; set; }
+	}
+
+	protected override void OnInitialized()
+	{
+		Data.Add(new MyData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
+		Data.Add(new MyData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
+		Data.Add(new MyData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
+
+		ChartOptions = new ApexChartOptions<MyData>
+			{
+				Title = new Title
+				{
+					Text = "Sample Data",
+					Style = new TitleStyle
+					{
+						Color = "#ffffff"
+					}
+				},
+
+				Xaxis = new XAxis
+				{
+					Labels = new XAxisLabels
+					{
+						Style = new AxisLabelStyle
+						{
+							Colors = "#ffffff"
+						}
+					}
+				},
+
+				Yaxis = new List<YAxis>
+				{
+					new YAxis
+					{
+						Labels = new YAxisLabels
+						{
+							Style = new AxisLabelStyle
+							{
+								Colors = "#ffffff"
+							}
+						}
+					}
+				},
+
+				Legend = new Legend
+				{
+				Show = true,
+				Labels = new LegendLabels
+				{
+					Colors = "#ffffff"
+				}
+				}
+			};
+
+
+		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
+		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 76 });
+		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
+		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
+		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
+		PieChartOptions = new ApexChartOptions<PieChartData>
+		{
+			Title = new Title
+			{
+				Text = "Andel per sjanger",
+				Style = new TitleStyle
+				{
+					Color = "#ffffff"
+				}
+			},
+
+			Chart = new Chart
+			{
+				Type = ChartType.Pie
+			},
+
+			Labels = PieChartDataList.Select(d => d.Label).ToList(),
+		
+			Legend = new Legend
+			{
+				Show = true,
+				Position = LegendPosition.Bottom,
+				Labels = new LegendLabels
+				{
+					Colors = "#ffffff"
+				}
+			}
+			
+		};
+	}
 }
