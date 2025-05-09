@@ -13,7 +13,7 @@
 				<p><strong>291</strong> artister</p>
 			</div>
 			<div class="data_card">
-				<p><strong>188</strong> avspilte låter </p>
+				<p><strong>188</strong> spilte låter </p>
 			</div>
 		</div>
 
@@ -57,58 +57,58 @@
 				<thead class="thead-light">
 					<tr>
 						<th>#</th>
+						<th>Ext</th>
 						<th>Tittel</th>
-						<th>Extended</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>1</td>
-						<td>A New Song</td>
 						<td>✅</td>
+						<td>A New Song</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>2</td>
-						<td>Track Added Yesterday</td>
 						<td>✅</td>
+						<td>Track Added Yesterday</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>3</td>
-						<td>I want This Song</td>
 						<td>✅</td>
+						<td>I want This Song</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>4</td>
-						<td>Considering Buying This Track</td>
 						<td>✅</td>
+						<td>Considering Buying This Track</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>5</td>
-						<td>This Track Is A Radio Edit</td>
 						<td>❌</td>
+						<td>This Track Is A Radio Edit</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>6</td>
+						<td>✅</td>
 						<td>Got To Many Songs Man</td>
-						<td>✅</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>7</td>
-						<td>Song 7</td>
 						<td>✅</td>
+						<td>Song 7</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>7</td>
-						<td>Song 7</td>
 						<td>✅</td>
+						<td>Song 7</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 				</tbody>
@@ -201,15 +201,32 @@
 		Data.Add(new MyData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
 		Data.Add(new MyData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
 
+		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
+		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 196 });
+		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
+		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
+		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
+
 		ChartOptions = new ApexChartOptions<MyData>
 			{
+				Chart = new Chart
+				{
+					Type = ChartType.Bar,
+					Width = "139%",
+					Height = "90%"
+				},
+
 				Title = new Title
 				{
-					Text = "Sample Data",
+					Text = "Nylig lagt til",
 					Style = new TitleStyle
 					{
-						Color = "#ffffff"
+						Color = "#ffffff",
+						FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+						FontWeight = 500,
+
 					}
+					
 				},
 
 				Xaxis = new XAxis
@@ -247,12 +264,6 @@
 				}
 			};
 
-
-		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
-		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 76 });
-		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
-		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
-		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
 		PieChartOptions = new ApexChartOptions<PieChartData>
 		{
 			Title = new Title
@@ -260,25 +271,35 @@
 				Text = "Andel per sjanger",
 				Style = new TitleStyle
 				{
-					Color = "#ffffff"
+					Color = "#ffffff",
+					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+					FontWeight = 500
 				}
 			},
 
 			Chart = new Chart
 			{
-				Type = ChartType.Pie
+				Type = ChartType.Pie,
+				Width = "150%",
+				Height = "91%"
 			},
 
 			Labels = PieChartDataList.Select(d => d.Label).ToList(),
-		
+
 			Legend = new Legend
 			{
 				Show = true,
 				Position = LegendPosition.Bottom,
+				FontFamily = "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif",
 				Labels = new LegendLabels
 				{
 					Colors = "#ffffff"
 				}
+			},
+
+			Stroke = new Stroke
+			{
+				Show = false
 			}
 			
 		};
