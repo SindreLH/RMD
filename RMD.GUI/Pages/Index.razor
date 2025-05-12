@@ -10,7 +10,7 @@
 
 		<div class="cards_container">
 			<div class="data_card">
-				<h3><strong>306 Låter</strong></h3>
+				<h3><strong>@songCount?.Value Låter</strong></h3>
 				<p>188 Promoterte</p>
 				<div class="newly_added">
 
@@ -22,7 +22,7 @@
 					@if (latestSong != null && latestSong.IsSuccess)
 					{
 						<p class="green_plus">+</p>
-						<p>@latestSong.Value.Title</p>
+						<p>@latestSong.Value.Title Artister</p>
 					}
 
 					else
@@ -33,7 +33,7 @@
 				</div>
 			</div>
 			<div class="data_card">
-				<h3><strong>291 Artister</strong></h3>
+				<h3><strong>@artistCount?.Value Artister</strong></h3>
 				<p>34 Nasjonaliteter</p>
 				<div class="newly_added">
 					@if (isLoading)
@@ -223,6 +223,8 @@
 
 	private Result<Song>? latestSong;
 	private Result<Artist>? latestArtist;
+	private Result<int>? artistCount;
+	private Result<int>? songCount;
 	private bool isLoading = true;
 
 	public class PieChartData
@@ -242,6 +244,8 @@
 	{
 		latestSong = await DashboardService.GetLatestSongAsync();
 		latestArtist = await DashboardService.GetLatestArtistAsync();
+		artistCount = await DashboardService.GetArtistCountAsync();
+		songCount = await DashboardService.GetSongCountAsync();
 		isLoading = false;
 		StateHasChanged(); 
 

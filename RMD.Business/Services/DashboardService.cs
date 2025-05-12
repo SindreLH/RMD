@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 using RMD.Data.Context;
 using RMD.Data.Models;
 using System;
@@ -14,6 +15,8 @@ namespace RMD.Business.Services
     {
         Task<Result<Song>> GetLatestSongAsync();
         Task<Result<Artist>> GetLatestArtistAsync();
+		Task<Result<int>> GetArtistCountAsync();
+		Task<Result<int>> GetSongCountAsync();
 
 	}
 
@@ -45,7 +48,7 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<Song>.Failure("An unknown error occured while FETCHING ALL songs from the database." + ex.Message);
+				return Result<Song>.Failure("An unknown error occured while FETCHING latest songs from the database." + ex.Message);
 			}
 		}
 	public async Task<Result<Artist>> GetLatestArtistAsync()
@@ -67,9 +70,51 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<Artist>.Failure("An unknown error occured while FETCHING ALL songs from the database." + ex.Message);
+				return Result<Artist>.Failure("An unknown error occured while FETCHING LATEST artist from the database." + ex.Message);
 			}
 		}
+	public async Task<Result<int>> GetArtistCountAsync()
+	{
+			try
+			{
+				int count = await _context.Artists.CountAsync();
 
+				if (count == 0)
+				{
+					return Result<int>.Failure("No artists were found in the database.");
+				}
+
+				return Result<int>.Success(count);
+			}
+
+
+
+			catch(Exception ex)
+			{
+				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+			}
+	}	
+
+	public async Task<Result<int>> GetSongCountAsync()
+	{
+			try
+			{
+				int count = await _context.Songs.CountAsync();
+
+				if (count == 0)
+				{
+					return Result<int>.Failure("No songs were found in the database.");
+				}
+
+				return Result<int>.Success(count);
+			}
+
+
+
+			catch(Exception ex)
+			{
+				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+			}
+	}	
 	}
 }
