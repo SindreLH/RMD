@@ -17,6 +17,7 @@ namespace RMD.Business.Services
         Task<Result<Artist>> GetLatestArtistAsync();
 		Task<Result<int>> GetArtistCountAsync();
 		Task<Result<int>> GetSongCountAsync();
+		Task<Result<int>> GetPlayedSongCountAsync();
 
 	}
 
@@ -94,7 +95,6 @@ namespace RMD.Business.Services
 				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
 			}
 	}	
-
 	public async Task<Result<int>> GetSongCountAsync()
 	{
 			try
@@ -115,6 +115,30 @@ namespace RMD.Business.Services
 			{
 				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
 			}
-	}	
+	}
+
+	public async Task<Result<int>> GetPlayedSongCountAsync()
+	{
+		try
+		{
+				int count = await _context.Songs
+						.Where(s => s.Played)
+						.CountAsync();
+
+			if (count == 0)
+			{
+				return Result<int>.Failure("No PLAYED songs were found in the database.");
+			}
+
+			return Result<int>.Success(count);
+		}
+
+
+
+		catch (Exception ex)
+		{
+			return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+		}
+	}
 	}
 }
