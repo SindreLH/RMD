@@ -7,7 +7,9 @@ namespace RMD.Data.Models
         [Key]
         public int ArtistId { get; set; }
 
-        [Required]
+		public DateTime ArtistCreatedAt { get; set; } = DateTime.UtcNow;
+
+		[Required]
         public string Name { get; set; }
 
         [Required]

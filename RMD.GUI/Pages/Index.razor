@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using RMD.Business.Services
+@using RMD.Data.Models
+@inject IDashboardService DashboardService
 
 <PageTitle>RMD | Home</PageTitle>
 
@@ -8,20 +11,49 @@
 		<div class="cards_container">
 			<div class="data_card">
 				<h3><strong>306 Låter</strong></h3>
-				<p>188 Promotert</p>
+				<p>188 Promoterte</p>
 				<div class="newly_added">
-					<p class="green_plus">+</p>
-					<p>Monkey Island (Club Mix)</p>
+
+					@if (isLoading)
+					{
+						<img src="~/images/Loader.gif">
+					}
+
+					@if (latestSong != null && latestSong.IsSuccess)
+					{
+						<p class="green_plus">+</p>
+						<p>@latestSong.Value.Title</p>
+					}
+
+					else
+					{
+						<p class="green_plus">+</p>
+						<p>Ingen sanger funnet</p>
+					}
 				</div>
 			</div>
 			<div class="data_card">
 				<h3><strong>291 Artister</strong></h3>
 				<p>34 Nasjonaliteter</p>
 				<div class="newly_added">
-					<p class="green_plus">+</p>
-					<p>Banana Inc.</p>
+					@if (isLoading)
+					{
+						<img src="~/images/Loader.gif">
+					}
+
+					@if (latestArtist != null && latestArtist.IsSuccess)
+					{
+						<p class="green_plus">+</p>
+						<p>@latestArtist.Value.Name</p>
+					}
+
+					else
+					{
+						<p class="green_plus">+</p>
+						<p>Ingen artister funnet</p>
+					}
 				</div>
-				
+
 			</div>
 		</div>
 
@@ -189,6 +221,9 @@
 	private ApexChartOptions<PieChartData> PieChartOptions { get; set; } = new();
 	private List<PieChartData> PieChartDataList { get; set; } = new();
 
+	private Result<Song>? latestSong;
+	private Result<Artist>? latestArtist;
+	private bool isLoading = true;
 
 	public class PieChartData
 	{
@@ -203,8 +238,13 @@
 		public int NewArtists { get; set; }
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		latestSong = await DashboardService.GetLatestSongAsync();
+		latestArtist = await DashboardService.GetLatestArtistAsync();
+		isLoading = false;
+		StateHasChanged(); 
+
 		Data.Add(new MyData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
 		Data.Add(new MyData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
 		Data.Add(new MyData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
@@ -243,7 +283,7 @@
 						FontWeight = 500,
 
 					}
-					
+
 				},
 
 				Xaxis = new XAxis
@@ -318,7 +358,8 @@
 			{
 				Show = false
 			}
-			
+
 		};
+
 	}
 }

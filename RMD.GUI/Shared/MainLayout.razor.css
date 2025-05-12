@@ -7,7 +7,8 @@
 main {
     flex: 1;
     /*    background-color: #212529;*/
-     background-image: linear-gradient(#1f78d7, #25369B);
+    /*background-color: #0a0a0a;*/
+    background-image: linear-gradient(#1f78d7, #25369B);
     /*  background-image: linear-gradient(-225deg, #ff057c 0%, #8d0b93 50%, #321575 100%);*/
     /* background-image: url("images/wave_background_optimized.png");*/
     /* background-image: url("images/test.jpg");*/

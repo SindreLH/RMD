@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
-
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace RMD.Data.Migrations
 {
@@ -18,6 +17,7 @@ namespace RMD.Data.Migrations
                 {
                     ArtistId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ArtistCreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nationality = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -36,6 +36,7 @@ namespace RMD.Data.Migrations
                 {
                     SongId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    SongCreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     RemixArtist = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Length = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -60,20 +61,6 @@ namespace RMD.Data.Migrations
                         principalColumn: "ArtistId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Artists",
-                columns: new[] { "ArtistId", "DiscogsUrl", "FacebookUrl", "Name", "Nationality", "ProfilePicUrl", "SoundcloudUrl" },
-                values: new object[,]
-                {
-                    { 1, "https://www.test.com/", "https://www.facebook.com/RejackHS", "Rejack", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" },
-                    { 2, "https://www.test.com/", "https://www.facebook.com/RejackHS", "Rejack 2", "🇳🇴 Norge", "https://www.test.com/", "https://www.soundcloud.com/RejackHS" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Songs",
-                columns: new[] { "SongId", "ArtistId", "ExtendedMix", "Favorite", "Genre", "Length", "Played", "PlayedInEp", "RadioMix", "RemixArtist", "Stored", "Title", "Wanted", "WantedSongUrl" },
-                values: new object[] { 1, 1, true, true, "Hands Up", "02:23", true, 18, false, "Test", true, "Hands Up Track (Test Remix)", false, "https://www.soundcloud.com/RejackHS" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Songs_ArtistId",
