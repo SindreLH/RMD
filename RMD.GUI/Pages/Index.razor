@@ -34,7 +34,7 @@
 			</div>
 			<div class="data_card">
 				<h3><strong>@artistCount?.Value Artister</strong></h3>
-				<p>34 Nasjonaliteter</p>
+				<p>@artistNationCount?.Value Nasjonaliteter</p>
 				<div class="newly_added">
 					@if (isLoading)
 					{
@@ -226,6 +226,7 @@
 	private Result<int>? artistCount;
 	private Result<int>? songCount;
 	private Result<int>? playedSongCount;
+	private Result<int>? artistNationCount;
 	private bool isLoading = true;
 
 	public class PieChartData
@@ -248,6 +249,7 @@
 		artistCount = await DashboardService.GetArtistCountAsync();
 		songCount = await DashboardService.GetSongCountAsync();
 		playedSongCount = await DashboardService.GetPlayedSongCountAsync();
+		artistNationCount = await DashboardService.GetArtistNationCountAsync();
 		isLoading = false;
 		StateHasChanged(); 
 
