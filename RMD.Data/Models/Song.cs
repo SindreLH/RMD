@@ -8,6 +8,9 @@ namespace RMD.Data.Models
         [Key]
         public int SongId { get; set; }
 
+        public DateTime SongCreatedAt { get; set; } = DateTime.UtcNow;
+
+
         [Required]
         [MaxLength(150)]
         public required string Title { get; set; }

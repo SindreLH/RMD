@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using RMD.Business.Services
+@using RMD.Data.Models
+@inject IDashboardService DashboardService
 
 <PageTitle>RMD | Home</PageTitle>
 
@@ -7,13 +10,50 @@
 
 		<div class="cards_container">
 			<div class="data_card">
-				<p><strong>306</strong> låter</p>
+				<h3><strong>306 Låter</strong></h3>
+				<p>188 Promoterte</p>
+				<div class="newly_added">
+
+					@if (isLoading)
+					{
+						<img src="~/images/Loader.gif">
+					}
+
+					@if (latestSong != null && latestSong.IsSuccess)
+					{
+						<p class="green_plus">+</p>
+						<p>@latestSong.Value.Title</p>
+					}
+
+					else
+					{
+						<p class="green_plus">+</p>
+						<p>Ingen sanger funnet</p>
+					}
+				</div>
 			</div>
 			<div class="data_card">
-				<p><strong>291</strong> artister</p>
-			</div>
-			<div class="data_card">
-				<p><strong>188</strong> avspilte låter </p>
+				<h3><strong>291 Artister</strong></h3>
+				<p>34 Nasjonaliteter</p>
+				<div class="newly_added">
+					@if (isLoading)
+					{
+						<img src="~/images/Loader.gif">
+					}
+
+					@if (latestArtist != null && latestArtist.IsSuccess)
+					{
+						<p class="green_plus">+</p>
+						<p>@latestArtist.Value.Name</p>
+					}
+
+					else
+					{
+						<p class="green_plus">+</p>
+						<p>Ingen artister funnet</p>
+					}
+				</div>
+
 			</div>
 		</div>
 
@@ -52,63 +92,63 @@
 
 		</div>
 
-		<div class="table-container">
+		<div class="table_container">
 			<table class="table table-bordered table-dark table-striped table-hover">
 				<thead class="thead-light">
 					<tr>
 						<th>#</th>
+						<th>Ext</th>
 						<th>Tittel</th>
-						<th>Extended</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>1</td>
-						<td>A New Song</td>
 						<td>✅</td>
+						<td>A New Song</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>2</td>
-						<td>Track Added Yesterday</td>
 						<td>✅</td>
+						<td>Track Added Yesterday</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>3</td>
-						<td>I want This Song</td>
 						<td>✅</td>
+						<td>I want This Song</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>4</td>
-						<td>Considering Buying This Track</td>
 						<td>✅</td>
+						<td>Considering Buying This Track</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>5</td>
-						<td>This Track Is A Radio Edit</td>
 						<td>❌</td>
+						<td>This Track Is A Radio Edit</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>6</td>
+						<td>✅</td>
 						<td>Got To Many Songs Man</td>
-						<td>✅</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>7</td>
-						<td>Song 7</td>
 						<td>✅</td>
+						<td>Song 7</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 					<tr>
 						<td>7</td>
-						<td>Song 7</td>
 						<td>✅</td>
+						<td>Song 7</td>
 						<td>https://www.w3schools.com/html/html_tables.asp</td>
 					</tr>
 				</tbody>
@@ -117,8 +157,9 @@
 	</div>
 
 	<div class="right_container">
-		<div class="resources_container">
 
+		<div class="resources_container">
+			<h3 style="margin-left:3rem;">Ressurser</h3>
 			<h5>ℹ️ Informasjon</h5>
 			<div class="resource_item">
 				<a href="https://www.discogs.com">🔗 Discogs.com</a>
@@ -153,26 +194,25 @@
 				<a href="https://www.discogs.com">🔗 Handsuppowo.pl</a>
 			</div>
 			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 Trackitdown.com</a>
-			</div>
-			<div class="resource_item">
 				<a href="https://www.discogs.com">🔗 YouTube2mp3.com</a>
 			</div>
-
-			<h5>👍Sosiale Medier</h5>
 			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 YouTube.com</a>
+				<a href="https://www.discogs.com">🔗 Domega Records Bootlegs</a>
 			</div>
 			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 Soundcloud.com</a>
+				<a href="https://www.discogs.com">🔗 HHH YouTube Channel</a>
 			</div>
 			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 Discogs.com</a>
+				<a href="https://www.discogs.com">🔗 Unreal Project Promo Drive</a>
+			</div>
+			<div class="resource_item">
+				<a href="https://www.discogs.com">🔗 Nuteczki.eu Forums</a>
 			</div>
 		</div>
 	</div>
 
 </div>
+
 
 @code {
 	private ApexChartOptions<MyData> ChartOptions { get; set; } = new();
@@ -181,6 +221,9 @@
 	private ApexChartOptions<PieChartData> PieChartOptions { get; set; } = new();
 	private List<PieChartData> PieChartDataList { get; set; } = new();
 
+	private Result<Song>? latestSong;
+	private Result<Artist>? latestArtist;
+	private bool isLoading = true;
 
 	public class PieChartData
 	{
@@ -195,21 +238,52 @@
 		public int NewArtists { get; set; }
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		latestSong = await DashboardService.GetLatestSongAsync();
+		latestArtist = await DashboardService.GetLatestArtistAsync();
+		isLoading = false;
+		StateHasChanged(); 
+
 		Data.Add(new MyData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
 		Data.Add(new MyData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
 		Data.Add(new MyData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
+		Data.Add(new MyData { Category = "Apr", NewSongs = 7, NewArtists = 2 });
+		Data.Add(new MyData { Category = "Mai", NewSongs = 43, NewArtists = 2 });
+		Data.Add(new MyData { Category = "Jun", NewSongs = 63, NewArtists = 1 });
+		Data.Add(new MyData { Category = "Jul", NewSongs = 92, NewArtists = 34 });
+		Data.Add(new MyData { Category = "Aug", NewSongs = 5, NewArtists = 2 });
+		Data.Add(new MyData { Category = "Sep", NewSongs = 8, NewArtists = 1 });
+		Data.Add(new MyData { Category = "Okt", NewSongs = 45, NewArtists = 18 });
+		Data.Add(new MyData { Category = "Nov", NewSongs = 34, NewArtists = 10 });
+		Data.Add(new MyData { Category = "Des", NewSongs = 23, NewArtists = 2 });
+
+		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
+		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 196 });
+		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
+		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
+		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
 
 		ChartOptions = new ApexChartOptions<MyData>
 			{
+				Chart = new Chart
+				{
+					Type = ChartType.Bar,
+					Width = "139%",
+					Height = "90%"
+				},
+
 				Title = new Title
 				{
-					Text = "Sample Data",
+					Text = "Nylig lagt til",
 					Style = new TitleStyle
 					{
-						Color = "#ffffff"
+						Color = "#ffffff",
+						FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+						FontWeight = 500,
+
 					}
+
 				},
 
 				Xaxis = new XAxis
@@ -247,12 +321,6 @@
 				}
 			};
 
-
-		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
-		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 76 });
-		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
-		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
-		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
 		PieChartOptions = new ApexChartOptions<PieChartData>
 		{
 			Title = new Title
@@ -260,27 +328,38 @@
 				Text = "Andel per sjanger",
 				Style = new TitleStyle
 				{
-					Color = "#ffffff"
+					Color = "#ffffff",
+					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+					FontWeight = 500
 				}
 			},
 
 			Chart = new Chart
 			{
-				Type = ChartType.Pie
+				Type = ChartType.Pie,
+				Width = "150%",
+				Height = "91%"
 			},
 
 			Labels = PieChartDataList.Select(d => d.Label).ToList(),
-		
+
 			Legend = new Legend
 			{
 				Show = true,
 				Position = LegendPosition.Bottom,
+				FontFamily = "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif",
 				Labels = new LegendLabels
 				{
 					Colors = "#ffffff"
 				}
+			},
+
+			Stroke = new Stroke
+			{
+				Show = false
 			}
-			
+
 		};
+
 	}
 }

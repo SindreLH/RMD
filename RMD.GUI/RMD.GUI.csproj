@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Pages\Components\Tabs\" />
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
 	<!--EFC Versions were set to 6.0.12 here-->
@@ -64,6 +65,12 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\RMD.Business\RMD.Business.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Content Update="wwwroot\fonts\Roboto-Regular.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

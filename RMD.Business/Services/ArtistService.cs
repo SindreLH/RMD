@@ -95,6 +95,8 @@ namespace RMD.Business.Services
 			}
 		}
 
+		
+
 		public async Task<Result<bool>> DeleteArtistByIdAsync(int artistId)
 		{
 			try
