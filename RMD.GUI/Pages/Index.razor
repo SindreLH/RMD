@@ -2,16 +2,17 @@
 @using RMD.Business.Services
 @using RMD.Data.Models
 @inject IDashboardService DashboardService
+@inject NavigationManager Navigation
 
-<PageTitle>RMD | Home</PageTitle>
+<PageTitle>RMD | Dashboard</PageTitle>
 
 <div class="main_container">
 	<div class="left_container">
 
 		<div class="cards_container">
 			<div class="data_card">
-				<h3><strong>306 Låter</strong></h3>
-				<p>188 Promoterte</p>
+				<h3><strong>@songCount?.Value Låter</strong></h3>
+				<p>@playedSongCount?.Value Promoterte</p>
 				<div class="newly_added">
 
 					@if (isLoading)
@@ -33,8 +34,8 @@
 				</div>
 			</div>
 			<div class="data_card">
-				<h3><strong>291 Artister</strong></h3>
-				<p>34 Nasjonaliteter</p>
+				<h3><strong>@artistCount?.Value Artister</strong></h3>
+				<p>@artistNationCount?.Value Nasjonaliteter</p>
 				<div class="newly_added">
 					@if (isLoading)
 					{
@@ -64,14 +65,14 @@
 
 					<ApexPointSeries TItem="MyData"
 					Items="Data"
-					Name="New Songs"
+					Name="Nye låter"
 					SeriesType="SeriesType.Bar"
 					XValue="e => e.Category"
 					YValue="e => e.NewSongs" />
 
 					<ApexPointSeries TItem="MyData"
 					Items="Data"
-					Name="New Artists"
+					Name="Nye artister"
 					SeriesType="SeriesType.Bar"
 					XValue="e => e.Category"
 					YValue="e => e.NewArtists" />
@@ -97,60 +98,33 @@
 				<thead class="thead-light">
 					<tr>
 						<th>#</th>
-						<th>Ext</th>
 						<th>Tittel</th>
+						<th>Lengde</th>
+						<th>Extended</th>
+						<th>Sjanger</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>1</td>
-						<td>✅</td>
-						<td>A New Song</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>✅</td>
-						<td>Track Added Yesterday</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>✅</td>
-						<td>I want This Song</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>4</td>
-						<td>✅</td>
-						<td>Considering Buying This Track</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>5</td>
-						<td>❌</td>
-						<td>This Track Is A Radio Edit</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>6</td>
-						<td>✅</td>
-						<td>Got To Many Songs Man</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td>✅</td>
-						<td>Song 7</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td>✅</td>
-						<td>Song 7</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
+					@foreach (var song in wantedSongs?.Value ?? Enumerable.Empty<Song>())
+					{
+						<tr>
+							<td>@song.SongId</td>
+							<td>@song.Title</td>
+							<td>@song.Length</td>
+							<td>@(song.ExtendedMix ? "✅" : "❌")</td>
+							<td>@song.Genre</td>
+							<td class="text-truncate" style="max-width: 200px">
+								<a href="@song.WantedSongUrl" 
+									target="_blank" 
+									rel="noopener noreferrer" 
+									title="@song.WantedSongUrl">
+									@song.WantedSongUrl
+								</a>
+							</td>
+						</tr>
+					}
+					
 				</tbody>
 			</table>
 		</div>
@@ -223,6 +197,11 @@
 
 	private Result<Song>? latestSong;
 	private Result<Artist>? latestArtist;
+	private Result<int>? artistCount;
+	private Result<int>? songCount;
+	private Result<int>? playedSongCount;
+	private Result<int>? artistNationCount;
+	private Result<IEnumerable<Song>>? wantedSongs;
 	private bool isLoading = true;
 
 	public class PieChartData
@@ -242,6 +221,11 @@
 	{
 		latestSong = await DashboardService.GetLatestSongAsync();
 		latestArtist = await DashboardService.GetLatestArtistAsync();
+		artistCount = await DashboardService.GetArtistCountAsync();
+		songCount = await DashboardService.GetSongCountAsync();
+		playedSongCount = await DashboardService.GetPlayedSongCountAsync();
+		artistNationCount = await DashboardService.GetArtistNationCountAsync();
+		wantedSongs = await DashboardService.GetWantedSongsAsync();
 		isLoading = false;
 		StateHasChanged(); 
 
@@ -325,7 +309,7 @@
 		{
 			Title = new Title
 			{
-				Text = "Andel per sjanger",
+				Text = "Låter pr. sjanger",
 				Style = new TitleStyle
 				{
 					Color = "#ffffff",
