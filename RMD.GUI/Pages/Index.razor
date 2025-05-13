@@ -2,8 +2,9 @@
 @using RMD.Business.Services
 @using RMD.Data.Models
 @inject IDashboardService DashboardService
+@inject NavigationManager Navigation
 
-<PageTitle>RMD | Home</PageTitle>
+<PageTitle>RMD | Dashboard</PageTitle>
 
 <div class="main_container">
 	<div class="left_container">
@@ -22,7 +23,7 @@
 					@if (latestSong != null && latestSong.IsSuccess)
 					{
 						<p class="green_plus">+</p>
-						<p>@latestSong.Value.Title Artister</p>
+						<p>@latestSong.Value.Title</p>
 					}
 
 					else
@@ -97,60 +98,33 @@
 				<thead class="thead-light">
 					<tr>
 						<th>#</th>
-						<th>Ext</th>
 						<th>Tittel</th>
+						<th>Lengde</th>
+						<th>Extended</th>
+						<th>Sjanger</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>1</td>
-						<td>✅</td>
-						<td>A New Song</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>✅</td>
-						<td>Track Added Yesterday</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>✅</td>
-						<td>I want This Song</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>4</td>
-						<td>✅</td>
-						<td>Considering Buying This Track</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>5</td>
-						<td>❌</td>
-						<td>This Track Is A Radio Edit</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>6</td>
-						<td>✅</td>
-						<td>Got To Many Songs Man</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td>✅</td>
-						<td>Song 7</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td>✅</td>
-						<td>Song 7</td>
-						<td>https://www.w3schools.com/html/html_tables.asp</td>
-					</tr>
+					@foreach (var song in wantedSongs?.Value ?? Enumerable.Empty<Song>())
+					{
+						<tr>
+							<td>@song.SongId</td>
+							<td>@song.Title</td>
+							<td>@song.Length</td>
+							<td>@(song.ExtendedMix ? "✅" : "❌")</td>
+							<td>@song.Genre</td>
+							<td class="text-truncate" style="max-width: 200px">
+								<a href="@song.WantedSongUrl" 
+									target="_blank" 
+									rel="noopener noreferrer" 
+									title="@song.WantedSongUrl">
+									@song.WantedSongUrl
+								</a>
+							</td>
+						</tr>
+					}
+					
 				</tbody>
 			</table>
 		</div>
@@ -227,6 +201,7 @@
 	private Result<int>? songCount;
 	private Result<int>? playedSongCount;
 	private Result<int>? artistNationCount;
+	private Result<IEnumerable<Song>>? wantedSongs;
 	private bool isLoading = true;
 
 	public class PieChartData
@@ -250,6 +225,7 @@
 		songCount = await DashboardService.GetSongCountAsync();
 		playedSongCount = await DashboardService.GetPlayedSongCountAsync();
 		artistNationCount = await DashboardService.GetArtistNationCountAsync();
+		wantedSongs = await DashboardService.GetWantedSongsAsync();
 		isLoading = false;
 		StateHasChanged(); 
 

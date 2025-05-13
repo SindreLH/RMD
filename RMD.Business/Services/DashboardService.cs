@@ -11,27 +11,28 @@ using System.Threading.Tasks;
 
 namespace RMD.Business.Services
 {
-    public interface IDashboardService
-    {
-        Task<Result<Song>> GetLatestSongAsync();
-        Task<Result<Artist>> GetLatestArtistAsync();
+	public interface IDashboardService
+	{
+		Task<Result<Song>> GetLatestSongAsync();
+		Task<Result<Artist>> GetLatestArtistAsync();
 		Task<Result<int>> GetArtistCountAsync();
 		Task<Result<int>> GetSongCountAsync();
 		Task<Result<int>> GetPlayedSongCountAsync();
 		Task<Result<int>> GetArtistNationCountAsync();
+		Task<Result<IEnumerable<Song>>> GetWantedSongsAsync();
 
 	}
 
-    public class DashboardService : IDashboardService
-    {
+	public class DashboardService : IDashboardService
+	{
 		private readonly RMDContext _context;
 		public DashboardService(RMDContext context)
 		{
 			_context = context;
 		}
-	
 
-	public async Task<Result<Song>> GetLatestSongAsync()
+
+		public async Task<Result<Song>> GetLatestSongAsync()
 		{
 			try
 			{
@@ -53,7 +54,7 @@ namespace RMD.Business.Services
 				return Result<Song>.Failure("An unknown error occured while FETCHING latest songs from the database." + ex.Message);
 			}
 		}
-	public async Task<Result<Artist>> GetLatestArtistAsync()
+		public async Task<Result<Artist>> GetLatestArtistAsync()
 		{
 			try
 			{
@@ -75,8 +76,8 @@ namespace RMD.Business.Services
 				return Result<Artist>.Failure("An unknown error occured while FETCHING LATEST artist from the database." + ex.Message);
 			}
 		}
-	public async Task<Result<int>> GetArtistCountAsync()
-	{
+		public async Task<Result<int>> GetArtistCountAsync()
+		{
 			try
 			{
 				int count = await _context.Artists.CountAsync();
@@ -91,13 +92,13 @@ namespace RMD.Business.Services
 
 
 
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
 			}
-	}	
-	public async Task<Result<int>> GetSongCountAsync()
-	{
+		}
+		public async Task<Result<int>> GetSongCountAsync()
+		{
 			try
 			{
 				int count = await _context.Songs.CountAsync();
@@ -112,59 +113,81 @@ namespace RMD.Business.Services
 
 
 
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
 			}
-	}
-	public async Task<Result<int>> GetPlayedSongCountAsync()
-	{
-		try
+		}
+		public async Task<Result<int>> GetPlayedSongCountAsync()
 		{
+			try
+			{
 				int count = await _context.Songs
 						.Where(s => s.Played)
 						.CountAsync();
 
-			if (count == 0)
-			{
-				return Result<int>.Failure("No PLAYED songs were found in the database.");
+				if (count == 0)
+				{
+					return Result<int>.Failure("No PLAYED songs were found in the database.");
+				}
+
+				return Result<int>.Success(count);
 			}
 
-			return Result<int>.Success(count);
-		}
 
 
-
-		catch (Exception ex)
-		{
-			return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
-		}
-	}
-
-	public async Task<Result<int>> GetArtistNationCountAsync()
-	{
-		try
-		{
-			int count = await _context.Artists
-				.Where(a => !string.IsNullOrEmpty(a.Nationality))
-				.Select(a => a.Nationality)
-				.Distinct()
-				.CountAsync();
-						
-			if (count == 0)
+			catch (Exception ex)
 			{
-				return Result<int>.Failure("No PLAYED songs were found in the database.");
+				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+			}
+		}
+		public async Task<Result<int>> GetArtistNationCountAsync()
+		{
+			try
+			{
+				int count = await _context.Artists
+					.Where(a => !string.IsNullOrEmpty(a.Nationality))
+					.Select(a => a.Nationality)
+					.Distinct()
+					.CountAsync();
+
+				if (count == 0)
+				{
+					return Result<int>.Failure("No PLAYED songs were found in the database.");
+				}
+
+				return Result<int>.Success(count);
 			}
 
-			return Result<int>.Success(count);
+
+
+			catch (Exception ex)
+			{
+				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+			}
 		}
 
 
-
-		catch (Exception ex)
+		public async Task<Result<IEnumerable<Song>>> GetWantedSongsAsync()
 		{
-			return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+			try
+			{
+				var songs = await _context.Songs
+					.Where(s => s.Wanted)
+					.ToListAsync();
+
+				if (songs == null || !songs.Any())
+				{
+					return Result<IEnumerable<Song>>.Failure("No WANTED songs were found in the database.");
+				}
+
+				return Result<IEnumerable<Song>>.Success(songs);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING WANTED SONGS from the database." + ex.Message);
+			}
 		}
-	}
 	}
 }
