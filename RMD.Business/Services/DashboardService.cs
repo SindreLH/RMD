@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+
 
 
 namespace RMD.Business.Services
@@ -20,8 +22,10 @@ namespace RMD.Business.Services
 		Task<Result<int>> GetPlayedSongCountAsync();
 		Task<Result<int>> GetArtistNationCountAsync();
 		Task<Result<IEnumerable<Song>>> GetWantedSongsAsync();
+		Task<Result<Dictionary<string, double>>> GetGenrePercentagesAsync();
 
 	}
+
 
 	public class DashboardService : IDashboardService
 	{
@@ -30,7 +34,6 @@ namespace RMD.Business.Services
 		{
 			_context = context;
 		}
-
 
 		public async Task<Result<Song>> GetLatestSongAsync()
 		{
@@ -166,8 +169,6 @@ namespace RMD.Business.Services
 				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
 			}
 		}
-
-
 		public async Task<Result<IEnumerable<Song>>> GetWantedSongsAsync()
 		{
 			try
@@ -189,5 +190,36 @@ namespace RMD.Business.Services
 				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING WANTED SONGS from the database." + ex.Message);
 			}
 		}
-	}
+
+		public async Task<Result<Dictionary<string, double>>> GetGenrePercentagesAsync()
+		{
+			try
+			{
+
+				var songCount = await _context.Songs.CountAsync();
+
+				var genreCount = await _context.Songs
+					.GroupBy(s => s.Genre)
+					.Select(g => new
+					{
+						Genre = g.Key,
+						Count = g.Count()
+					})
+					.ToListAsync();
+
+				var percentages = genreCount
+				   .ToDictionary(
+					g => g.Genre,
+					g => Math.Round((double)g.Count / songCount * 100, 2));
+
+				return Result<Dictionary<string, double>>.Success(percentages);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Dictionary<string, double>>.Failure("An unknown error occured while calculating genre percentages." + ex.Message);
+
+			}
+		}
+}
 }
