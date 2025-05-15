@@ -23,6 +23,7 @@ namespace RMD.Business.Services
 		Task<Result<int>> GetArtistNationCountAsync();
 		Task<Result<IEnumerable<Song>>> GetWantedSongsAsync();
 		Task<Result<Dictionary<string, double>>> GetGenrePercentagesAsync();
+		Task<Result<Dictionary<string, int>>> GetGenreCountAsync();
 
 	}
 
@@ -220,6 +221,32 @@ namespace RMD.Business.Services
 				return Result<Dictionary<string, double>>.Failure("An unknown error occured while calculating genre percentages." + ex.Message);
 
 			}
+		}
+
+		public async Task<Result<Dictionary<string, int>>> GetGenreCountAsync()
+		{
+
+			try
+			{
+				var genreCount = await _context.Songs
+					.GroupBy(s => s.Genre)
+					.Select(g => new
+					{
+						Genre = g.Key ?? "Ukjent sjanger",
+						Count = g.Count()
+					})
+					.ToDictionaryAsync(g => g.Genre, g => g.Count);
+
+				return Result<Dictionary<string, int>>.Success(genreCount);
+			}
+
+			catch (Exception ex)
+			{
+				return Result<Dictionary<string, int>>.Failure("Error getting genre counts: " + ex.Message);
+			}
+
+
+
 		}
 }
 }

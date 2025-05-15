@@ -206,6 +206,7 @@
 	private Result<IEnumerable<Song>>? wantedSongs;
 	private bool isLoading = true;
 	private Result<Dictionary<string, double>>? genreDictionary;
+	private Result<Dictionary<string, int>>? genreCount;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -217,23 +218,28 @@
 		artistNationCount = await DashboardService.GetArtistNationCountAsync();
 		wantedSongs = await DashboardService.GetWantedSongsAsync();
 		genreDictionary = await DashboardService.GetGenrePercentagesAsync();
+		genreCount = await DashboardService.GetGenreCountAsync();
 
-		if(genreDictionary.IsSuccess && genreDictionary.Value != null)
+
+		//Load PieChart with data
+		var genreCountsResult = await DashboardService.GetGenreCountAsync();
+
+		if (genreCountsResult.IsSuccess && genreCountsResult.Value != null)
 		{
-			foreach(var kvp in genreDictionary.Value)
+			int total = genreCountsResult.Value.Values.Sum();
+
+			foreach (var kvp in genreCountsResult.Value)
 			{
 				PieChartDataList.Add(new PieChartData
 				{
 					Label = kvp.Key ?? "Ukjent sjanger",
-					Value = (decimal)kvp.Value,
-					Count = 
+					Value = kvp.Value,
+					Count = kvp.Value
 				});
 			}
 
 			PieChartOptions.Labels = PieChartDataList.Select(d => d.Label).ToList();
 		}
-
-		
 
 		isLoading = false;
 		StateHasChanged(); 
@@ -310,6 +316,19 @@
 
 		PieChartOptions = new ApexChartOptions<PieChartData>
 		{
+			Tooltip = new Tooltip
+			{
+				Custom = @"
+					function({ series, seriesIndex, w }) {
+					const label = w.globals.labels[seriesIndex];
+					const count = series[seriesIndex];
+					const total = series.reduce((a, b) => a + b, 0);
+					const percentage = ((count / total) * 100).toFixed(1);
+					return label + ': ' + count + ' låter (' + percentage + '%)';
+					}
+				"
+			},
+
 			Title = new Title
 			{
 				Text = "Sjangerfordeling",
@@ -343,7 +362,6 @@
 			{
 				Show = false
 			}
-
 		};
 
 	}
