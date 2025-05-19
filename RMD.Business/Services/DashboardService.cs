@@ -192,6 +192,8 @@ namespace RMD.Business.Services
 			}
 		}
 
+
+		// Redundant?
 		public async Task<Result<Dictionary<string, double>>> GetGenrePercentagesAsync()
 		{
 			try
@@ -244,9 +246,8 @@ namespace RMD.Business.Services
 			{
 				return Result<Dictionary<string, int>>.Failure("Error getting genre counts: " + ex.Message);
 			}
-
-
-
 		}
+
+
 }
 }

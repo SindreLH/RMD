@@ -204,9 +204,10 @@
 	private Result<int>? playedSongCount;
 	private Result<int>? artistNationCount;
 	private Result<IEnumerable<Song>>? wantedSongs;
-	private bool isLoading = true;
 	private Result<Dictionary<string, double>>? genreDictionary;
 	private Result<Dictionary<string, int>>? genreCount;
+
+	private bool isLoading = true;
 
 	protected override async Task OnInitializedAsync()
 	{
