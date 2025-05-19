@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using RMD.Business.Services
 @using RMD.Data.Models
+@using RMD.Data.Models.Dashboard
 @inject IDashboardService DashboardService
 @inject NavigationManager Navigation
 
@@ -60,17 +61,17 @@
 
 		<div class="graphs_container">
 			<div class="chart">
-				<ApexChart TItem="MyData"
+				<ApexChart TItem="BarChartData"
 				Options = "ChartOptions">
 
-					<ApexPointSeries TItem="MyData"
+					<ApexPointSeries TItem="BarChartData"
 					Items="Data"
 					Name="Nye låter"
 					SeriesType="SeriesType.Bar"
 					XValue="e => e.Category"
 					YValue="e => e.NewSongs" />
 
-					<ApexPointSeries TItem="MyData"
+					<ApexPointSeries TItem="BarChartData"
 					Items="Data"
 					Name="Nye artister"
 					SeriesType="SeriesType.Bar"
@@ -116,15 +117,15 @@
 							<td>@song.Genre</td>
 							<td class="text-truncate" style="max-width: 200px">
 								<a href="@song.WantedSongUrl" 
-									target="_blank" 
-									rel="noopener noreferrer" 
-									title="@song.WantedSongUrl">
+								target="_blank" 
+								rel="noopener noreferrer" 
+								title="@song.WantedSongUrl">
 									@song.WantedSongUrl
 								</a>
 							</td>
 						</tr>
 					}
-					
+
 				</tbody>
 			</table>
 		</div>
@@ -189,11 +190,12 @@
 
 
 @code {
-	private ApexChartOptions<MyData> ChartOptions { get; set; } = new();
-	private List<MyData> Data { get; set; } = new();
-
+	private ApexChartOptions<BarChartData> ChartOptions { get; set; } = new();
+	private List<BarChartData> Data { get; set; } = new();
 	private ApexChartOptions<PieChartData> PieChartOptions { get; set; } = new();
 	private List<PieChartData> PieChartDataList { get; set; } = new();
+	private List<string> PieLabels = new();
+	private List<double?> PieValues = new();
 
 	private Result<Song>? latestSong;
 	private Result<Artist>? latestArtist;
@@ -202,20 +204,10 @@
 	private Result<int>? playedSongCount;
 	private Result<int>? artistNationCount;
 	private Result<IEnumerable<Song>>? wantedSongs;
+	private Result<Dictionary<string, double>>? genreDictionary;
+	private Result<Dictionary<string, int>>? genreCount;
+
 	private bool isLoading = true;
-
-	public class PieChartData
-	{
-		public string? Label { get; set; }
-		public int Value { get; set; }
-	}
-
-	public class MyData
-	{
-		public string? Category { get; set; }
-		public int NewSongs { get; set; }
-		public int NewArtists { get; set; }
-	}
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -226,29 +218,47 @@
 		playedSongCount = await DashboardService.GetPlayedSongCountAsync();
 		artistNationCount = await DashboardService.GetArtistNationCountAsync();
 		wantedSongs = await DashboardService.GetWantedSongsAsync();
+		genreDictionary = await DashboardService.GetGenrePercentagesAsync();
+		genreCount = await DashboardService.GetGenreCountAsync();
+
+
+		//Load PieChart with data
+		var genreCountsResult = await DashboardService.GetGenreCountAsync();
+
+		if (genreCountsResult.IsSuccess && genreCountsResult.Value != null)
+		{
+			int total = genreCountsResult.Value.Values.Sum();
+
+			foreach (var kvp in genreCountsResult.Value)
+			{
+				PieChartDataList.Add(new PieChartData
+				{
+					Label = kvp.Key ?? "Ukjent sjanger",
+					Value = kvp.Value,
+					Count = kvp.Value
+				});
+			}
+
+			PieChartOptions.Labels = PieChartDataList.Select(d => d.Label).ToList();
+		}
+
 		isLoading = false;
 		StateHasChanged(); 
 
-		Data.Add(new MyData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
-		Data.Add(new MyData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
-		Data.Add(new MyData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
-		Data.Add(new MyData { Category = "Apr", NewSongs = 7, NewArtists = 2 });
-		Data.Add(new MyData { Category = "Mai", NewSongs = 43, NewArtists = 2 });
-		Data.Add(new MyData { Category = "Jun", NewSongs = 63, NewArtists = 1 });
-		Data.Add(new MyData { Category = "Jul", NewSongs = 92, NewArtists = 34 });
-		Data.Add(new MyData { Category = "Aug", NewSongs = 5, NewArtists = 2 });
-		Data.Add(new MyData { Category = "Sep", NewSongs = 8, NewArtists = 1 });
-		Data.Add(new MyData { Category = "Okt", NewSongs = 45, NewArtists = 18 });
-		Data.Add(new MyData { Category = "Nov", NewSongs = 34, NewArtists = 10 });
-		Data.Add(new MyData { Category = "Des", NewSongs = 23, NewArtists = 2 });
+		Data.Add(new BarChartData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
+		Data.Add(new BarChartData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
+		Data.Add(new BarChartData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
+		Data.Add(new BarChartData { Category = "Apr", NewSongs = 7, NewArtists = 2 });
+		Data.Add(new BarChartData { Category = "Mai", NewSongs = 43, NewArtists = 2 });
+		Data.Add(new BarChartData { Category = "Jun", NewSongs = 63, NewArtists = 1 });
+		Data.Add(new BarChartData { Category = "Jul", NewSongs = 92, NewArtists = 34 });
+		Data.Add(new BarChartData { Category = "Aug", NewSongs = 5, NewArtists = 2 });
+		Data.Add(new BarChartData { Category = "Sep", NewSongs = 8, NewArtists = 1 });
+		Data.Add(new BarChartData { Category = "Okt", NewSongs = 45, NewArtists = 18 });
+		Data.Add(new BarChartData { Category = "Nov", NewSongs = 34, NewArtists = 10 });
+		Data.Add(new BarChartData { Category = "Des", NewSongs = 23, NewArtists = 2 });
 
-		PieChartDataList.Add(new PieChartData { Label = "Hands Up", Value = 146 });
-		PieChartDataList.Add(new PieChartData { Label = "Hardstyle", Value = 306 - 196 });
-		PieChartDataList.Add(new PieChartData { Label = "Trance", Value = 306 - 230 });
-		PieChartDataList.Add(new PieChartData { Label = "Hard Trance", Value = 306 - 188 });
-		PieChartDataList.Add(new PieChartData { Label = "UK Hardcore", Value = 306 - 188 });
-
-		ChartOptions = new ApexChartOptions<MyData>
+		ChartOptions = new ApexChartOptions<BarChartData>
 			{
 				Chart = new Chart
 				{
@@ -307,9 +317,22 @@
 
 		PieChartOptions = new ApexChartOptions<PieChartData>
 		{
+			Tooltip = new Tooltip
+			{
+				Custom = @"
+					function({ series, seriesIndex, w }) {
+					const label = w.globals.labels[seriesIndex];
+					const count = series[seriesIndex];
+					const total = series.reduce((a, b) => a + b, 0);
+					const percentage = ((count / total) * 100).toFixed(1);
+					return label + ': ' + count + ' låter (' + percentage + '%)';
+					}
+				"
+			},
+
 			Title = new Title
 			{
-				Text = "Låter pr. sjanger",
+				Text = "Sjangerfordeling",
 				Style = new TitleStyle
 				{
 					Color = "#ffffff",
@@ -324,8 +347,6 @@
 				Width = "150%",
 				Height = "91%"
 			},
-
-			Labels = PieChartDataList.Select(d => d.Label).ToList(),
 
 			Legend = new Legend
 			{
@@ -342,7 +363,6 @@
 			{
 				Show = false
 			}
-
 		};
 
 	}
