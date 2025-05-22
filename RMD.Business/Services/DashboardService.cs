@@ -23,7 +23,6 @@ namespace RMD.Business.Services
 		Task<Result<int>> GetArtistNationCountAsync();
 		Task<Result<IEnumerable<Song>>> GetWantedSongsAsync();
 		Task<Result<Dictionary<string, int>>> GetGenreCountAsync();
-
 	}
 
 
