@@ -64,18 +64,23 @@
 				<ApexChart TItem="BarChartData"
 				Options = "ChartOptions">
 
+					@if (Data.Count == 0)
+					{
+						<p style="color:red;">Ingen data tilgjengelig for bar chart.</p>
+					}
+
 					<ApexPointSeries TItem="BarChartData"
 					Items="Data"
 					Name="Nye låter"
 					SeriesType="SeriesType.Bar"
-					XValue="e => e.Category"
+					XValue="e => e.Month"
 					YValue="e => e.NewSongs" />
 
 					<ApexPointSeries TItem="BarChartData"
 					Items="Data"
 					Name="Nye artister"
 					SeriesType="SeriesType.Bar"
-					XValue="e => e.Category"
+					XValue="e => e.Month"
 					YValue="e => e.NewArtists" />
 				</ApexChart>
 			</div>
@@ -241,21 +246,21 @@
 			PieChartOptions.Labels = PieChartDataList.Select(d => d.Label).ToList();
 		}
 
-		isLoading = false;
-		StateHasChanged(); 
+		//Load BarChart with data
+		var monthlyResult = await DashboardService.GetMonthlyAdditionsAsync();
+		if(monthlyResult.IsSuccess && monthlyResult.Value != null)
+		{
+	
 
-		Data.Add(new BarChartData { Category = "Jan", NewSongs = 12, NewArtists = 33 });
-		Data.Add(new BarChartData { Category = "Feb", NewSongs = 43, NewArtists = 42 });
-		Data.Add(new BarChartData { Category = "Mar", NewSongs = 112, NewArtists = 23 });
-		Data.Add(new BarChartData { Category = "Apr", NewSongs = 7, NewArtists = 2 });
-		Data.Add(new BarChartData { Category = "Mai", NewSongs = 43, NewArtists = 2 });
-		Data.Add(new BarChartData { Category = "Jun", NewSongs = 63, NewArtists = 1 });
-		Data.Add(new BarChartData { Category = "Jul", NewSongs = 92, NewArtists = 34 });
-		Data.Add(new BarChartData { Category = "Aug", NewSongs = 5, NewArtists = 2 });
-		Data.Add(new BarChartData { Category = "Sep", NewSongs = 8, NewArtists = 1 });
-		Data.Add(new BarChartData { Category = "Okt", NewSongs = 45, NewArtists = 18 });
-		Data.Add(new BarChartData { Category = "Nov", NewSongs = 34, NewArtists = 10 });
-		Data.Add(new BarChartData { Category = "Des", NewSongs = 23, NewArtists = 2 });
+			Data = monthlyResult.Value
+				.OrderBy(d => Enum.TryParse(typeof(Months), d.Month, out var result)
+					? (int)result
+				: 13)
+					.ToList();
+		}
+
+		isLoading = false;
+		StateHasChanged();
 
 		ChartOptions = new ApexChartOptions<BarChartData>
 			{
@@ -281,6 +286,7 @@
 
 				Xaxis = new XAxis
 				{
+					Categories = Data.Select(d => d.Month.Substring(0,3)).ToList(),
 					Labels = new XAxisLabels
 					{
 						Style = new AxisLabelStyle

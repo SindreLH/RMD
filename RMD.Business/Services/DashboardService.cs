@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Any;
 using RMD.Data.Context;
 using RMD.Data.Models;
+using RMD.Data.Models.Dashboard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,22 @@ using System.Xml.Linq;
 
 namespace RMD.Business.Services
 {
+	public enum Months
+	{
+		January = 1,
+		February = 2,
+		March = 3,
+		April = 4,
+		May = 5,
+		June = 6,
+		July = 7,
+		August = 8,
+		September = 9,
+		October = 10,
+		November = 11,
+		December = 12
+	}
+
 	public interface IDashboardService
 	{
 		Task<Result<Song>> GetLatestSongAsync();
@@ -23,6 +40,7 @@ namespace RMD.Business.Services
 		Task<Result<int>> GetArtistNationCountAsync();
 		Task<Result<IEnumerable<Song>>> GetWantedSongsAsync();
 		Task<Result<Dictionary<string, int>>> GetGenreCountAsync();
+		Task<Result<List<BarChartData>>> GetMonthlyAdditionsAsync();
 	}
 
 
@@ -33,6 +51,10 @@ namespace RMD.Business.Services
 		{
 			_context = context;
 		}
+
+	
+
+
 
 		public async Task<Result<Song>> GetLatestSongAsync()
 		{
@@ -189,7 +211,6 @@ namespace RMD.Business.Services
 				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING WANTED SONGS from the database." + ex.Message);
 			}
 		}
-
 		public async Task<Result<Dictionary<string, int>>> GetGenreCountAsync()
 		{
 
@@ -213,6 +234,39 @@ namespace RMD.Business.Services
 			}
 		}
 
+		public async Task<Result<List<BarChartData>>> GetMonthlyAdditionsAsync()
+		{
 
-}
+			try
+			{
+				int year = DateTime.Now.Year;
+				var data = new List<BarChartData>();
+
+				foreach (Months month in Enum.GetValues(typeof(Months)))
+				{
+					int newSongs = await _context.Songs
+						.CountAsync(s => s.SongCreatedAt.Year == year && s.SongCreatedAt.Month == (int)month);
+					
+
+					int newArtists = await _context.Artists
+						.CountAsync(a => a.ArtistCreatedAt.Year == year && a.ArtistCreatedAt.Month == (int)month);
+
+					data.Add(new BarChartData
+					{
+						Month = month.ToString(),
+						NewSongs = newSongs,
+						NewArtists = newArtists
+					});
+				}
+
+				return Result<List<BarChartData>>.Success(data);
+			}
+
+			catch(Exception ex)
+			{
+				return Result<List<BarChartData>>.Failure("Error loading monthly data: " + ex.Message);
+			}
+			
+		}
+	}
 }

@@ -8,7 +8,7 @@ namespace RMD.Data.Models.Dashboard
 {
 	public class BarChartData
 	{
-		public string? Category { get; set; }
+		public string? Month { get; set; }
 		public int NewSongs { get; set; }
 		public int NewArtists { get; set; }
 	}
