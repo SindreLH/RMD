@@ -103,11 +103,11 @@
 			<table class="table table-bordered table-dark table-striped table-hover">
 				<thead class="thead-light">
 					<tr>
-						<th>#</th>
+						<th class="hide-mobile">#</th>
 						<th>Tittel</th>
-						<th>Lengde</th>
-						<th>Extended</th>
-						<th>Sjanger</th>
+						<th class="hide-mobile">Lengde</th>
+						<th class="hide-mobile">Extended</th>
+						<th class="hide-mobile">Sjanger</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
@@ -115,12 +115,12 @@
 					@foreach (var song in wantedSongs?.Value ?? Enumerable.Empty<Song>())
 					{
 						<tr>
-							<td>@song.SongId</td>
+							<td class="hide-mobile">@song.SongId</td>
 							<td>@song.Title</td>
-							<td>@song.Length</td>
-							<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-							<td>@song.Genre</td>
-							<td class="text-truncate" style="max-width: 200px">
+							<td class="hide-mobile">@song.Length</td>
+							<td class="hide-mobile">@(song.ExtendedMix ? "✅" : "❌")</td>
+							<td class="hide-mobile">@song.Genre</td>
+							<td class="text-truncate" style="max-width: 180px">
 								<a href="@song.WantedSongUrl" 
 								target="_blank" 
 								rel="noopener noreferrer" 

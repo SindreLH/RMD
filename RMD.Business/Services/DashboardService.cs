@@ -52,10 +52,6 @@ namespace RMD.Business.Services
 			_context = context;
 		}
 
-	
-
-
-
 		public async Task<Result<Song>> GetLatestSongAsync()
 		{
 			try
@@ -233,7 +229,6 @@ namespace RMD.Business.Services
 				return Result<Dictionary<string, int>>.Failure("Error getting genre counts: " + ex.Message);
 			}
 		}
-
 		public async Task<Result<List<BarChartData>>> GetMonthlyAdditionsAsync()
 		{
 
