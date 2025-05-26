@@ -35,8 +35,12 @@ h3{
 h2 {
     color: white;
   
-} 
+}
 
+
+a:hover {
+    color: #43C000;
+}
 
 .data_card {
     padding-top: 2.5rem;
@@ -207,6 +211,7 @@ a{
         color: lightgray;
         font-size: small;
     }
+
 
     .main_container{
         display: flex;
