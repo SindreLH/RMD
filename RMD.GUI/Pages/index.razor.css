@@ -30,8 +30,17 @@ h3{
     color: white;
     font-size: 2.5rem;
     font-weight: 900;
-} 
+}
 
+h2 {
+    color: white;
+  
+}
+
+
+a:hover {
+    color: #43C000;
+}
 
 .data_card {
     padding-top: 2.5rem;
@@ -71,6 +80,53 @@ h3{
     border-radius: 20px;
     width: 31rem;
     height: 15rem;
+}
+
+.card_loader{
+    display: flex;
+    flex-direction: column;
+}
+
+.card_loader_text{
+    margin-top:3rem;
+    padding:0;
+}
+
+.load_container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    width: 100%;
+    height: 20rem;
+    border-radius: 25px;
+    background-color: rgba(37, 37, 37, 0.5);
+}
+
+.load_contents {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.load_spinner {
+    max-width: 64px;
+    max-height: 64px;
+    width: 64px;
+    height: 64px;
+    justify-self: center;
+    align-self: center;
+}
+
+.load_text {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    justify-self: center;
+    align-self: center;
+    padding-top: 6rem;
+    font-weight: 400;
+    font-size: 1.25rem;
 }
 
 
@@ -179,5 +235,93 @@ a{
     text-decoration: none;
     color: lightgray;
     font-size: small;
+}
+
+@media (max-width: 412px) {
+    h4 {
+        margin: 3rem;
+        font-size: large;
+        color: white;
+    }
+
+    h5 {
+        margin-left: 3rem;
+        font-size: medium;
+        font-weight: 400;
+        color: white;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: lightgray;
+        font-size: small;
+    }
+
+
+    .main_container{
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .left_container{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cards_container{
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    .data_card{
+        margin-bottom: 1rem;
+        width: 100%;
+        height: auto;
+    }
+
+    .graphs_container{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart{
+        margin-bottom: 1rem;
+        width: 100%;
+        height: 20rem;
+    }
+
+    .table-container {
+        width: 65%;
+        margin-bottom: 5rem;
+    }
+
+    .table {
+        max-width: 65%;
+        width: auto;
+    }
+
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .right_container{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .resources_container{
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
+        width: 23rem;
+        height: auto;
+        margin-left: 3rem;
+        align-items: start;
+    }
 }
 
