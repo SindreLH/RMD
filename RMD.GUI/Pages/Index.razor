@@ -12,50 +12,58 @@
 
 		<div class="cards_container">
 			<div class="data_card">
-				<h3><strong>@songCount?.Value Låter</strong></h3>
-				<p>@playedSongCount?.Value Promoterte</p>
-				<div class="newly_added">
-
-					@if (isLoading)
-					{
-						<img src="~/images/Loader.gif">
-					}
-
-					@if (latestSong != null && latestSong.IsSuccess)
-					{
-						<p class="green_plus">+</p>
-						<p>@latestSong.Value.Title</p>
-					}
-
-					else
-					{
-						<p class="green_plus">+</p>
-						<p>Ingen sanger funnet</p>
-					}
-				</div>
+				@if (isLoading)
+				{
+					<div class="card_loader">
+						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+						<p class="card_loader_text">Laster inn låter...</p>
+					</div>
+				}
+				else
+				{
+					<h3><strong>@songCount?.Value Låter</strong></h3>
+					<p>@playedSongCount?.Value Promoterte</p>
+					<div class="newly_added">
+						@if (latestSong != null && latestSong.IsSuccess)
+						{
+							<p class="green_plus">+</p>
+							<p>@latestSong.Value.Title</p>
+						}
+						else
+						{
+							<p class="green_plus">+</p>
+							<p>Ingen sanger funnet</p>
+						}
+					</div>
+				}
 			</div>
+
+
 			<div class="data_card">
-				<h3><strong>@artistCount?.Value Artister</strong></h3>
-				<p>@artistNationCount?.Value Nasjonaliteter</p>
-				<div class="newly_added">
-					@if (isLoading)
-					{
-						<img src="~/images/Loader.gif">
-					}
-
-					@if (latestArtist != null && latestArtist.IsSuccess)
-					{
-						<p class="green_plus">+</p>
-						<p>@latestArtist.Value.Name</p>
-					}
-
-					else
-					{
-						<p class="green_plus">+</p>
-						<p>Ingen artister funnet</p>
-					}
-				</div>
-
+				@if (isLoading)
+				{
+					<div class="card_loader">
+						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+						<p class="card_loader_text">Laster inn artister...</p>
+					</div>
+				}
+				else
+				{
+					<h3><strong>@artistCount?.Value Artister</strong></h3>
+					<p>@artistNationCount?.Value Nasjonaliteter</p>
+					<div class="newly_added">
+						@if (latestArtist != null && latestArtist.IsSuccess)
+						{
+							<p class="green_plus">+</p>
+							<p>@latestArtist.Value.Name</p>
+						}
+						else
+						{
+							<p class="green_plus">+</p>
+							<p>Ingen artister funnet</p>
+						}
+					</div>
+				}
 			</div>
 		</div>
 
@@ -109,6 +117,7 @@
 						<th>Kilde</th>
 					</tr>
 				</thead>
+
 				<tbody>
 					@foreach (var song in wantedSongs?.Value ?? Enumerable.Empty<Song>())
 					{
@@ -131,6 +140,17 @@
 
 				</tbody>
 			</table>
+
+			@if (wantedSongs == null)
+			{
+				<div class="load_container">
+					<div class="load_contents">
+						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
+						<p class="load_text">Laster inn låter...</p>
+					</div>
+				</div>
+			}
+
 		</div>
 	</div>
 
@@ -214,11 +234,13 @@
 	private Result<Dictionary<string, int>>? genreCount;
 
 	private bool isLoading = true;
-
 	private bool showPieChart = true;
 
 	protected override async Task OnInitializedAsync()
 	{
+		await Task.Delay(300);
+
+
 		latestSong = await DashboardService.GetLatestSongAsync();
 		latestArtist = await DashboardService.GetLatestArtistAsync();
 		artistCount = await DashboardService.GetArtistCountAsync();
@@ -229,11 +251,10 @@
 		genreCount = await DashboardService.GetGenreCountAsync();
 
 		//Load PieChart with data
-
 		var genreCountsResult = await DashboardService.GetGenreCountAsync();
 		if (genreCountsResult.IsSuccess && genreCountsResult.Value != null)
 		{
-			PieChartDataList.Clear(); // 👈 ensures no duplicates when navigating back
+			PieChartDataList.Clear();
 
 			foreach (var kvp in genreCountsResult.Value)
 			{
@@ -300,20 +321,15 @@
 			};
 		}
 
-
 		showPieChart = false;       // temporarily remove chart from DOM
 		StateHasChanged();          // trigger the UI update to unmount the chart
 		await Task.Delay(10);       // short delay to give Blazor time to destroy the component
 		showPieChart = true;        // re-render the chart from scratch
 
-
-
 		//Load BarChart with data
 		var monthlyResult = await DashboardService.GetMonthlyAdditionsAsync();
 		if (monthlyResult.IsSuccess && monthlyResult.Value != null)
 		{
-
-
 			Data = monthlyResult.Value
 				.OrderBy(d => Enum.TryParse(typeof(Months), d.Month, out var result)
 					? (int)result
@@ -379,20 +395,14 @@
 			}
 		};
 
-
-
 		isLoading = false;
 		StateHasChanged();
-
-		await Task.Delay(10);
-
+		await Task.Delay(300);
 		if (barChart is not null)
 		{
 			await barChart.UpdateSeriesAsync();
 			await barChart.UpdateOptionsAsync(true, true, true);
-		}
-
-		
+		}		
 	}
 }
 
