@@ -62,38 +62,36 @@
 		<div class="graphs_container">
 			<div class="chart">
 				<ApexChart TItem="BarChartData"
-				Options = "ChartOptions">
-
-					@if (Data.Count == 0)
-					{
-						<p style="color:red;">Ingen data tilgjengelig for bar chart.</p>
-					}
-
+						   @ref="barChart"
+						   Options="ChartOptions">
 					<ApexPointSeries TItem="BarChartData"
-					Items="Data"
-					Name="Nye låter"
-					SeriesType="SeriesType.Bar"
-					XValue="e => e.Month"
-					YValue="e => e.NewSongs" />
-
+									 Items="Data"
+									 Name="Nye låter"
+									 SeriesType="SeriesType.Bar"
+									 XValue="e => e.Month"
+									 YValue="e => e.NewSongs" />
 					<ApexPointSeries TItem="BarChartData"
-					Items="Data"
-					Name="Nye artister"
-					SeriesType="SeriesType.Bar"
-					XValue="e => e.Month"
-					YValue="e => e.NewArtists" />
+									 Items="Data"
+									 Name="Nye artister"
+									 SeriesType="SeriesType.Bar"
+									 XValue="e => e.Month"
+									 YValue="e => e.NewArtists" />
 				</ApexChart>
 			</div>
 
 			<div class="chart">
-				<ApexChart TItem="PieChartData"
-				Options="PieChartOptions">
-					<ApexPointSeries TItem="PieChartData"
-					Items="PieChartDataList"
-					SeriesType="SeriesType.Pie"
-					YValue="e => e.Value"
-					XValue="e => e.Label" />
-				</ApexChart>
+				@if (showPieChart)
+				{
+					<ApexChart TItem="PieChartData"
+							   @ref="pieChart"
+							   Options="PieChartOptions">
+						<ApexPointSeries TItem="PieChartData"
+										 Items="PieChartDataList"
+										 SeriesType="SeriesType.Pie"
+										 YValue="e => e.Value"
+										 XValue="e => e.Label" />
+					</ApexChart>
+				}
 
 			</div>
 
@@ -121,10 +119,10 @@
 							<td class="hide-mobile">@(song.ExtendedMix ? "✅" : "❌")</td>
 							<td class="hide-mobile">@song.Genre</td>
 							<td class="text-truncate" style="max-width: 180px">
-								<a href="@song.WantedSongUrl" 
-								target="_blank" 
-								rel="noopener noreferrer" 
-								title="@song.WantedSongUrl">
+								<a href="@song.WantedSongUrl"
+								   target="_blank"
+								   rel="noopener noreferrer"
+								   title="@song.WantedSongUrl">
 									@song.WantedSongUrl
 								</a>
 							</td>
@@ -139,7 +137,7 @@
 	<div class="right_container">
 
 		<div class="resources_container">
-			<h3 style="margin-left:3rem;">Ressurser</h3>
+			<h2 style="margin-left:3rem;">Ressurser</h2>
 			<h5>ℹ️ Informasjon</h5>
 			<div class="resource_item">
 				<a href="https://www.discogs.com">🔗 Discogs.com</a>
@@ -202,6 +200,9 @@
 	private List<string> PieLabels = new();
 	private List<double?> PieValues = new();
 
+	private ApexChart<BarChartData>? barChart;
+	private ApexChart<PieChartData>? pieChart;
+
 	private Result<Song>? latestSong;
 	private Result<Artist>? latestArtist;
 	private Result<int>? artistCount;
@@ -214,6 +215,8 @@
 
 	private bool isLoading = true;
 
+	private bool showPieChart = true;
+
 	protected override async Task OnInitializedAsync()
 	{
 		latestSong = await DashboardService.GetLatestSongAsync();
@@ -225,13 +228,12 @@
 		wantedSongs = await DashboardService.GetWantedSongsAsync();
 		genreCount = await DashboardService.GetGenreCountAsync();
 
-
 		//Load PieChart with data
-		var genreCountsResult = await DashboardService.GetGenreCountAsync();
 
+		var genreCountsResult = await DashboardService.GetGenreCountAsync();
 		if (genreCountsResult.IsSuccess && genreCountsResult.Value != null)
 		{
-			int total = genreCountsResult.Value.Values.Sum();
+			PieChartDataList.Clear(); // 👈 ensures no duplicates when navigating back
 
 			foreach (var kvp in genreCountsResult.Value)
 			{
@@ -243,14 +245,74 @@
 				});
 			}
 
-			PieChartOptions.Labels = PieChartDataList.Select(d => d.Label).ToList();
+			var labels = PieChartDataList.Select(d => d.Label).ToList();
+
+			PieChartOptions = new ApexChartOptions<PieChartData>
+			{
+				Labels = labels,
+
+				Tooltip = new Tooltip
+				{
+					Custom = @"
+				function({ series, seriesIndex, w }) {
+					const label = w.globals.labels[seriesIndex];
+					const count = series[seriesIndex];
+					const total = series.reduce((a, b) => a + b, 0);
+					const percentage = ((count / total) * 100).toFixed(1);
+					return label + ': ' + count + ' låter (' + percentage + '%)';
+				}"
+				},
+
+				Title = new Title
+				{
+					Text = "Sjangerfordeling",
+					Style = new TitleStyle
+					{
+						Color = "#ffffff",
+						FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+						FontWeight = 500
+					}
+				},
+
+				Chart = new Chart
+				{
+					Type = ChartType.Pie,
+					Width = "150%",
+					Height = "91%"
+				},
+
+				Legend = new Legend
+				{
+					Show = true,
+					Position = LegendPosition.Bottom,
+					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+					Labels = new LegendLabels
+					{
+						Colors = "#ffffff"
+					}
+				},
+
+				Stroke = new Stroke
+				{
+					Show = false,
+					Width = new List<int> { 0 }
+				}
+			};
 		}
+
+
+		showPieChart = false;       // temporarily remove chart from DOM
+		StateHasChanged();          // trigger the UI update to unmount the chart
+		await Task.Delay(10);       // short delay to give Blazor time to destroy the component
+		showPieChart = true;        // re-render the chart from scratch
+
+
 
 		//Load BarChart with data
 		var monthlyResult = await DashboardService.GetMonthlyAdditionsAsync();
-		if(monthlyResult.IsSuccess && monthlyResult.Value != null)
+		if (monthlyResult.IsSuccess && monthlyResult.Value != null)
 		{
-	
+
 
 			Data = monthlyResult.Value
 				.OrderBy(d => Enum.TryParse(typeof(Months), d.Month, out var result)
@@ -259,44 +321,41 @@
 					.ToList();
 		}
 
-		isLoading = false;
-		StateHasChanged();
-
 		ChartOptions = new ApexChartOptions<BarChartData>
+		{
+			Chart = new Chart
 			{
-				Chart = new Chart
-				{
-					Type = ChartType.Bar,
-					Width = "139%",
-					Height = "90%"
-				},
+				Type = ChartType.Bar,
+				Width = "139%",
+				Height = "90%"
+			},
 
-				Title = new Title
+			Title = new Title
+			{
+				Text = "Tilskudd per måned",
+				Style = new TitleStyle
 				{
-					Text = "Tilskudd per måned",
-					Style = new TitleStyle
+					Color = "#ffffff",
+					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
+					FontWeight = 500,
+
+				}
+
+			},
+
+			Xaxis = new XAxis
+			{
+				Categories = Data.Select(d => d?.Month?.Substring(0, 3)).ToList(),
+				Labels = new XAxisLabels
+				{
+					Style = new AxisLabelStyle
 					{
-						Color = "#ffffff",
-						FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
-						FontWeight = 500,
-
+						Colors = "#ffffff"
 					}
+				}
+			},
 
-				},
-
-				Xaxis = new XAxis
-				{
-					Categories = Data.Select(d => d.Month.Substring(0,3)).ToList(),
-					Labels = new XAxisLabels
-					{
-						Style = new AxisLabelStyle
-						{
-							Colors = "#ffffff"
-						}
-					}
-				},
-
-				Yaxis = new List<YAxis>
+			Yaxis = new List<YAxis>
 				{
 					new YAxis
 					{
@@ -310,65 +369,31 @@
 					}
 				},
 
-				Legend = new Legend
-				{
-				Show = true,
-				Labels = new LegendLabels
-				{
-					Colors = "#ffffff"
-				}
-				}
-			};
-
-		PieChartOptions = new ApexChartOptions<PieChartData>
-		{
-			Tooltip = new Tooltip
-			{
-				Custom = @"
-					function({ series, seriesIndex, w }) {
-					const label = w.globals.labels[seriesIndex];
-					const count = series[seriesIndex];
-					const total = series.reduce((a, b) => a + b, 0);
-					const percentage = ((count / total) * 100).toFixed(1);
-					return label + ': ' + count + ' låter (' + percentage + '%)';
-					}
-				"
-			},
-
-			Title = new Title
-			{
-				Text = "Sjangerfordeling",
-				Style = new TitleStyle
-				{
-					Color = "#ffffff",
-					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
-					FontWeight = 500
-				}
-			},
-
-			Chart = new Chart
-			{
-				Type = ChartType.Pie,
-				Width = "150%",
-				Height = "91%"
-			},
-
 			Legend = new Legend
 			{
 				Show = true,
-				Position = LegendPosition.Bottom,
-				FontFamily = "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif",
 				Labels = new LegendLabels
 				{
 					Colors = "#ffffff"
 				}
-			},
-
-			Stroke = new Stroke
-			{
-				Show = false
 			}
 		};
 
+
+
+		isLoading = false;
+		StateHasChanged();
+
+		await Task.Delay(10);
+
+		if (barChart is not null)
+		{
+			await barChart.UpdateSeriesAsync();
+			await barChart.UpdateOptionsAsync(true, true, true);
+		}
+
+		
 	}
 }
+
+
