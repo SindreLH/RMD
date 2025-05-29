@@ -8,7 +8,7 @@
 @inject IArtistService ArtistService
 @page "/AddSong"
 
-<PageTitle>RMD | Add a new song</PageTitle>
+<PageTitle>RMD | Legg til låt</PageTitle>
 
 @if (warningModalDuplicateVisible)
 {
@@ -25,7 +25,12 @@
 
 
 
-        <h3>Registrer låt</h3>
+        @* <h3>Legg til låt</h3> *@
+
+        @if (showToastMessage)
+        {
+            <p>En låt har blitt lagret</p>
+        }
 
         <EditForm Model="newSongDto" OnValidSubmit="SaveSong">
             <DataAnnotationsValidator/>
@@ -79,7 +84,6 @@
                             <option value="Jumpstyle">Jumpstyle</option>
                             <option value="Trance">Trance</option>
                             <option value="Happy Hardcore">Happy Hardcore</option>
-                            <option value="UK Hardcore">UK Hardcore</option>
                         </InputSelect>
                     </div>
                 </div>
@@ -144,6 +148,9 @@
                         </div>
                     }
 
+                    
+
+
                 </div>
             </div>
 
@@ -172,6 +179,7 @@
     private bool warningModalDuplicateVisible = false;
     private string? attemptedTitle;
     private string? attemptedArtistName;
+    private bool showToastMessage = false;
 
     private List<Artist> allArtists = new();
 
@@ -232,7 +240,7 @@
                     WantedSongUrl = String.Empty
                 };
 
-         
+            showToastMessage = true;
 
             Console.WriteLine("Song successfully saved!");
         }

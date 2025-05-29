@@ -8,7 +8,7 @@
 @inject ISongService SongService
 @page "/AddArtist"
 
-<PageTitle>RMD | Add new artist</PageTitle>
+<PageTitle>RMD | Legg til artist</PageTitle>
 
 @if (warningModalDuplicateVisible)
 {
@@ -21,7 +21,7 @@
 
 
 
-		<h3>Registrer artist</h3>
+		@* <h3>Legg til artist</h3> *@
 
 		<EditForm Model="newArtistDto" OnValidSubmit="SaveArtist">
 			<DataAnnotationsValidator />
