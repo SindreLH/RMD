@@ -1,10 +1,13 @@
 ﻿@page "/Songs"
 @using RMD.GUI.Pages.Components.Modals;
+@using RMD.GUI.Pages.Components.Toasts;
 @using RMD.Data.Models;
 @using RMD.Business.Services
 @inject ISongService SongService
 
 <PageTitle>RMD | Låter</PageTitle>
+
+<SongToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" />
 
 @if (editModalVisible)
 {
@@ -85,11 +88,6 @@
 
 </div>
 
-@* @if (songs == null)
-{
-	<p>Loading songs...</p>
-} *@
-
 @if (!string.IsNullOrWhiteSpace(songs?.Error))
 {
 	<p class="text-danger">@songs.Error</p>
@@ -107,10 +105,8 @@
 				<th>Sjanger</th>
 				<th>Favoritt</th>
 				<th>Extended</th>
-				@* <th>Spilt</th> *@
 				<th>Episode</th>
 				<th>Lagret</th>
-				@* <th>Ønsket</th> *@
 				<th>Kilde</th>
 			</tr>
 		</thead>
@@ -127,10 +123,8 @@
 					<td>@song.Genre</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
 					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					@* <td>@(song.Played ? "✅" : "❌")</td> *@
 					<td>@song.PlayedInEp</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>
-					@* <td>@(song.Wanted ? "✅" : "❌")</td> *@
 					<td class="text-truncate" style="max-width: 200px">
 						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
 							@song.WantedSongUrl
@@ -140,8 +134,6 @@
 			}
 		</tbody>
 	</table>
-
-
 
 	@if (songs == null)
 	{
@@ -173,6 +165,12 @@
 	private bool? playedFilter = null;
 	private bool? storedFilter = null;
 	private bool? wantedFilter = null;
+
+	// These parameters are used to replce flags from earlier.
+	// They represent the toast state, making the modal stateless. The parent (This page) owns the state.
+	// State is hoisted to modal via modal callback during saving.
+	[Parameter] public bool showToast { get; set; } = false;
+	[Parameter] public string toastMessage { get; set; } = string.Empty;
 
 	public enum SongFilterType
 	{
@@ -296,6 +294,7 @@
 
 	private async Task OnSongEdited(Song updatedSong)
 	{
+
 		var dto = new RMD.Data.Models.DTO.SongDto
 			{
 				Title = updatedSong.Title,
@@ -317,14 +316,23 @@
 
 		if (result.IsSuccess)
 		{
-			// Optionally reload songs from service
+			// Reload songs, setting relevant flags to false
 			songs = await SongService.GetAllSongsAsync();
 			isSelected = false;
 			editModalVisible = false;
+
+			// Setting toast message and trigger pop up with 4 sec. timer
+			toastMessage = "Suksess! Oppdatert: " + dto.Title;
+			showToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showToast = false;
+			StateHasChanged();
+
 		}
 		else
 		{
-			// Handle error
+			// REPLACE WITH ERROR TOAST HERE:
 			Console.WriteLine(result.Error);
 		}
 	}
@@ -344,11 +352,25 @@
 
 			isSelected = false;
 			deleteModalVisible = false;
+
+			// Setting toast message and trigger pop up with 4 sec. timer
+			toastMessage = "Suksess! Slettet: " + selectedSong.Title;
+			showToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showToast = false;
+			StateHasChanged();
 		}
 		else
 		{
-			// Handle error
+			// REPLACE WITH ERROR TOAST
 			Console.WriteLine(result.Error);
 		}
+	}
+
+	private async Task HideToast()
+	{
+		showToast = false;
+		await InvokeAsync(StateHasChanged);
 	}
 }

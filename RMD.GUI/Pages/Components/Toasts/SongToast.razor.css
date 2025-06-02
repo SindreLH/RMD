@@ -1,7 +1,31 @@
 ﻿.toast_container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    align-items: flex-end;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
-    
+    z-index: 1051;
+    animation: fadeinout 5s ease-in-out forwards;
+}
+
+@keyframes fadeinout {
+    0% {
+        opacity: 0;
+    }
+
+    33.33%{
+        opacity: 1;
+    }
+
+    66.66% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .toast_contents_success {

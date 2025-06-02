@@ -4,11 +4,14 @@
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
+@using RMD.GUI.Pages.Components.Toasts
 @inject ISongService SongService 
 @inject IArtistService ArtistService
 @page "/AddSong"
 
 <PageTitle>RMD | Legg til låt</PageTitle>
+
+<SongToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" />
 
 @if (warningModalDuplicateVisible)
 {
@@ -16,22 +19,11 @@
         IsVisible="true" 
         OnClose="CloseModal" 
         Title="@attemptedTitle"
-        ArtistName="@attemptedArtistName"
-        />
+        ArtistName="@attemptedArtistName"/>
 }
 
 <div class="container_parent">
-    <div class="main_form_container">
-
-
-
-        @* <h3>Legg til låt</h3> *@
-
-        @if (showToastMessage)
-        {
-            <p>En låt har blitt lagret</p>
-        }
-
+    <div class="main_form_container">        
         <EditForm Model="newSongDto" OnValidSubmit="SaveSong">
             <DataAnnotationsValidator/>
             <div id="a_b_container">
@@ -148,9 +140,6 @@
                         </div>
                     }
 
-                    
-
-
                 </div>
             </div>
 
@@ -170,8 +159,6 @@
 
 </div>
 
-
-
 @code {
 
     private bool playedIsToggled = false;
@@ -179,7 +166,9 @@
     private bool warningModalDuplicateVisible = false;
     private string? attemptedTitle;
     private string? attemptedArtistName;
-    private bool showToastMessage = false;
+
+    [Parameter] public bool showToast { get; set; } = false;
+    [Parameter] public string toastMessage { get; set; } = string.Empty;
 
     private List<Artist> allArtists = new();
 
@@ -210,7 +199,6 @@
 
     private async Task SaveSong()
     {
-        Console.WriteLine("Debug: SaveSong method was triggered!");
 
         // Sync toggles to DTO before saving
         newSongDto.Played = playedIsToggled;
@@ -223,7 +211,6 @@
             // Resetting the form 
             playedIsToggled = false;
             wantedIsToggled = false;
-
             newSongDto = new SongDto
                 {
                     Title = String.Empty,
@@ -240,9 +227,15 @@
                     WantedSongUrl = String.Empty
                 };
 
-            showToastMessage = true;
-
-            Console.WriteLine("Song successfully saved!");
+            
+            // Setting toast message and trigger pop up with 4 sec. timer
+            toastMessage = "Suksess! Opprettet: " + result.Value.Title;
+            showToast = true;
+            StateHasChanged();
+            await Task.Delay(4000);
+            showToast = false;
+            StateHasChanged();
+    
         }
         else
         {
@@ -258,6 +251,12 @@
                 warningModalDuplicateVisible = true;
             }
         }
+    }
+
+    private async Task HideToast()
+    {
+        showToast = false;
+        await InvokeAsync(StateHasChanged);
     }
 
 
