@@ -11,16 +11,8 @@
 
 <PageTitle>RMD | Legg til låt</PageTitle>
 
-<SongToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" />
-
-@if (warningModalDuplicateVisible)
-{
-    <ErrorModalDuplicate 
-        IsVisible="true" 
-        OnClose="CloseModal" 
-        Title="@attemptedTitle"
-        ArtistName="@attemptedArtistName"/>
-}
+<SuccessToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" /> 
+<WarningToast WarningToastMessage="@warningToastMessage" ShowWarningToast="@showWarningToast" OnClose="HideWarningToast"/>
 
 <div class="container_parent">
     <div class="main_form_container">        
@@ -163,12 +155,14 @@
 
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
-    private bool warningModalDuplicateVisible = false;
     private string? attemptedTitle;
     private string? attemptedArtistName;
 
     [Parameter] public bool showToast { get; set; } = false;
     [Parameter] public string toastMessage { get; set; } = string.Empty;
+
+    [Parameter] public bool showWarningToast { get; set; } = false;
+    [Parameter] public string warningToastMessage { get; set; } = string.Empty;
 
     private List<Artist> allArtists = new();
 
@@ -190,11 +184,6 @@
         {
             allArtists = result.Value.ToList();
         }
-    }
-
-    private void CloseModal()
-    {
-        warningModalDuplicateVisible = false;
     }
 
     private async Task SaveSong()
@@ -227,7 +216,6 @@
                     WantedSongUrl = String.Empty
                 };
 
-            
             // Setting toast message and trigger pop up with 4 sec. timer
             toastMessage = "Suksess! Opprettet: " + result.Value.Title;
             showToast = true;
@@ -235,7 +223,7 @@
             await Task.Delay(4000);
             showToast = false;
             StateHasChanged();
-    
+
         }
         else
         {
@@ -248,7 +236,14 @@
                 attemptedArtistName = allArtists
                     .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
 
-                warningModalDuplicateVisible = true;
+                // warningModalDuplicateVisible = true;
+                // Setting toast message and trigger pop up with 4 sec. timer
+                warningToastMessage = "Advarsel! Duplikat: " + newSongDto.Title;
+                showWarningToast = true;
+                StateHasChanged();
+                await Task.Delay(4000);
+                showWarningToast = false;
+                StateHasChanged();
             }
         }
     }
@@ -259,6 +254,11 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    private async Task HideWarningToast()
+    {
+        showWarningToast = false;
+        await InvokeAsync(StateHasChanged);
+    }
 
     //Event Handlers for toggles
     private void OnPlayedChanged(ChangeEventArgs e)

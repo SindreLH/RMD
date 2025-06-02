@@ -1,7 +1,7 @@
 ﻿.toast_container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 15px;
+    right: 15px;
     align-items: flex-end;
     pointer-events: none;
     display: flex;
@@ -34,7 +34,7 @@
     height: 70px;
     padding: 16px;
     border-radius: 8px;
-    margin: 20px;
+    margin: 2px;
     background-color: rgba(37, 37, 37, 0.5);
     display: flex;
     align-content: center;

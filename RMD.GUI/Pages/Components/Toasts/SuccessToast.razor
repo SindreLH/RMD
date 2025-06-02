@@ -1,8 +1,4 @@
-﻿@page "/Test"
-
-@* Change name to SUCCESS TOAST: *@
-
-@if (ShowToast)
+﻿@if (ShowToast)
 {
 	<div class="toast_container">
 		<div class="toast_contents_success">
@@ -12,6 +8,7 @@
 			<div class="text_container">
 				<p class="text-truncate" style="max-width:350px; height: 100%;">@ToastMessage</p>
 			</div>
+
 			<i class="bi bi-x" @onclick="Close"></i>
 
 		</div>
