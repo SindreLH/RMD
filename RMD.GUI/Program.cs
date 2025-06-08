@@ -18,6 +18,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddSingleton<ToastService>();
 
 builder.Services.AddApexCharts();
 
