@@ -8,6 +8,7 @@
 <PageTitle>RMD | Låter</PageTitle>
 
 <SuccessToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" />
+<InfoToast InfoToastMessage="@infoToastMessage" ShowInfoToast="@showInfoToast" OnClose="HideToast"/>
 
 @if (editModalVisible)
 {
@@ -172,6 +173,9 @@
 	[Parameter] public bool showToast { get; set; } = false;
 	[Parameter] public string toastMessage { get; set; } = string.Empty;
 
+	[Parameter] public bool showInfoToast { get; set; } = false;
+	[Parameter] public string infoToastMessage { get; set; } = string.Empty;
+
 	public enum SongFilterType
 	{
 		Played,
@@ -272,6 +276,7 @@
 				playedFilter = isChecked ? true : null;
 				break; 
 
+
 			case SongFilterType.Stored:
 				storedFilter = isChecked ? true : null;
 				break;
@@ -287,6 +292,61 @@
 			case SongFilterType.ExtendedMix:
 				extendedMixFilter = isChecked ? true : null;
 				break;
+		}
+
+		@if (isChecked == true && playedFilter == true)
+		{
+			infoToastMessage = "Info: Listefilter aktivert: Viser avspilte låter.";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
+		}
+		@if (isChecked == true && storedFilter == true)
+		{
+			infoToastMessage = "Info: Listefilter aktivert: Viser lagrede låter.";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
+		}
+		@if (isChecked == true && wantedFilter == true)
+		{
+			infoToastMessage = "Info: Listefilter aktivert: Viser ønskede låter.";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
+		}
+		@if (isChecked == true && favoriteFilter == true)
+		{
+			infoToastMessage = "Info: Listefilter aktivert: Viser favorittlåter.";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
+		}
+		@if (isChecked == true && extendedMixFilter == true)
+		{
+			infoToastMessage = "Info: Listefilter aktivert: Viser extended mixes.";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
+		}
+		else
+		{
+			infoToastMessage = "Info: Listefilter deaktivert";
+			showInfoToast = true;
+			StateHasChanged();
+			await Task.Delay(4000);
+			showInfoToast = false;
+			StateHasChanged();
 		}
 
 		await LoadFilteredSongsAsync();
