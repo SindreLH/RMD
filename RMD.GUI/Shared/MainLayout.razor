@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using RMD.GUI.Pages.Components.Toasts
 
 <PageTitle>RMD.GUI</PageTitle>
 
@@ -15,7 +16,9 @@
         </div>
  *@
         <article class="content px-4">
+            
             @Body
+            <ToastComponent />
         </article>
     </main>
 </div>

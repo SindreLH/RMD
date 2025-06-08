@@ -2,8 +2,13 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
+@using RMD.GUI.Pages.Components.Toasts
 
+@inject ToastService ToastService
 @inject IArtistService ArtistService
+
+
+@* TODO: Check for duplicate artist name - also on song edit modal*@
 
 @if (IsVisible)
 {
@@ -139,6 +144,7 @@
     private void CloseEditModal()
     {
         OnClose.InvokeAsync(false);
+        ToastService.ShowToast("INFO: Endringene på " +editableArtist?.Name + " ble avbrutt.", ToastType.Info);
     }
 
     
@@ -148,6 +154,13 @@
         if(editableArtist != null)
         {
             await OnSave.InvokeAsync(editableArtist);
+            ToastService.ShowToast("SUKSESS! " + editableArtist.Name + " ble endret! ", ToastType.Success);
+        }
+
+      
+        else
+        {
+            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
         }
     }
 

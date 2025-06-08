@@ -27,13 +27,12 @@
     align-items: center;
     width: 42rem;
     height: 40rem;
-    background: rgba(5, 5, 5, 0.5);
-    background: linear-gradient(180deg, rgb(91, 0, 0, 0.50), rgb(125, 29, 29, 0.50));
+    background: radial-gradient(circle at 50% 50%, rgba(0, 120, 255, 0.7) 0%, rgba(0, 188, 212, 0.5) 0%, rgba(10, 54, 129, 0.2) 100%);
     border-radius: 20px;
 }
 
 .bi-exclamation-triangle {
-    background: -webkit-linear-gradient(#ff0844, #ffb199);
+    background: -webkit-linear-gradient(#fff, #fff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 8rem;

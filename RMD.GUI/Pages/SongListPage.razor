@@ -3,6 +3,7 @@
 @using RMD.Data.Models;
 @using RMD.Business.Services
 @inject ISongService SongService
+@inject ToastService ToastService
 
 <PageTitle>RMD | Låter</PageTitle>
 
@@ -172,7 +173,6 @@
 		Favorite
 	}
 
-
 	private void SelectSong(Song song)
 	{
 
@@ -261,8 +261,7 @@
 		{
 			case SongFilterType.Played:
 				playedFilter = isChecked ? true : null;
-				break; 
-
+				break;
 
 			case SongFilterType.Stored:
 				storedFilter = isChecked ? true : null;
@@ -279,6 +278,33 @@
 			case SongFilterType.ExtendedMix:
 				extendedMixFilter = isChecked ? true : null;
 				break;
+		}
+
+		
+		if (isChecked)
+		{
+			
+			ToastService.ShowToast(filterType switch
+			{
+				SongFilterType.Played => "INFO: Viser avspilte låter.",
+				SongFilterType.Stored => "INFO: Viser lagrede låter.",
+				SongFilterType.Wanted => "INFO: Viser ønskede låter.",
+				SongFilterType.Favorite => "INFO: Viser favorittlåter.",
+				SongFilterType.ExtendedMix => "INFO: Viser extended mixes.",
+				_ => "Filter aktivert."
+			}, ToastType.Info);
+		}
+		else
+		{
+			
+			if (playedFilter is null &&
+				storedFilter is null &&
+				wantedFilter is null &&
+				favoriteFilter is null &&
+				extendedMixFilter is null)
+			{
+				ToastService.ShowToast("INFO: Alle filtre er deaktivert.).", ToastType.Info);
+			}
 		}
 
 		await LoadFilteredSongsAsync();
@@ -315,8 +341,10 @@
 		}
 		else
 		{
-			// REPLACE WITH ERROR TOAST HERE:
-			Console.WriteLine(result.Error);
+			if (!result.IsSuccess)
+			{
+				ToastService.ShowToast("FEIL: Kunne ikke oppdatere låten: " + result.Error, ToastType.Error);
+			}
 		}
 	}
 
@@ -338,8 +366,7 @@
 		}
 		else
 		{
-			// REPLACE WITH ERROR TOAST
-			Console.WriteLine(result.Error);
+			ToastService.ShowToast("FEIL : En ukjent feil har oppstått. Prøv igjen senere.", ToastType.Error);
 		}
 	}
 }

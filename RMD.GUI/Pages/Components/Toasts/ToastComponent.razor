@@ -1,0 +1,80 @@
+﻿@using RMD.Business.Services
+@inject ToastService ToastService;
+
+@* <summary>
+    This component has been injected with the ToastService, granting access to OnShow and ShowToast.
+    
+    A toast div is conditionally renedered.
+    CSS styles are applied, corresponding to the toast type set in the parent/consumer component.
+    I.E AddSongPage.razor or similar.
+    
+    The override of OnInitialized ensures the subscription to the OnShow event at this components first load.
+    This is ensuring that this component reacts to ShowToast calls from outside.
+    
+    The ShowToast handling method recieves a message and toast type when called by parent components.
+    This information is used to update the toast contents and CSS styling accordingly, ensuring flexibility. 
+    Lastly, the visible flag is raised, displaying the toast component for four seconds. 
+
+    The Dispose method is handling clean up and unsubscribing from the event when it is destroyed. This prevents memory leaks and various unwanted behaviors.
+</summary> *@
+
+@if (visible && !string.IsNullOrWhiteSpace(message))
+{
+    <div class="rmd-toast-container">
+        <div class="toast_contents @toastCss">
+            <i class="@iconCss"></i>
+
+            <div class="text_container">
+                <p class="text-truncate" style="max-width: 350px; height: 100%;">@message</p>
+            </div>
+
+            <i class="bi bi-x" @onclick="CloseToast"></i>
+        </div>
+    </div>
+}
+
+@code {
+    private string? message;
+    private string toastCss = "";
+    private bool visible = true;
+    private string iconCss = "";
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnShow += ShowToast;
+    }
+
+    private async void ShowToast(string msg, ToastType type)
+    {
+        
+
+        message = msg;
+
+        (toastCss, iconCss) = type switch
+        {
+            ToastType.Info => ("toast-info", "bi bi-info-circle-fill"),
+            ToastType.Success => ("toast-success", "bi bi-check-circle-fill"),
+            ToastType.Warning => ("toast-warning", "bi bi-exclamation-circle-fill"),
+            ToastType.Error => ("toast-error", "bi bi-x-circle-fill"),
+            _ => ("toast-info", "bi bi-info-circle-fill")
+        };
+
+        visible = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(4000);
+        visible = false;
+        await InvokeAsync(StateHasChanged);
+
+    }
+
+    private void CloseToast()
+    {
+        visible = false;
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnShow -= ShowToast;
+    }
+
+}

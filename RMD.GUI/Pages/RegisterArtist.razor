@@ -1,21 +1,18 @@
 ﻿@using RMD.GUI.Pages.Components
+@using RMD.GUI.Pages.Components.Toasts
 @using RMD.Data.Context
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
+
+@inject ToastService ToastService
 @inject IArtistService ArtistService
 @inject ISongService SongService
 @page "/AddArtist"
 
 <PageTitle>RMD | Legg til artist</PageTitle>
 
-@if (warningModalDuplicateVisible)
-{
-	<ErrorModalDuplicate IsVisible="true" 
-		OnClose="CloseModal"
-		ArtistName="@attemptedArtistName"/>
-}
 <div class="container_parent">
 	<div class="main_form_container">
 
@@ -141,13 +138,12 @@
 
 	private async Task SaveArtist()
 	{
-		Console.WriteLine("SaveArtist called"); 
 
 		var result = await ArtistService.CreateNewArtistAsync(newArtistDto);
 
 		if (result.IsSuccess)
 		{
-			Console.WriteLine("Artist successfully created with ID: " + result.Value.ArtistId); 
+			ToastService.ShowToast("SUKSESS! " + newArtistDto.Name + " ble opprettet! ", ToastType.Success);
 
 			newArtistDto = new ArtistDto
 				{
@@ -159,26 +155,21 @@
 					DiscogsUrl = ""
 				};
 
-			warningModalDuplicateVisible = false;
 			StateHasChanged();
 		}
 		else
 		{
 			Console.WriteLine($"Error creating artist: {result.Error}");
+			ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
 
 			if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
 			{
 				attemptedArtistName = newArtistDto.Name;
 
-				warningModalDuplicateVisible = true;
+				ToastService.ShowToast("ADVARSEL: " + newArtistDto.Name + " finnes allerede i databasen.", ToastType.Warning);
 			}
 			}
 		}
-
-	private void CloseModal()
-	{
-		warningModalDuplicateVisible = false;
-	}
 }
 
 	

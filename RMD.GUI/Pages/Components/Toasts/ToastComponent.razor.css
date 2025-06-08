@@ -1,4 +1,4 @@
-﻿.toast_container {
+.rmd-toast-container {
     position: fixed;
     bottom: 15px;
     right: 15px;
@@ -10,25 +10,11 @@
     animation: fadeinout 5s ease-in-out forwards;
 }
 
-@keyframes fadeinout {
-    0% {
-        opacity: 0;
-    }
-
-    33.33% {
-        opacity: 1;
-    }
-
-    66.66% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-.toast_contents {
+.toast-success,
+.toast-info,
+.toast-warning,
+.toast-error
+{
     position: relative;
     width: 500px;
     height: 70px;
@@ -42,7 +28,6 @@
     z-index: 1050;
 }
 
-
 p {
     color: white;
     font-size: 15px;
@@ -55,19 +40,35 @@ p {
     gap: 10px;
 }
 
-
+/*info*/
 .bi-info-circle-fill {
-    color: #1491de;
+    color: #fff;
     font-size: 24px;
     margin-right: 15px;
 }
 
+/*success*/
+.bi-check-circle-fill {
+    color: #43C000;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+/*warning*/
+.bi-exclamation-circle-fill {
+    color: #ebb734;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+/*error*/
 .bi-x-circle-fill {
     color: #de1414;
     font-size: 24px;
     margin-right: 15px;
 }
 
+/*close*/
 .bi-x {
     position: absolute;
     top: 15px;
@@ -75,4 +76,22 @@ p {
     color: white;
     font-size: 16px;
     cursor: pointer;
+}
+
+@keyframes fadeinout {
+    0% {
+        opacity: 0;
+    }
+
+    33% {
+        opacity: 1;
+    }
+
+    66% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

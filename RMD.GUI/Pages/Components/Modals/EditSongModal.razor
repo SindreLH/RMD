@@ -4,6 +4,7 @@
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Toasts
 
+@inject ToastService ToastService
 @inject IArtistService ArtistService
 
 <div class="modal-backdrop">
@@ -192,12 +193,18 @@
         if (editableSong != null)
         {
             await OnSave.InvokeAsync(editableSong);
+            ToastService.ShowToast("SUKSESS! " + editableSong.Title + " ble endret.", ToastType.Success);
+        }
+        else
+        {
+            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
         }
     }
 
     private void CloseEditModal()
     {
         OnClose.InvokeAsync(false);
+        ToastService.ShowToast("INFO: Endringene på " + editableSong.Title + " ble avbrutt.", ToastType.Info);
     }
 
     protected override void OnParametersSet()

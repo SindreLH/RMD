@@ -4,6 +4,9 @@
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
+@using RMD.GUI.Pages.Components.Toasts
+
+@inject ToastService ToastService
 @inject ISongService SongService 
 @inject IArtistService ArtistService
 @page "/AddSong"
@@ -188,6 +191,8 @@
 
         if (result.IsSuccess)
         {
+            ToastService.ShowToast("SUKSESS! " + newSongDto.Title + " ble opprettet! ", ToastType.Success);
+
             // Resetting the form 
             playedIsToggled = false;
             wantedIsToggled = false;
@@ -206,11 +211,16 @@
                     PlayedInEp = null,
                     WantedSongUrl = String.Empty
                 };
+            
+            
+
         }
         else
         {
             Console.WriteLine($"Error: {result.Error}");
 
+            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
+     
             if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
             {
                 attemptedTitle = newSongDto.Title;
@@ -218,7 +228,7 @@
                 attemptedArtistName = allArtists
                     .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
 
-                // warningModalDuplicateVisible = true;
+                ToastService.ShowToast("ADVARSEL: " + attemptedTitle + " av " + attemptedArtistName + " finnes allerede.", ToastType.Warning);
             }
         }
     }

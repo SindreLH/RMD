@@ -47,6 +47,10 @@
 }
 
 .grid_container {
+    max-height: 28rem;
+    height: auto;
+    overflow-y: auto;
+
     background-color: #00000050;
     margin-top: 2rem;
     padding: 2rem;
