@@ -1,14 +1,10 @@
 ﻿@page "/Songs"
 @using RMD.GUI.Pages.Components.Modals;
-@using RMD.GUI.Pages.Components.Toasts;
 @using RMD.Data.Models;
 @using RMD.Business.Services
 @inject ISongService SongService
 
 <PageTitle>RMD | Låter</PageTitle>
-
-<SuccessToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" />
-<InfoToast InfoToastMessage="@infoToastMessage" ShowInfoToast="@showInfoToast" OnClose="HideToast"/>
 
 @if (editModalVisible)
 {
@@ -167,15 +163,6 @@
 	private bool? storedFilter = null;
 	private bool? wantedFilter = null;
 
-	// These parameters are used to replce flags from earlier.
-	// They represent the toast state, making the modal stateless. The parent (This page) owns the state.
-	// State is hoisted to modal via modal callback during saving.
-	[Parameter] public bool showToast { get; set; } = false;
-	[Parameter] public string toastMessage { get; set; } = string.Empty;
-
-	[Parameter] public bool showInfoToast { get; set; } = false;
-	[Parameter] public string infoToastMessage { get; set; } = string.Empty;
-
 	public enum SongFilterType
 	{
 		Played,
@@ -294,61 +281,6 @@
 				break;
 		}
 
-		@if (isChecked == true && playedFilter == true)
-		{
-			infoToastMessage = "Info: Listefilter aktivert: Viser avspilte låter.";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-		@if (isChecked == true && storedFilter == true)
-		{
-			infoToastMessage = "Info: Listefilter aktivert: Viser lagrede låter.";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-		@if (isChecked == true && wantedFilter == true)
-		{
-			infoToastMessage = "Info: Listefilter aktivert: Viser ønskede låter.";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-		@if (isChecked == true && favoriteFilter == true)
-		{
-			infoToastMessage = "Info: Listefilter aktivert: Viser favorittlåter.";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-		@if (isChecked == true && extendedMixFilter == true)
-		{
-			infoToastMessage = "Info: Listefilter aktivert: Viser extended mixes.";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-		else
-		{
-			infoToastMessage = "Info: Listefilter deaktivert";
-			showInfoToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showInfoToast = false;
-			StateHasChanged();
-		}
-
 		await LoadFilteredSongsAsync();
 	}
 
@@ -380,15 +312,6 @@
 			songs = await SongService.GetAllSongsAsync();
 			isSelected = false;
 			editModalVisible = false;
-
-			// Setting toast message and trigger pop up with 4 sec. timer
-			toastMessage = "Suksess! Oppdatert: " + dto.Title;
-			showToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showToast = false;
-			StateHasChanged();
-
 		}
 		else
 		{
@@ -412,25 +335,11 @@
 
 			isSelected = false;
 			deleteModalVisible = false;
-
-			// Setting toast message and trigger pop up with 4 sec. timer
-			toastMessage = "Suksess! Slettet: " + selectedSong.Title;
-			showToast = true;
-			StateHasChanged();
-			await Task.Delay(4000);
-			showToast = false;
-			StateHasChanged();
 		}
 		else
 		{
 			// REPLACE WITH ERROR TOAST
 			Console.WriteLine(result.Error);
 		}
-	}
-
-	private async Task HideToast()
-	{
-		showToast = false;
-		await InvokeAsync(StateHasChanged);
 	}
 }

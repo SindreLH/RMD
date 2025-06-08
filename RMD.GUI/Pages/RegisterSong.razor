@@ -4,15 +4,12 @@
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
-@using RMD.GUI.Pages.Components.Toasts
 @inject ISongService SongService 
 @inject IArtistService ArtistService
 @page "/AddSong"
 
 <PageTitle>RMD | Legg til låt</PageTitle>
 
-<SuccessToast ToastMessage="@toastMessage" ShowToast="@showToast" OnClose="HideToast" /> 
-<WarningToast WarningToastMessage="@warningToastMessage" ShowWarningToast="@showWarningToast" OnClose="HideWarningToast"/>
 
 <div class="container_parent">
     <div class="main_form_container">        
@@ -158,12 +155,6 @@
     private string? attemptedTitle;
     private string? attemptedArtistName;
 
-    [Parameter] public bool showToast { get; set; } = false;
-    [Parameter] public string toastMessage { get; set; } = string.Empty;
-
-    [Parameter] public bool showWarningToast { get; set; } = false;
-    [Parameter] public string warningToastMessage { get; set; } = string.Empty;
-
     private List<Artist> allArtists = new();
 
     private SongDto newSongDto = new SongDto
@@ -215,15 +206,6 @@
                     PlayedInEp = null,
                     WantedSongUrl = String.Empty
                 };
-
-            // Setting toast message and trigger pop up with 4 sec. timer
-            toastMessage = "Suksess! Opprettet: " + result.Value.Title;
-            showToast = true;
-            StateHasChanged();
-            await Task.Delay(4000);
-            showToast = false;
-            StateHasChanged();
-
         }
         else
         {
@@ -237,27 +219,8 @@
                     .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
 
                 // warningModalDuplicateVisible = true;
-                // Setting toast message and trigger pop up with 4 sec. timer
-                warningToastMessage = "Advarsel! Duplikat: " + newSongDto.Title;
-                showWarningToast = true;
-                StateHasChanged();
-                await Task.Delay(4000);
-                showWarningToast = false;
-                StateHasChanged();
             }
         }
-    }
-
-    private async Task HideToast()
-    {
-        showToast = false;
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task HideWarningToast()
-    {
-        showWarningToast = false;
-        await InvokeAsync(StateHasChanged);
     }
 
     //Event Handlers for toggles
