@@ -1,5 +1,9 @@
 ﻿@page "/Modal2"
 @using RMD.Data.Models
+@using RMD.Business.Services
+@using RMD.GUI.Pages.Components.Toasts
+
+@inject ToastService ToastService
 
 @if (IsVisible)
 {
@@ -46,11 +50,14 @@
 	private void CloseDeleteModal()
 	{
 		OnClose.InvokeAsync(false);
+		ToastService.ShowToast("INFO: Sletting av " + Artist?.Name + " ble avbrutt.", ToastType.Info);
+		
 	}
 
 	private void DeleteArtist()
 	{
 		OnDelete.InvokeAsync(Artist);
+		ToastService.ShowToast("SUKSESS! " + Artist?.Name + " ble fjernet.", ToastType.Success);
 	}
 }
 

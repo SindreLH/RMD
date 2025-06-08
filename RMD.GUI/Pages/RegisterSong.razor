@@ -4,29 +4,18 @@
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Modals
+@using RMD.GUI.Pages.Components.Toasts
+
+@inject ToastService ToastService
 @inject ISongService SongService 
 @inject IArtistService ArtistService
 @page "/AddSong"
 
-<PageTitle>RMD | Add a new song</PageTitle>
+<PageTitle>RMD | Legg til låt</PageTitle>
 
-@if (warningModalDuplicateVisible)
-{
-    <ErrorModalDuplicate 
-        IsVisible="true" 
-        OnClose="CloseModal" 
-        Title="@attemptedTitle"
-        ArtistName="@attemptedArtistName"
-        />
-}
 
 <div class="container_parent">
-    <div class="main_form_container">
-
-
-
-        <h3>Registrer låt</h3>
-
+    <div class="main_form_container">        
         <EditForm Model="newSongDto" OnValidSubmit="SaveSong">
             <DataAnnotationsValidator/>
             <div id="a_b_container">
@@ -79,7 +68,6 @@
                             <option value="Jumpstyle">Jumpstyle</option>
                             <option value="Trance">Trance</option>
                             <option value="Happy Hardcore">Happy Hardcore</option>
-                            <option value="UK Hardcore">UK Hardcore</option>
                         </InputSelect>
                     </div>
                 </div>
@@ -163,13 +151,10 @@
 
 </div>
 
-
-
 @code {
 
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
-    private bool warningModalDuplicateVisible = false;
     private string? attemptedTitle;
     private string? attemptedArtistName;
 
@@ -195,14 +180,8 @@
         }
     }
 
-    private void CloseModal()
-    {
-        warningModalDuplicateVisible = false;
-    }
-
     private async Task SaveSong()
     {
-        Console.WriteLine("Debug: SaveSong method was triggered!");
 
         // Sync toggles to DTO before saving
         newSongDto.Played = playedIsToggled;
@@ -212,10 +191,11 @@
 
         if (result.IsSuccess)
         {
+            ToastService.ShowToast("SUKSESS! " + newSongDto.Title + " ble opprettet! ", ToastType.Success);
+
             // Resetting the form 
             playedIsToggled = false;
             wantedIsToggled = false;
-
             newSongDto = new SongDto
                 {
                     Title = String.Empty,
@@ -231,15 +211,16 @@
                     PlayedInEp = null,
                     WantedSongUrl = String.Empty
                 };
+            
+            
 
-         
-
-            Console.WriteLine("Song successfully saved!");
         }
         else
         {
             Console.WriteLine($"Error: {result.Error}");
 
+            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
+     
             if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
             {
                 attemptedTitle = newSongDto.Title;
@@ -247,11 +228,10 @@
                 attemptedArtistName = allArtists
                     .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
 
-                warningModalDuplicateVisible = true;
+                ToastService.ShowToast("ADVARSEL: " + attemptedTitle + " av " + attemptedArtistName + " finnes allerede.", ToastType.Warning);
             }
         }
     }
-
 
     //Event Handlers for toggles
     private void OnPlayedChanged(ChangeEventArgs e)

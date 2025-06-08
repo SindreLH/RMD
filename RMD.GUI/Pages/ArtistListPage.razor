@@ -2,9 +2,12 @@
 @using RMD.Business.Services
 @using RMD.Data.Models
 @using RMD.GUI.Pages.Components.Modals
+@using RMD.GUI.Pages.Components.Toasts
+
+@inject ToastService ToastService
 @inject IArtistService ArtistService
 
-<PageTitle>RMD | Artists</PageTitle>
+<PageTitle>RMD | Artister</PageTitle>
 
 @if (emptyDbModalVisible)
 {
@@ -133,10 +136,12 @@
 			if (isFiltering)
 			{
 				filteredArtists = filteredArtists.OrderBy(a => a.Name).ToList();
+				
 			}
 			else
 			{
 				artists = Result<IEnumerable<Artist>>.Success(baseList.OrderBy(a => a.Name).ToList());
+
 			}
 		}
 		else
@@ -194,6 +199,7 @@
 		if (!sortAlphabetically)
 		{
 			// Reset everything to the original list
+			ToastService.ShowToast("INFO: Kronologisk sortering aktivert.", ToastType.Info);
 			isFiltering = false;
 			filteredArtists = new List<Artist>();
 			artists = Result<IEnumerable<Artist>>.Success(allArtists);
@@ -202,6 +208,7 @@
 		}
 
 		// If sorting is enabled, apply filtering (if any), and sort alphabetically
+		ToastService.ShowToast("INFO: Alfabetisk sortering aktivert.", ToastType.Info);
 		isFiltering = !string.IsNullOrWhiteSpace(searchString);
 		IEnumerable<Artist> baseList = allArtists;
 

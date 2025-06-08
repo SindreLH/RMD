@@ -3,8 +3,9 @@
 @using RMD.Data.Models;
 @using RMD.Business.Services
 @inject ISongService SongService
+@inject ToastService ToastService
 
-<PageTitle>RMD | Songs</PageTitle>
+<PageTitle>RMD | Låter</PageTitle>
 
 @if (editModalVisible)
 {
@@ -85,11 +86,6 @@
 
 </div>
 
-@* @if (songs == null)
-{
-	<p>Loading songs...</p>
-} *@
-
 @if (!string.IsNullOrWhiteSpace(songs?.Error))
 {
 	<p class="text-danger">@songs.Error</p>
@@ -107,10 +103,8 @@
 				<th>Sjanger</th>
 				<th>Favoritt</th>
 				<th>Extended</th>
-				@* <th>Spilt</th> *@
 				<th>Episode</th>
 				<th>Lagret</th>
-				@* <th>Ønsket</th> *@
 				<th>Kilde</th>
 			</tr>
 		</thead>
@@ -127,10 +121,8 @@
 					<td>@song.Genre</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
 					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					@* <td>@(song.Played ? "✅" : "❌")</td> *@
 					<td>@song.PlayedInEp</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>
-					@* <td>@(song.Wanted ? "✅" : "❌")</td> *@
 					<td class="text-truncate" style="max-width: 200px">
 						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
 							@song.WantedSongUrl
@@ -140,8 +132,6 @@
 			}
 		</tbody>
 	</table>
-
-
 
 	@if (songs == null)
 	{
@@ -182,7 +172,6 @@
 		ExtendedMix,
 		Favorite
 	}
-
 
 	private void SelectSong(Song song)
 	{
@@ -272,7 +261,7 @@
 		{
 			case SongFilterType.Played:
 				playedFilter = isChecked ? true : null;
-				break; 
+				break;
 
 			case SongFilterType.Stored:
 				storedFilter = isChecked ? true : null;
@@ -291,11 +280,39 @@
 				break;
 		}
 
+		
+		if (isChecked)
+		{
+			
+			ToastService.ShowToast(filterType switch
+			{
+				SongFilterType.Played => "INFO: Viser avspilte låter.",
+				SongFilterType.Stored => "INFO: Viser lagrede låter.",
+				SongFilterType.Wanted => "INFO: Viser ønskede låter.",
+				SongFilterType.Favorite => "INFO: Viser favorittlåter.",
+				SongFilterType.ExtendedMix => "INFO: Viser extended mixes.",
+				_ => "Filter aktivert."
+			}, ToastType.Info);
+		}
+		else
+		{
+			
+			if (playedFilter is null &&
+				storedFilter is null &&
+				wantedFilter is null &&
+				favoriteFilter is null &&
+				extendedMixFilter is null)
+			{
+				ToastService.ShowToast("INFO: Alle filtre er deaktivert.).", ToastType.Info);
+			}
+		}
+
 		await LoadFilteredSongsAsync();
 	}
 
 	private async Task OnSongEdited(Song updatedSong)
 	{
+
 		var dto = new RMD.Data.Models.DTO.SongDto
 			{
 				Title = updatedSong.Title,
@@ -317,15 +334,17 @@
 
 		if (result.IsSuccess)
 		{
-			// Optionally reload songs from service
+			// Reload songs, setting relevant flags to false
 			songs = await SongService.GetAllSongsAsync();
 			isSelected = false;
 			editModalVisible = false;
 		}
 		else
 		{
-			// Handle error
-			Console.WriteLine(result.Error);
+			if (!result.IsSuccess)
+			{
+				ToastService.ShowToast("FEIL: Kunne ikke oppdatere låten: " + result.Error, ToastType.Error);
+			}
 		}
 	}
 
@@ -347,8 +366,7 @@
 		}
 		else
 		{
-			// Handle error
-			Console.WriteLine(result.Error);
+			ToastService.ShowToast("FEIL : En ukjent feil har oppstått. Prøv igjen senere.", ToastType.Error);
 		}
 	}
 }
