@@ -191,7 +191,11 @@
 
         if (result.IsSuccess)
         {
-            ToastService.ShowToast("SUKSESS! " + newSongDto.Title + " ble opprettet! ", ToastType.Success);
+            // Truncating long song titles
+            var title = result.Value.Title.Length > 30
+            ? result.Value.Title[..30] + "..." : attemptedTitle;
+
+            ToastService.ShowToast($"SUKSESS! {title} ble opprettet! ", ToastType.Success);
 
             // Resetting the form 
             playedIsToggled = false;
@@ -211,16 +215,14 @@
                     PlayedInEp = null,
                     WantedSongUrl = String.Empty
                 };
-            
-            
+
+
 
         }
         else
         {
-            Console.WriteLine($"Error: {result.Error}");
-
             ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
-     
+
             if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
             {
                 attemptedTitle = newSongDto.Title;
@@ -228,7 +230,11 @@
                 attemptedArtistName = allArtists
                     .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
 
-                ToastService.ShowToast("ADVARSEL: " + attemptedTitle + " av " + attemptedArtistName + " finnes allerede.", ToastType.Warning);
+                // Truncating long song titles
+                var title = attemptedTitle.Length > 30
+                ? attemptedTitle[..30] + "..." : attemptedTitle;
+
+                ToastService.ShowToast($"ADVARSEL: {title} av " + attemptedArtistName + " finnes allerede.", ToastType.Warning);
             }
         }
     }

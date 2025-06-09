@@ -193,7 +193,12 @@
         if (editableSong != null)
         {
             await OnSave.InvokeAsync(editableSong);
-            ToastService.ShowToast("SUKSESS! " + editableSong.Title + " ble endret.", ToastType.Success);
+
+            // Truncating long song titles
+            var title = editableSong.Title.Length > 30
+                ? editableSong.Title[..30] + "..."
+                : editableSong.Title;
+            ToastService.ShowToast($"SUKSESS! {title} ble endret.", ToastType.Success);
         }
         else
         {
@@ -204,7 +209,12 @@
     private void CloseEditModal()
     {
         OnClose.InvokeAsync(false);
-        ToastService.ShowToast("INFO: Endringene på " + editableSong.Title + " ble avbrutt.", ToastType.Info);
+
+        // Truncating long song titles
+        var title = editableSong.Title.Length > 18
+            ? editableSong.Title[..18] + "..."
+            : editableSong.Title;
+        ToastService.ShowToast($"INFO: Endringene på {title} ble avbrutt.", ToastType.Info);
     }
 
     protected override void OnParametersSet()

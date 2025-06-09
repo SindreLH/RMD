@@ -143,7 +143,12 @@
 
 		if (result.IsSuccess)
 		{
-			ToastService.ShowToast("SUKSESS! " + newArtistDto.Name + " ble opprettet! ", ToastType.Success);
+
+			// Truncating long artist names
+			var name = result.Value.Name.Length > 18
+			? result.Value.Name[..18] + "..." :  result.Value.Name;
+
+			ToastService.ShowToast($"SUKSESS! {name} ble opprettet! ", ToastType.Success);
 
 			newArtistDto = new ArtistDto
 				{
@@ -159,17 +164,23 @@
 		}
 		else
 		{
-			Console.WriteLine($"Error creating artist: {result.Error}");
-			ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
-
 			if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
 			{
 				attemptedArtistName = newArtistDto.Name;
 
-				ToastService.ShowToast("ADVARSEL: " + newArtistDto.Name + " finnes allerede i databasen.", ToastType.Warning);
+				// Truncating long artist names
+				var name = newArtistDto.Name.Length > 18
+					? newArtistDto.Name[..18] + "..."
+					: newArtistDto.Name;
+
+				ToastService.ShowToast($"ADVARSEL: {name} finnes allerede i databasen.", ToastType.Warning);
 			}
+			else
+			{
+				ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
 			}
 		}
+	}
 }
 
 	

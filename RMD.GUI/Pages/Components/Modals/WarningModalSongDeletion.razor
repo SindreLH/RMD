@@ -50,14 +50,25 @@
 	private void CloseDeleteModal()
 	{
 		OnClose.InvokeAsync(false);
-		ToastService.ShowToast("INFO: Sletting av " + Song?.Title + " ble avbrutt.", ToastType.Info);
+
+		// Truncating long song titles
+		var title = Song?.Title.Length > 30
+			? Song?.Title[..30] + "..."
+			: Song?.Title;
+		ToastService.ShowToast($"INFO: Sletting av {title} ble avbrutt.", ToastType.Info);
 	}
 
 	private void DeleteSong()
 	{
 		OnDelete.InvokeAsync(Song);
-		ToastService.ShowToast("SUKSESS! " + Song?.Title + " ble fjernet.", ToastType.Success);
+
+		// Truncating long song titles
+		var title = Song?.Title.Length > 30
+			? Song?.Title[..30] + "..."
+			: Song?.Title;
+		
+		ToastService.ShowToast($"SUKSESS! {title} ble fjernet.", ToastType.Success);
 	}
-}
+ }
 
 
