@@ -7,9 +7,6 @@
 @inject ToastService ToastService
 @inject IArtistService ArtistService
 
-
-@* TODO: Check for duplicate artist name - also on song edit modal*@
-
 @if (IsVisible)
 {
     <div class="modal-backdrop">
@@ -133,18 +130,24 @@
 
 
 @code {
-    [Parameter]
-    public bool IsVisible { get; set; }
-    [Parameter] public EventCallback<bool> OnClose{ get; set; }
-    [Parameter] public EventCallback<Artist> OnSave{ get; set; }
-    [Parameter] public Artist? Artist { get; set; }
+        [Parameter]
+        public bool IsVisible { get; set; }
+        [Parameter] public EventCallback<bool> OnClose{ get; set; }
+        [Parameter] public EventCallback<Artist> OnSave{ get; set; }
+        [Parameter] public Artist? Artist { get; set; }
 
     private Artist? editableArtist;
 
     private void CloseEditModal()
     {
         OnClose.InvokeAsync(false);
-        ToastService.ShowToast("INFO: Endringene på " +editableArtist?.Name + " ble avbrutt.", ToastType.Info);
+
+        // Truncating long artist names
+        var name = editableArtist?.Name.Length > 10
+            ? editableArtist.Name[..10] + "..."
+            : editableArtist?.Name;
+
+        ToastService.ShowToast($"INFO: Endringene på {name} ble avbrutt.", ToastType.Info);
     }
 
     
@@ -154,10 +157,14 @@
         if(editableArtist != null)
         {
             await OnSave.InvokeAsync(editableArtist);
-            ToastService.ShowToast("SUKSESS! " + editableArtist.Name + " ble endret! ", ToastType.Success);
+
+            // Truncating long artist names
+            var name = editableArtist?.Name.Length > 18
+                ? editableArtist.Name[..18] + "..."
+                : editableArtist?.Name;
+            ToastService.ShowToast($"SUKSESS! {name} ble endret! ", ToastType.Success);
         }
 
-      
         else
         {
             ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
