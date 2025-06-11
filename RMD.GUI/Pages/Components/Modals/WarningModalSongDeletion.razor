@@ -52,8 +52,8 @@
 		OnClose.InvokeAsync(false);
 
 		// Truncating long song titles
-		var title = Song?.Title.Length > 30
-			? Song?.Title[..30] + "..."
+		var title = Song?.Title.Length > 20
+			? Song?.Title[..20] + "..."
 			: Song?.Title;
 		ToastService.ShowToast($"INFO: Sletting av {title} ble avbrutt.", ToastType.Info);
 	}
@@ -63,8 +63,8 @@
 		OnDelete.InvokeAsync(Song);
 
 		// Truncating long song titles
-		var title = Song?.Title.Length > 30
-			? Song?.Title[..30] + "..."
+		var title = Song?.Title.Length > 20
+			? Song?.Title[..20] + "..."
 			: Song?.Title;
 		
 		ToastService.ShowToast($"SUKSESS! {title} ble fjernet.", ToastType.Success);

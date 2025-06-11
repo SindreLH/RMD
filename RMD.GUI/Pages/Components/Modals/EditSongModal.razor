@@ -195,8 +195,8 @@
             await OnSave.InvokeAsync(editableSong);
 
             // Truncating long song titles
-            var title = editableSong.Title.Length > 30
-                ? editableSong.Title[..30] + "..."
+            var title = editableSong.Title.Length > 20
+                ? editableSong.Title[..20] + "..."
                 : editableSong.Title;
             ToastService.ShowToast($"SUKSESS! {title} ble endret.", ToastType.Success);
         }
@@ -211,8 +211,8 @@
         OnClose.InvokeAsync(false);
 
         // Truncating long song titles
-        var title = editableSong.Title.Length > 18
-            ? editableSong.Title[..18] + "..."
+        var title = editableSong.Title.Length > 12
+            ? editableSong.Title[..12] + "..."
             : editableSong.Title;
         ToastService.ShowToast($"INFO: Endringene på {title} ble avbrutt.", ToastType.Info);
     }

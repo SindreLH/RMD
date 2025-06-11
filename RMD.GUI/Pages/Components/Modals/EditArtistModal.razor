@@ -143,8 +143,8 @@
         OnClose.InvokeAsync(false);
 
         // Truncating long artist names
-        var name = editableArtist?.Name.Length > 18
-            ? editableArtist.Name[..18] + "..."
+        var name = editableArtist?.Name.Length > 10
+            ? editableArtist.Name[..10] + "..."
             : editableArtist?.Name;
 
         ToastService.ShowToast($"INFO: Endringene på {name} ble avbrutt.", ToastType.Info);
