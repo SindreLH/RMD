@@ -183,7 +183,7 @@
 
 			<h5>💾 Nedlasting</h5>
 			<div class="resource_item">
-				<a href="https://bootlegs-load.de/">🔗 Bootlegs.de</a>
+				<a href="https://bootlegs-load.de/">🔗 Bootlegs-load.de</a>
 			</div>
 			<div class="resource_item">
 				<a href="https://www.discogs.com">🔗 Handsup.dance</a>
@@ -321,6 +321,8 @@
 			};
 		}
 
+
+		// Fixing an annoying bug with ChatGippity
 		showPieChart = false;       // temporarily remove chart from DOM
 		StateHasChanged();          // trigger the UI update to unmount the chart
 		await Task.Delay(10);       // short delay to give Blazor time to destroy the component
