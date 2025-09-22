@@ -25,6 +25,44 @@
                         <InputText @bind-Value="newSongDto.Title" class="form-control"/>
                     </div>
 
+
+                    @* working here 22.09.25: dynamic rendering of inputs for artists *@
+
+                    <div class="artist_rows_windows">
+                        <div id="form-group" style="margin-bottom: 15px;">
+                            <label>Artister</label>
+
+                            @foreach (var row in artistRows)
+                            {
+                                <div class="artist_selection_container" @key="row.Key">
+                                    <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
+                                        <option value="">Velg en artist...</option>
+                                        @foreach (var artist in allArtists)
+                                        {
+                                            <option value="@artist.ArtistId">@artist.Name</option>
+                                        }
+                                    </InputSelect>
+
+                                    @if (artistRows.Count > 1)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger ms-2"
+                                                @onclick="() => RemoveArtistRow(row.Key)">
+                                            -
+                                        </button>
+                                    }
+
+
+                                    @if (artistRows.Count <= 5)
+                                    {
+                                        <button type="button" class="add_button" @onclick="AddArtistRows">+</button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+
                     <div id="form-group">
                         <label>Remixartist</label>
                         <InputSelect @bind-Value="newSongDto.RemixArtist" class="form-control">
@@ -37,20 +75,6 @@
 
                         </InputSelect>
                         <ValidationMessage For="@(() => newSongDto.RemixArtist)" />
-                    </div>
-
-                    <div id="form-group" style="margin-bottom: 15px;">
-                        <label>Artist</label>
-                        <InputSelect @bind-Value="newSongDto.ArtistId" class="form-control">
-                            <option value="">Velg artist</option>
-
-                            @foreach (var artist in allArtists)
-                            {
-                                <option value="@artist.ArtistId">@artist.Name</option>
-                            }
-
-                        </InputSelect>
-                        <ValidationMessage For="@(() => newSongDto.ArtistId)" />
                     </div>
 
 
@@ -153,8 +177,37 @@
 
 @code {
 
+    // New 22.09.25
+
+    //Row model with a stable key + value
+    private class ArtistRow
+    {
+        public Guid Key { get; } = Guid.NewGuid();
+        public int? SelectedId { get; set; } = null;
+    }
+
+    private List<ArtistRow> artistRows = new() { new ArtistRow() };
+
+    void AddArtistRows()
+    {
+        if (artistRows.Count < 5)
+        {
+            artistRows.Add(new ArtistRow());
+        }
+    }
+
+    void RemoveArtistRow(Guid key)
+    {
+        if(artistRows.Count == 1) return;
+        var idx = artistRows.FindIndex(r => r.Key == key);
+        if (idx >= 0) artistRows.RemoveAt(idx);
+
+    }
+
+
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
+
     private string? attemptedTitle;
     private string? attemptedArtistName;
 
@@ -191,6 +244,17 @@
 
         if (result.IsSuccess)
         {
+
+            // New 22.09.25: On Save - Filter Non-Null Selections
+            var finalArtistIds = artistRows
+                .Select(r => r.SelectedId)
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value)
+                .Distinct()
+                .ToList();
+
+           // TODO: pass finalArtistIds into your CreateNewSongAsync(...) call or DTO
+
             // Truncating long song titles
             var title = result.Value.Title.Length > 30
             ? result.Value.Title[..30] + "..." : attemptedTitle;
