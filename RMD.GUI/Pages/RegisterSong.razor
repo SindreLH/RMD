@@ -78,7 +78,7 @@
 
                                     @if(artistRows.Count >= 5)
                                     {
-                                        ToastService.ShowToast("INFO: Reached the maximum of 5 artist rows.", ToastType.Info);
+                                        ToastService.ShowToast("ADVARSEL: Mer enn 5 artister per låt er ikke tillatt.", ToastType.Warning);
                                     }
                                 </div>
                             }
@@ -87,7 +87,7 @@
                     
                     @if(remixIsToggled == true)
                     {
-                        <div class="artist_rows_windows" style="margin-top: -0.5rem;">
+                        <div class="artist_rows_windows" style="margin-top: 1rem;">
                             <div id="form-group">
                                 <label>Remix artister</label>
 
@@ -105,7 +105,7 @@
                                         @if (remixerRows.Count > 1)
                                         {
                                             <button type="button"
-                                                    class="btn btn-sm btn-outline-danger ms-lg-3"
+                                                    class="btn btn-sm btn-danger ms-lg-3"
                                                     @onclick="() => RemoveRemixRow(row.Key)">
                                                 -
                                             </button>
@@ -121,7 +121,7 @@
 
                                         @if (remixerRows.Count >= 5)
                                         {
-                                            ToastService.ShowToast("INFO: Reached the maximum of 5 artist rows.", ToastType.Info);
+                                            ToastService.ShowToast("ADVARSEL: Maks 5 artister per remix tillatt.", ToastType.Warning);
                                         }
                                     </div>
                                 }

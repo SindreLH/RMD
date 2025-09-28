@@ -55,7 +55,7 @@
 		var title = Song?.Title.Length > 20
 			? Song?.Title[..20] + "..."
 			: Song?.Title;
-		ToastService.ShowToast($"INFO: Sletting av {title} ble avbrutt.", ToastType.Info);
+		ToastService.ShowToast($"INFO: {title} ble ikke fjernet.", ToastType.Info);
 	}
 
 	private void DeleteSong()
