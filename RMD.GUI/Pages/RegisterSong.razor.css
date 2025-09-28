@@ -20,7 +20,7 @@
     width: 21rem;
     flex-direction: column;
     gap: 0.5rem; /* space between rows */
-    max-height: calc(2 * 3.5rem + 0.5rem);
+    max-height: calc(2 * 4rem + 0.5rem);
     /* ^ two row heights (~2.5rem each) + one gap (0.5rem).
      Tweak 2.5rem if your select/buttons are taller/shorter. */
     overflow-y: auto;
@@ -37,11 +37,11 @@
     margin-bottom: 1rem;
 }
 
-.artist_selection_container .form-control,
-.artist_selection_container .btn,
+/*.artist_selection_container .form-control,
+.artist_selection_container*/ .btn,
 .add_button {
-    margin-top: 7px;
-    height: 1.5rem;
+    margin-top: 1px;
+    height: 2.5rem;
 }
 
 h3 {

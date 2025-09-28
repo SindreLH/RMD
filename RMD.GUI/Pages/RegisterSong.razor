@@ -26,8 +26,14 @@
                     </div>
 
                     <div id="form-group">
+                        <label>Lengde (MM:SS)</label>
+                        <InputText @bind-Value="newSongDto.Length" class="form-control" />
+                    </div>
+
+                    <div id="form-group">
                         <label>Sjanger</label>
                         <InputSelect @bind-Value="newSongDto.Genre" class="form-control">
+                            <option value="" style="color: gray;">Velg en sjanger</option>
                             <option value="Hands Up">Hands Up</option>
                             <option value="Hard Trance">Hard Trance</option>
                             <option value="Hardstyle">Hardstyle</option>
@@ -36,21 +42,17 @@
                             <option value="Happy Hardcore">Happy Hardcore</option>
                         </InputSelect>
                     </div>
-                    
-                    <div id="form-group">
-                        <label>Lengde (MM:SS)</label>
-                        <InputText @bind-Value="newSongDto.Length" class="form-control" />
-                    </div>
+
 
                     <div class="artist_rows_windows">
-                        <div id="form-group" style="margin-bottom: 15px;">
+                        <div id="form-group" >
                             <label>Artister</label>
 
                             @foreach (var row in artistRows)
                             {
                                 <div class="artist_selection_container" @key="row.Key">
                                     <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                        <option value="">Velg en artist...</option>
+                                        <option value="" style="color: gray;">Velg en artist</option>
                                         @foreach (var artist in allArtists)
                                         {
                                             <option value="@artist.ArtistId">@artist.Name</option>
@@ -83,49 +85,61 @@
                         </div>
                     </div>
                     
-                    <div class="artist_rows_windows">
-                        <div id="form-group" style="margin-bottom: 15px;">
-                            <label>Remix artister</label>
+                    @if(remixIsToggled == true)
+                    {
+                        <div class="artist_rows_windows" style="margin-top: -0.5rem;">
+                            <div id="form-group">
+                                <label>Remix artister</label>
 
-                            @foreach (var row in remixerRows)
-                            {
-                                <div class="artist_selection_container" @key="row.Key">
-                                    <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                        <option value="">Velg en remix artist...</option>
-                                        @foreach (var artist in allArtists)
+                                @foreach (var row in remixerRows)
+                                {
+                                    <div class="artist_selection_container" @key="row.Key">
+                                        <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
+                                            <option value="" style="color: gray;">Velg en remix artist</option>
+                                            @foreach (var artist in allArtists)
+                                            {
+                                                <option value="@artist.ArtistId">@artist.Name</option>
+                                            }
+                                        </InputSelect>
+
+                                        @if (remixerRows.Count > 1)
                                         {
-                                            <option value="@artist.ArtistId">@artist.Name</option>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger ms-lg-3"
+                                                    @onclick="() => RemoveRemixRow(row.Key)">
+                                                -
+                                            </button>
+
+
                                         }
-                                    </InputSelect>
-
-                                    @if (remixerRows.Count > 1)
-                                    {
-                                        <button type="button"
-                                                class="btn btn-sm btn-danger ms-2"
-                                                @onclick="() => RemoveRemixRow(row.Key)">
-                                            -
-                                        </button>
 
 
-                                    }
+                                        @if (remixerRows.Count <= 5)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-light ms-2" @onclick="AddRemixRows">+</button>
+                                        }
 
-
-                                    @if (remixerRows.Count <= 5)
-                                    {
-                                        <button type="button" class="btn btn-sm btn-light ms-2" @onclick="AddRemixRows">+</button>
-                                    }
-
-                                    @if (remixerRows.Count >= 5)
-                                    {
-                                        ToastService.ShowToast("INFO: Reached the maximum of 5 artist rows.", ToastType.Info);
-                                    }
-                                </div>
-                            }
+                                        @if (remixerRows.Count >= 5)
+                                        {
+                                            ToastService.ShowToast("INFO: Reached the maximum of 5 artist rows.", ToastType.Info);
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
+
+                    
 
                 </div>
                 <div id="reg_song_part_b">
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="remixIsToggled">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Remix</label>
+                        <label class="col-form-label-sm">Aktiver artistvalg for remixartist.</label>
+                    </div>
+
 
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="newSongDto.ExtendedMix">
@@ -133,6 +147,7 @@
                         <label class="col-form-label-sm">Mix med intro og outro.</label>
                     </div>
 
+               
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="favoriteSwitch" @bind="newSongDto.Favorite">
                         <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
@@ -245,12 +260,12 @@
 
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
+    private bool remixIsToggled = false;
 
     private string? attemptedTitle;
     private string? attemptedArtistName;
 
     private List<Artist> allArtists = new();
-
     private SongDto newSongDto = new SongDto
     {
         //Init required members
@@ -270,7 +285,6 @@
             allArtists = result.Value.ToList();
         }
     }
-
     private async Task SaveSong()
     {
 
@@ -290,6 +304,16 @@
                 .Select(id => id!.Value)
                 .Distinct()
                 .ToList();
+
+            var remixArtistIds = remixerRows
+                .Where(r => r.SelectedId.HasValue)
+                .Select(r => r.SelectedId!.Value)
+                .Distinct()
+                .ToList();
+                
+            //Resets stacks after successful save
+            artistRows = new() {new ArtistRow()};
+            remixerRows = new() {new ArtistRow()};
 
            // TODO: pass finalArtistIds into your CreateNewSongAsync(...) call or DTO
 
@@ -346,7 +370,6 @@
     {
         playedIsToggled = newSongDto.Played;
     }
-
     private void OnWantedChange(ChangeEventArgs e)
     {
         wantedIsToggled = newSongDto.Wanted;

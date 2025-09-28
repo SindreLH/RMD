@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
     /*backdrop-filter: blur(4px);*/
-    background: rgba(1, 2, 3, 0.5);
+    background: rgba(1, 2, 3, 0.6);
 }
 
 .container_parent {
@@ -31,7 +31,8 @@
     width: 42rem;
     max-height: 70rem;
     height: auto;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 120, 255, 0.7) 0%, rgba(0, 188, 212, 0.5) 0%, rgba(10, 54, 129, 0.2) 100%);
+    /*background: radial-gradient(circle at 50% 50%, rgba(0, 120, 255, 0.7) 0%, rgba(0, 188, 212, 0.5) 0%, rgba(10, 54, 129, 0.2) 100%);*/
+    background-image: linear-gradient(#1f78d7, #25369B);
     backdrop-filter: blur(4px);
     border-radius: 20px;
 }
