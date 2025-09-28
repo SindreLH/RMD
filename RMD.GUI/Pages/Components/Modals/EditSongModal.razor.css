@@ -21,6 +21,25 @@
     padding-top: 1rem;
 }
 
+.rows_window {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-height: calc(2*2.75rem + .5rem);
+    overflow-y: auto;
+    padding-right: 8px
+}
+
+.select_row {
+    display: flex;
+    align-items: center
+}
+
+    .select_row .form-control, .select_row .btn, .add_button {
+        height: 2.75rem
+    }
+
+
 .main_form_container {
     z-index: 1050;
     margin-top: 3rem;

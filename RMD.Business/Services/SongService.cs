@@ -40,22 +40,26 @@ namespace RMD.Business.Services
 		{
 			try
 			{
-
+				//Checking dupes
 				var existingSong = await _context.Songs.
-					Where(x => x.Title == newSongDto.Title && x.ArtistId == newSongDto.ArtistId).FirstOrDefaultAsync();
+					Where(x => x.Title == newSongDto.Title)
+					.FirstOrDefaultAsync();
 
 				if (existingSong != null)
 				{
 					return Result<Song>.Failure($"A song with the name {newSongDto.Title} by this artist already exists in the database.");
 				}
 
+				//Loading artists
+				var artists = await _context.Artists
+					.Where(a => newSongDto.ArtistIds.Contains(a.ArtistId))
+					.ToListAsync();
 
-				var artist = await _context.Artists.FindAsync(newSongDto.ArtistId);
-
-				if(artist == null)
+				if (!artists.Any())
 				{
-					return Result<Song>.Failure("Artist not found.");
+					return Result<Song>.Failure("No valid artists selected.");
 				}
+
 
 				var newSong = new Song
 				{
@@ -71,14 +75,25 @@ namespace RMD.Business.Services
 					Wanted = newSongDto.Wanted,
 					WantedSongUrl = newSongDto.WantedSongUrl,
 					Favorite = newSongDto.Favorite,
-
-					ArtistId = newSongDto.ArtistId.Value,
-					Artist = artist
+					Artists = artists
+					//ArtistId = newSongDto.ArtistId.Value,
+					//Artist = artist
 
 				};
 
-				await _context.Songs.AddAsync(newSong);
+				//var artists = await _context.Artists
+				//	.Where(a => newSongDto.ArtistIds.Contains(a.ArtistId))
+				//	.ToListAsync();
+
+				
+
+				//await _context.Songs.AddAsync(newSong);
+				//await _context.SaveChangesAsync();
+				//return Result<Song>.Success(newSong);
+
+				_context.Songs.Add(newSong);
 				await _context.SaveChangesAsync();
+
 				return Result<Song>.Success(newSong);
 			}
 			catch (Exception ex)
@@ -154,7 +169,9 @@ namespace RMD.Business.Services
 			try
 			{
 				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
-				var songs = await _context.Songs.Where(x => x.ArtistId.Equals(artistId)).ToListAsync();
+				var songs = await _context.Songs
+					.Where(song => song.Artists.Any(artist => artist.ArtistId == artistId))
+					.ToListAsync();
 
 				if (artist == null)
 				{
@@ -233,9 +250,13 @@ namespace RMD.Business.Services
 
 				}
 
+				var newArtists = await _context.Artists
+					.Where(a => updatedSongDto.ArtistIds.Contains(a.ArtistId))
+					.ToListAsync();
+
 				song.Title = updatedSongDto.Title;
 				song.RemixArtist = updatedSongDto.RemixArtist;
-				song.ArtistId = updatedSongDto.ArtistId.Value;
+				song.Artists = newArtists;
 				song.Length = updatedSongDto.Length;
 				song.Genre = updatedSongDto.Genre;
 				song.ExtendedMix = updatedSongDto.ExtendedMix;

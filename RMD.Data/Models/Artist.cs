@@ -31,6 +31,7 @@ namespace RMD.Data.Models
             DiscogsUrl = String.Empty;
         }
 
-       
+        public ICollection<SongArtist> SongArtists { get; set; } = new List<SongArtist>();
+
     }
 }

@@ -17,6 +17,20 @@ namespace RMD.Data.Context
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			//29.09.25
+			modelBuilder.Entity<SongArtist>()
+		.HasKey(sa => new { sa.SongId, sa.ArtistId });
+
+			modelBuilder.Entity<SongArtist>()
+				.HasOne(sa => sa.Song)
+				.WithMany(s => s.SongArtists)
+				.HasForeignKey(sa => sa.SongId);
+
+			modelBuilder.Entity<SongArtist>()
+				.HasOne(sa => sa.Artist)
+				.WithMany(a => a.SongArtists)
+				.HasForeignKey(sa => sa.ArtistId);
 		}
 	}
 }

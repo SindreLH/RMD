@@ -221,8 +221,23 @@
 </div>
 
 @code {
-
+    private bool playedIsToggled = false;
+    private bool wantedIsToggled = false;
+    private bool remixIsToggled = false;
+    private string? attemptedTitle;
+    private string? attemptedArtistName;
+    private List<Artist> allArtists = new();
+    private SongDto newSongDto = new SongDto
+    {
+        //Init required members
+        Title = String.Empty,
+        RemixArtist = String.Empty,
+        ArtistIds = new List<int>(),
+        Length = String.Empty,
+        Genre = String.Empty,
+    };
     // Row set up for both artists and remixers
+
     private class ArtistRow
     {
         public Guid Key { get; } = Guid.NewGuid();
@@ -258,23 +273,7 @@
     }
 
 
-    private bool playedIsToggled = false;
-    private bool wantedIsToggled = false;
-    private bool remixIsToggled = false;
-
-    private string? attemptedTitle;
-    private string? attemptedArtistName;
-
-    private List<Artist> allArtists = new();
-    private SongDto newSongDto = new SongDto
-    {
-        //Init required members
-        Title = String.Empty,
-        RemixArtist = String.Empty,
-        ArtistId = 0, 
-        Length = String.Empty,
-        Genre = String.Empty,
-    };
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -285,6 +284,7 @@
             allArtists = result.Value.ToList();
         }
     }
+
     private async Task SaveSong()
     {
 
@@ -292,35 +292,36 @@
         newSongDto.Played = playedIsToggled;
         newSongDto.Wanted = wantedIsToggled;
 
-        var result = await SongService.CreateNewSongAsync(newSongDto);
+        // New 22.09.25: On Save - Filter Non-Null Selections
+        var finalArtistIds = artistRows
+            .Select(r => r.SelectedId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
 
-        if (result.IsSuccess)
-        {
+        newSongDto.ArtistIds = finalArtistIds;
 
-            // New 22.09.25: On Save - Filter Non-Null Selections
-            var finalArtistIds = artistRows
-                .Select(r => r.SelectedId)
-                .Where(id => id.HasValue)
-                .Select(id => id!.Value)
-                .Distinct()
-                .ToList();
-
-            var remixArtistIds = remixerRows
+        var remixArtistIds = remixerRows
                 .Where(r => r.SelectedId.HasValue)
                 .Select(r => r.SelectedId!.Value)
                 .Distinct()
                 .ToList();
-                
+        
+        // Calling service after DTOs are ready
+        var result = await SongService.CreateNewSongAsync(newSongDto);
+
+        if (result.IsSuccess)
+        {
             //Resets stacks after successful save
             artistRows = new() {new ArtistRow()};
             remixerRows = new() {new ArtistRow()};
-
-           // TODO: pass finalArtistIds into your CreateNewSongAsync(...) call or DTO
 
             // Truncating long song titles
             var title = result.Value.Title.Length > 30
             ? result.Value.Title[..30] + "..." : attemptedTitle;
 
+            //Calling the toast service, outputting a success message
             ToastService.ShowToast($"SUKSESS! {title} ble opprettet! ", ToastType.Success);
 
             // Resetting the form 
@@ -330,7 +331,7 @@
                 {
                     Title = String.Empty,
                     RemixArtist = String.Empty,
-                    ArtistId = null,
+                    ArtistIds = new List<int>(),
                     Length = String.Empty,
                     Genre = String.Empty,
                     ExtendedMix = false,
@@ -341,9 +342,6 @@
                     PlayedInEp = null,
                     WantedSongUrl = String.Empty
                 };
-
-
-
         }
         else
         {
@@ -353,8 +351,9 @@
             {
                 attemptedTitle = newSongDto.Title;
 
+                //Displaying the first artist in instances where there are multiple, defaults to "Ukjent artist" when there are none
                 attemptedArtistName = allArtists
-                    .FirstOrDefault(a => a.ArtistId == newSongDto.ArtistId)?.Name ?? "(Ukjent artist)";
+                    .FirstOrDefault(a => newSongDto.ArtistIds.Contains(a.ArtistId))?.Name ?? "(Ukjent artist)";
 
                 // Truncating long song titles
                 var title = attemptedTitle.Length > 30
