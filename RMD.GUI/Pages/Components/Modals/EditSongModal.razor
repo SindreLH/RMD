@@ -1,322 +1,597 @@
 ﻿@page "/Modal5"
+
 @using RMD.Data.Models
+
 @using RMD.Data.Models.DTO
+
 @using RMD.Business.Services
+
 @using RMD.GUI.Pages.Components.Toasts
 
+
+
 @inject ToastService ToastService
+
 @inject IArtistService ArtistService
 
+
+
 <div class="modal-backdrop">
-    <div class="container_parent">
-        <div class="main_form_container">
 
-            <i class="bi bi-pencil-square"></i>
+	<div class="container_parent">
 
-            <h3>Rediger låt</h3>
+		<div class="main_form_container">
 
-            <div id="a_b_container">
-                <div id="reg_song_part_a">
-                    <div id="form-group">
-                        <label>Tittel</label>
-                        <input type="text" class="form-control" @bind="editable.Title" />
-                    </div>
 
-                   @*  <div id="form-group">
-                        <label>Remixartist</label>
 
-                        <InputSelect @bind-Value="editableSong.RemixArtist" class="form-control" style="width: 18rem;">
-                            <option value="">Velg remixartist</option>
+			<i class="bi bi-pencil-square"></i>
 
-                            @foreach (var artist in allArtists)
-                            {
-                                <option value="@artist.Name">@artist.Name</option>
-                            }
-                        </InputSelect>
-                        
-                    </div> *@
 
-                    <div class="form-group" style="margin-bottom:15px;">
-                        <label>Remixartister</label>
-                        <div class="rows_window">
-                            @foreach (var row in remixRows)
-                            {
-                                <div class="select_row" @key="row.Key">
-                                    <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control" style="width:18rem;">
-                                        <option value="">Velg remixartist…</option>
-                                        @foreach (var a in allArtists)
-                                        {
-                                            <option value="@a.ArtistId">@a.Name</option>
-                                        }
-                                    </InputSelect>
 
-                                    @if (remixRows.Count > 1)
-                                    {
-                                        <button type="button" class="btn btn-sm btn-outline-danger ms-2"
-                                                @onclick="() => RemoveRemixRow(row.Key)">
-                                            -
-                                        </button>
-                                    }
+			<h3>Rediger låt</h3>
 
-                                    @if (row == remixRows[^1] && remixRows.Count < 5)
-                                    {
-                                        <button type="button" class="add_button" @onclick="AddRemixRow">+</button>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
 
-                   @*  <div id="form-group" style="margin-bottom: 15px;">
-                        <label>Artist</label>
-                        
-                        <InputSelect @bind-Value="editableSong.ArtistId" class="form-control" style="width: 18rem;">
-                            <option value="">Velg artist</option>
 
-                            @foreach (var artist in allArtists)
-                            {
-                                <option value="@artist.ArtistId">@artist.Name</option>
-                            }
+			<div id="a_b_container">
 
-                        </InputSelect>
+				<div id="reg_song_part_a">
 
-                    </div> *@
+					<div id="form-group">
 
-                    <div class="form-group" style="margin-bottom:15px;">
-                        <label>Artister</label>
-                        <div class="rows_window">
-                            @foreach (var row in artistRows)
-                            {
-                                <div class="select_row" @key="row.Key">
-                                    <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control" style="width:18rem;">
-                                        <option value="">Velg artist…</option>
-                                        @foreach (var a in allArtists)
-                                        {
-                                            <option value="@a.ArtistId">@a.Name</option>
-                                        }
-                                    </InputSelect>
+						<label>Tittel</label>
 
-                                    @if (artistRows.Count > 1)
-                                    {
-                                        <button type="button" class="btn btn-sm btn-outline-danger ms-2"
-                                                @onclick="() => RemoveArtistRow(row.Key)">
-                                            -
-                                        </button>
-                                    }
+						<input type="text" class="form-control" @bind="editable.Title" />
 
-                                    @if (row == artistRows[^1] && artistRows.Count < 5)
-                                    {
-                                        <button type="button" class="add_button" @onclick="AddArtistRow">+</button>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
+					</div>
 
-                    <div id="form-group">
-                        <label>Lengde (MMSS)</label>
-                        <input type="text" class="form-control" @bind="editable.Length" />
-                    </div>
 
-                    <div id="form-group">
-                        <label>Sjanger</label>
-                        <select name="sjanger" id="sjanger" class="form-control" @bind="editable.Genre">
-                            <option value="Hands Up">Hands Up</option>
-                            <option value="Hard Trance">Hard Trance</option>
-                            <option value="Hardstyle">Hardstyle</option>
-                            <option value="Jumpstyle">Jumpstyle</option>
-                            <option value="Trance">Trance</option>
-                            <option value="Happy Hardcore">Happy Hardcore</option>
-                            <option value="UK Hardcore">UK Hardcore</option>
-                        </select>
-                    </div>
-                </div>
 
-                <div id="reg_song_part_b">
+					<div id="form-group">
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="extendedMixCheckbox" @bind="editable.ExtendedMix">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
-                        <label class="col-form-label-sm">Mix med intro og outro.</label>
-                    </div>
+						<label>Lengde (MM:SS)</label>
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="favoriteCheckbox" @bind="editable.Favorite"/>
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
-                        <label class="col-form-label-sm">Låten har favorittstatus.</label>
-                    </div>
+						<input type="text" class="form-control" @bind="editable.Length" />
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="playedCheckbox" @bind="editable.Played">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
-                        <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
-                    </div>
+					</div>
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="storedCheckbox" @bind="editable.Stored">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
-                        <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
-                    </div>
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="wantedCheckbox" @bind="editable.Wanted">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
-                        <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
-                    </div>
 
-                    @if (editable.Played)
-                    {
-                        <div class="toggledInput">
-                            <div id="form-group">
-                                <label>Mixtape vol.</label>
-                                <input type="number" class="form-control number_ticker" @bind="editable.PlayedInEp"/>
-                                <label class="col-form-label-sm">Låten er spilt i ep</label>
-                            </div>
-                        </div>
-                    }
+					<div id="form-group">
 
-                    @if (editable.Wanted)
-                    {
-                        <div class="toggledInput">
-                            <div id="form-group">
-                                <label>Låtkilde</label>
-                                <input type="text" class="form-control number_ticker" @bind="editable.WantedSongUrl"/>
-                                <label class="col-form-label-sm">URL til låten</label>
-                            </div>
-                        </div>
-                    }
+						<label>Sjanger</label>
 
-                </div>
-            </div>
+						<select name="sjanger" id="sjanger" class="form-control" @bind="editable.Genre">
 
-            <div class="button_container">
+							<option value="Hands Up">Hands Up</option>
 
-                <div class="cancel_button">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">
-                        Avbryt
-                    </button>
-                </div>
+							<option value="Hard Trance">Hard Trance</option>
 
-                <div class="save_button">
-                    <button type="button" class="btn btn-success" @onclick="SaveChangesAsync">
-                        Lagre endringer
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+							<option value="Hardstyle">Hardstyle</option>
+
+							<option value="Jumpstyle">Jumpstyle</option>
+
+							<option value="Trance">Trance</option>
+
+							<option value="Happy Hardcore">Happy Hardcore</option>
+
+							<option value="UK Hardcore">UK Hardcore</option>
+
+						</select>
+
+					</div>
+
+
+
+					<div class="artist_rows_windows">
+
+						<div id="form-group" style="margin-bottom:15px;">
+
+							<label>Artister</label>
+
+
+
+							@foreach (var row in artistRows)
+
+							{
+
+								<div class="artist_selection_container" @key="row.Key">
+
+									@if (artistsLoaded)
+									{
+										<InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
+											<option value="">Velg en artist</option>
+											@foreach (var a in allArtists)
+											{
+												<option value="@a.ArtistId">@a.Name</option>
+											}
+										</InputSelect>
+									}
+									else
+									{
+										<select class="form-control" disabled>
+											<option>Laster artister...</option>
+										</select>
+									}
+
+
+
+									@if (artistRows.Count > 1)
+
+									{
+
+										<button type="button"
+												class="btn btn-sm btn-danger ms-2"
+												@onclick="() => RemoveArtistRow(row.Key)">
+
+											-
+
+										</button>
+
+									}
+
+
+
+									@if (artistRows.Count <= 5)
+
+									{
+
+										<button type="button"
+												class="btn btn-sm btn-light ms-2"
+												@onclick="AddArtistRow">
+
+											+
+
+										</button>
+
+									}
+
+
+
+									@if (artistRows.Count >= 5)
+
+									{
+
+										ToastService.ShowToast("ADVARSEL: Mer enn 5 artister per låt er ikke tillatt.", ToastType.Warning);
+
+									}
+
+								</div>
+
+							}
+
+						</div>
+
+					</div>
+
+
+
+					@if (remixIsToggled == true)
+
+					{
+
+						<div class="artist_rows_windows" style="margin-top: 1rem;">
+
+							<div id="form-group">
+
+								<label>Remix artister</label>
+
+
+
+								@foreach (var row in remixRows)
+
+								{
+
+									<div class="artist_selection_container" @key="row.Key">
+
+										<InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control" style="width:18rem;">
+
+											<option value="">Velg remixartist</option>
+
+											@foreach (var a in allArtists)
+
+											{
+
+												<option value="@a.ArtistId">@a.Name</option>
+
+											}
+
+										</InputSelect>
+
+
+
+										@if (remixRows.Count > 1)
+
+										{
+
+											<button type="button"
+													class="btn btn-sm btn-danger ms-2"
+													@onclick="() => RemoveRemixRow(row.Key)">
+
+												-
+
+											</button>
+
+										}
+
+
+
+										@if (remixRows.Count <= 5)
+
+										{
+
+											<button type="button"
+													class="btn btn-sm btn-light ms-2"
+													@onclick="AddRemixRow">
+
+												+
+
+											</button>
+
+										}
+
+
+
+										@if (artistRows.Count >= 5)
+
+										{
+
+											ToastService.ShowToast("ADVARSEL: Mer enn 5 artister per låt er ikke tillatt.", ToastType.Warning);
+
+										}
+
+									</div>
+
+								}
+
+							</div>
+
+						</div>
+
+					}
+
+
+
+
+
+				</div>
+
+
+
+				<div id="reg_song_part_b">
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="remixIsToggled">
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Remix</label>
+
+						<label class="col-form-label-sm">Aktiver artistvalg for remixartist.</label>
+
+					</div>
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="extendedMixCheckbox" @bind="editable.ExtendedMix">
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
+
+						<label class="col-form-label-sm">Mix med intro og outro.</label>
+
+					</div>
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="favoriteCheckbox" @bind="editable.Favorite" />
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
+
+						<label class="col-form-label-sm">Låten har favorittstatus.</label>
+
+					</div>
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="playedCheckbox" @bind="editable.Played">
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Spilt</label>
+
+						<label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
+
+					</div>
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="storedCheckbox" @bind="editable.Stored">
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
+
+						<label class="col-form-label-sm">Låten er lagret i samlingen.</label>
+
+					</div>
+
+
+
+					<div class="form-check form-switch">
+
+						<input class="form-check-input" type="checkbox" id="wantedCheckbox" @bind="editable.Wanted">
+
+						<label class="form-check-label" for="flexSwitchCheckDefault">Ønsket</label>
+
+						<label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
+
+					</div>
+
+
+
+					@if (editable.Played)
+
+					{
+
+						<div class="toggledInput">
+
+							<div id="form-group">
+
+								<label>Mixtape vol.</label>
+
+								<input type="number" class="form-control number_ticker" @bind="editable.PlayedInEp" />
+
+								<label class="col-form-label-sm">Låten er spilt i ep</label>
+
+							</div>
+
+						</div>
+
+					}
+
+
+
+					@if (editable.Wanted)
+
+					{
+
+						<div class="toggledInput">
+
+							<div id="form-group">
+
+								<label>Låtkilde</label>
+
+								<input type="text" class="form-control number_ticker" @bind="editable.WantedSongUrl" />
+
+								<label class="col-form-label-sm">URL til låten</label>
+
+							</div>
+
+						</div>
+
+					}
+
+
+
+				</div>
+
+			</div>
+
+
+
+			<div class="button_container">
+
+
+
+				<div class="cancel_button">
+
+					<button type="button" class="btn btn-secondary" @onclick="CloseEditModal">
+
+						Avbryt
+
+					</button>
+
+				</div>
+
+
+
+				<div class="save_button">
+
+					<button type="button" class="btn btn-success" @onclick="SaveChangesAsync">
+
+						Lagre endringer
+
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
 </div>
 
 
 
 
 
+
+
+
+
+
+
 @code {
-    private List<Artist> allArtists = new();
 
-    [Parameter] public bool IsVisible { get; set; }
-    [Parameter] public EventCallback<bool> OnClose { get; set; }
-    [Parameter] public EventCallback<SongUpdateDto> OnSave { get; set; }
-    [Parameter] public Song? Song { get; set; }
+	private List<Artist> allArtists = new();
 
-    //Row model for UI binding
-    private class IdRow{ public Guid Key { get; } = Guid.NewGuid(); public int? SelectedId { get; set; } }
+	private bool remixIsToggled = false;
 
-    private List<IdRow> artistRows = new() { new IdRow() };
-    private List<IdRow> remixRows = new() { new IdRow() };
+	private bool hasInitialized = false;
+	private int currentSongId;
+	private bool artistsLoaded = false;
 
-    private SongUpdateDto editable = new();
+	[Parameter] public bool IsVisible { get; set; }
 
-    void AddArtistRow() { if (artistRows.Count < 5) artistRows.Add(new IdRow()); }
-    void RemoveArtistRow(Guid key) { if (artistRows.Count > 1) artistRows.RemoveAll(r => r.Key == key); }
-    void AddRemixRow() { if (remixRows.Count < 5) remixRows.Add(new IdRow()); }
-    void RemoveRemixRow(Guid key) { if (remixRows.Count > 1) remixRows.RemoveAll(r => r.Key == key); }
+	[Parameter] public EventCallback<bool> OnClose { get; set; }
+
+	[Parameter] public EventCallback<SongUpdateDto> OnSave { get; set; }
+
+	[Parameter] public Song? Song { get; set; }
 
 
-    // Init to string.empty because required
-    // private Song editableSong = new()
-    // {
-    //     Title = string.Empty,
-    //     RemixArtist = null,
-    //     Length = string.Empty,
-    //     Genre = string.Empty,
-    //     ArtistId = 0,
 
-    //     SongId = 0,
-    //     Stored = false,
-    //     Wanted = false, 
-    //     Played = false,
-    //     ExtendedMix = false,
-    //     Favorite = false,
-    //     WantedSongUrl = string.Empty,
-    // };
+	private class IdRow
 
-    
+	{
 
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await ArtistService.GetAllArtistsAsync();
+		public Guid Key { get; } = Guid.NewGuid();
 
-        if (result.IsSuccess)
-        {
-            allArtists = result.Value.ToList();
-        }
-    }
+		public int? SelectedId { get; set; }
 
-    private async Task SaveChangesAsync()
-    {
-        // collect from rows -> dto lists
-        editable.ArtistIds = artistRows.Where(r => r.SelectedId.HasValue).Select(r => r.SelectedId!.Value).Distinct().ToList();
-        editable.RemixArtistIds = remixRows.Where(r => r.SelectedId.HasValue).Select(r => r.SelectedId!.Value).Distinct().ToList();
 
-        await OnSave.InvokeAsync(editable);
 
-        var title = editable.Title.Length > 20 ? editable.Title[..20] + "..." : editable.Title;
-        ToastService.ShowToast($"SUKSESS! {title} ble endret.", ToastType.Success);
-    }
+		public IdRow(int? selectedId = null)
 
-    private void CloseEditModal()
-    {
-        OnClose.InvokeAsync(false);
+		{
 
-        // Truncating long song titles
-        var title = editable.Title.Length > 12
-            ? editable.Title[..12] + "..."
-            : editable.Title;
-        ToastService.ShowToast($"INFO: Endringene på {title} ble avbrutt.", ToastType.Info);
-    }
+			SelectedId = selectedId;
 
-    protected override void OnParametersSet()
-    {
-        if (Song is null) return;
+		}
 
-        //This is mapping incomming entity to the update DTO
+	}
 
-        editable = new SongUpdateDto
-        {
-            SongId = Song.SongId,
-            Title = Song.Title,
-            Length = Song.Length,
-            Genre = Song.Genre,
-            Favorite = Song.Favorite,
-            ExtendedMix = Song.ExtendedMix,
-            Played = Song.Played,
-            PlayedInEp = Song.PlayedInEp,
-            Stored = Song.Stored,
-            Wanted = Song.Wanted,
-            WantedSongUrl = Song.WantedSongUrl,
-            // pull relationships (requires Song.SongArtists loaded)
-            ArtistIds = Song.SongArtists?.Where(x => x.Role == ArtistRole.Primary).Select(x => x.ArtistId).ToList() ?? new(),
-            RemixArtistIds = Song.SongArtists?.Where(x => x.Role == ArtistRole.Remix).Select(x => x.ArtistId).ToList() ?? new()
-        };
 
-        // seed rows from lists (show at least one row)
-        artistRows = editable.ArtistIds.Any()
-            ? editable.ArtistIds.Select(id => new IdRow { SelectedId = id }).ToList()
-            : new() { new IdRow() };
 
-        remixRows = editable.RemixArtistIds.Any()
-            ? editable.RemixArtistIds.Select(id => new IdRow { SelectedId = id }).ToList()
-            : new() { new IdRow() };
-    }
+	//Row model for UI binding
+
+	// private class IdRow { public Guid Key { get; } = Guid.NewGuid(); public int? SelectedId { get; set; } }
+
+
+
+	private List<IdRow> artistRows = new() { new IdRow() };
+
+	private List<IdRow> remixRows = new() { new IdRow() };
+
+
+
+	private SongUpdateDto editable = new();
+
+
+
+	void AddArtistRow() { if (artistRows.Count < 5) artistRows.Add(new IdRow()); }
+
+	void RemoveArtistRow(Guid key) { if (artistRows.Count > 1) artistRows.RemoveAll(r => r.Key == key); }
+
+	void AddRemixRow() { if (remixRows.Count < 5) remixRows.Add(new IdRow()); }
+
+	void RemoveRemixRow(Guid key) { if (remixRows.Count > 1) remixRows.RemoveAll(r => r.Key == key); }
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		var result = await ArtistService.GetAllArtistsAsync();
+		if (result.IsSuccess)
+		{
+			allArtists = result.Value.ToList();
+			artistsLoaded = true;
+		}
+	}
+	
+
+
+
+	private async Task SaveChangesAsync()
+
+	{
+
+		// collect from rows -> dto lists
+
+		editable.ArtistIds = artistRows.Where(r => r.SelectedId.HasValue).Select(r => r.SelectedId!.Value).Distinct().ToList();
+
+		editable.RemixArtistIds = remixRows.Where(r => r.SelectedId.HasValue).Select(r => r.SelectedId!.Value).Distinct().ToList();
+
+
+
+		await OnSave.InvokeAsync(editable);
+
+
+
+		var title = editable.Title.Length > 20 ? editable.Title[..20] + "..." : editable.Title;
+
+		ToastService.ShowToast($"SUKSESS! {title} ble endret.", ToastType.Success);
+
+		CloseEditModal();
+
+	}
+
+
+
+	private void CloseEditModal()
+
+	{
+
+		OnClose.InvokeAsync(false);
+
+
+
+	}
+
+
+
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (Song is not null && Song.SongId != currentSongId)
+		{
+			currentSongId = Song.SongId;
+
+			// Last artister hvis listen er tom
+			if (!allArtists.Any())
+			{
+				var result = await ArtistService.GetAllArtistsAsync();
+				if (result.IsSuccess) allArtists = result.Value.ToList();
+			}
+
+			// Map data til editable DTO
+			editable = new SongUpdateDto
+			{
+				SongId = Song.SongId,
+				Title = Song.Title,
+				Length = Song.Length,
+				Genre = Song.Genre,
+				Favorite = Song.Favorite,
+				ExtendedMix = Song.ExtendedMix,
+				Played = Song.Played,
+				PlayedInEp = Song.PlayedInEp,
+				Stored = Song.Stored,
+				Wanted = Song.Wanted,
+				WantedSongUrl = Song.WantedSongUrl,
+				// VIKTIG: Sørg for at Song.SongArtists faktisk er lastet fra databasen
+				ArtistIds = Song.SongArtists?.Where(x => x.Role == ArtistRole.Primary).Select(x => x.ArtistId).ToList() ?? new(),
+				RemixArtistIds = Song.SongArtists?.Where(x => x.Role == ArtistRole.Remix).Select(x => x.ArtistId).ToList() ?? new()
+			};
+
+			// Populer rader for UI
+			artistRows = editable.ArtistIds.Any()
+				? editable.ArtistIds.Select(id => new IdRow(id)).ToList()
+				: new() { new IdRow() };
+
+			remixRows = editable.RemixArtistIds.Any()
+				? editable.RemixArtistIds.Select(id => new IdRow(id)).ToList()
+				: new() { new IdRow() };
+
+			remixIsToggled = editable.RemixArtistIds.Any();
+		}
+	}
+
 }
+

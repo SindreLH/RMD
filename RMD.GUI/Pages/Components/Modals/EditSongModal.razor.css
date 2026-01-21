@@ -4,9 +4,36 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /*backdrop-filter: blur(4px);*/
     background: rgba(1, 2, 3, 0.6);
 }
+
+/*WORKING HERE: 21.01.2026*/
+
+.artist_rows_windows {
+    display: flex;
+    width: 21rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: calc(2 * 4rem + 0.5rem);
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-gutter: stable both-edges;
+}
+
+.artist_selection_container {
+    display: flex;
+    flex-direction: row;
+    padding-right: 8px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.btn,.add_button {
+    margin-top: 1px;
+    height: 2.5rem;
+}
+
+/*TO HERE: 21.01.2026*/
 
 .container_parent {
     display: flex;
@@ -20,25 +47,6 @@
     font-size: 5rem;
     padding-top: 1rem;
 }
-
-.rows_window {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    max-height: calc(2*2.75rem + .5rem);
-    overflow-y: auto;
-    padding-right: 8px
-}
-
-.select_row {
-    display: flex;
-    align-items: center
-}
-
-    .select_row .form-control, .select_row .btn, .add_button {
-        height: 2.75rem
-    }
-
 
 .main_form_container {
     z-index: 1050;
@@ -76,25 +84,23 @@ label {
     width: 40rem;
 }
 
-input, select {
+/*input, select {
     width: 18rem;
-}
+}*/
 
 /**Del A**/
 #reg_song_part_a {
     display: flex;
     flex-direction: column;
-    width: 15rem;
-    margin-right: 7rem;
-    margin-top: 2rem;
+    width: 20rem;
+    margin-right: 3rem;
 }
 
 /**Del B**/
 #reg_song_part_b {
     display: flex;
     flex-direction: column;
-    /*padding-top: 2rem;*/
-    margin-top: 3.5rem;
+    margin-top: 1.5rem;
     width: 15rem;
 }
 
@@ -120,15 +126,14 @@ input, select {
     flex-direction: column;
 }
 
+.btn-secondary, .btn-success {
+    width: 15rem;
+}
 
 .button_container {
     display: flex;
     flex-direction: row;
     padding-bottom: 2rem;
-}
-
-.btn {
-    width: 11rem;
 }
 
 .btn-secondary {
@@ -169,8 +174,6 @@ input, select {
         position: fixed;
         top: 0;
         left: 0;
-        /*max-width: 100%;
-        height: auto;*/
         backdrop-filter: blur(5px);
         background: rgba(0, 0, 0, 0.5);
     }
@@ -179,8 +182,6 @@ input, select {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        /* max-width: 100%;
-        height: auto;*/
     }
 
     .bi-pencil-square {
@@ -224,16 +225,12 @@ input, select {
         display: flex;
         flex-direction: column;
         align-content: center;
-        /*margin-left: 5rem;*/
-        /*width: 40rem;*/
         max-width: 100%;
         height: auto;
     }
 
     input {
         width: 18rem;
-        /*max-width: 100%;
-        height: auto;*/
     }
 
     select {
@@ -252,7 +249,6 @@ input, select {
     #reg_song_part_a {
         display: flex;
         flex-direction: column;
-        /*width: 15rem;*/
         margin-right: 7rem;
         margin-top: 2rem;
         max-width: 100%;
@@ -263,9 +259,7 @@ input, select {
     #reg_song_part_b {
         display: flex;
         flex-direction: column;
-        /*padding-top: 2rem;*/
         margin-top: 1.5rem;
-        /*width: 15rem;*/
         max-width: 100%;
         height: auto;
     }
@@ -294,9 +288,6 @@ input, select {
 
 
     .button_container {
-        /* display: flex;
-        flex-direction: column;
-        align-items: center;*/
         display: flex;
         flex-direction: column;
     }
@@ -313,14 +304,6 @@ input, select {
         max-width: 100%;
         height: auto;
     }
-
-
-    /*.cancel_button {
-        margin-top: 2rem;*/
-    /* margin-right: 2rem;*/
-    /* position: relative;*/
-    /*display: inline-block;*/
-    /*}*/
 
     .save_button {
         margin-top: 2rem;

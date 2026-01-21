@@ -37,9 +37,7 @@
     margin-bottom: 1rem;
 }
 
-/*.artist_selection_container .form-control,
-.artist_selection_container*/ .btn,
-.add_button {
+.btn,.add_button {
     margin-top: 1px;
     height: 2.5rem;
 }

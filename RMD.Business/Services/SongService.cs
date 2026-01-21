@@ -24,6 +24,7 @@ namespace RMD.Business.Services
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
 		Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId);
+		Task<Result<Song>> GetSongByIdWithArtistsAsync(int songId);
 
 	}
 
@@ -140,11 +141,25 @@ namespace RMD.Business.Services
 			}
 		}
 
+		//FOR DELETE SONG MODAL - REFECTH SELECTED SONG WITH MANY-TO-MANY RELATIONSHIP
+		public async Task<Result<Song>> GetSongByIdWithArtistsAsync(int songId)
+		{
+			var song = await _context.Songs
+				.Include(s => s.SongArtists)
+					.ThenInclude(sa => sa.Artist)
+				.FirstOrDefaultAsync(s => s.SongId == songId);
+
+			if (song == null)
+				return Result<Song>.Failure("Låten ble ikke funnet.");
+
+			return Result<Song>.Success(song);
+		}
+
 		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync()
 		{
 			try
 			{
-				var songs = await _context.Songs.ToListAsync();
+				var songs = await _context.Songs.Include(s => s.Artists).ToListAsync();
 
 				if (songs == null || !songs.Any())
 				{
@@ -255,8 +270,24 @@ namespace RMD.Business.Services
 					.ToListAsync();
 
 				song.Title = updatedSongDto.Title;
-				song.RemixArtist = updatedSongDto.RemixArtist;
-				song.Artists = newArtists;
+				foreach (var artistId in updatedSongDto.RemixArtistIds)
+				{
+					song.SongArtists.Add(new SongArtist
+					{
+						ArtistId = artistId,
+						SongId = songId,
+						Role = ArtistRole.Remix
+					});
+				}
+				foreach (var artistId in updatedSongDto.ArtistIds)
+				{
+					song.SongArtists.Add(new SongArtist
+					{
+						ArtistId = artistId,
+						SongId = songId,
+						Role = ArtistRole.Primary
+					});
+				}
 				song.Length = updatedSongDto.Length;
 				song.Genre = updatedSongDto.Genre;
 				song.ExtendedMix = updatedSongDto.ExtendedMix;

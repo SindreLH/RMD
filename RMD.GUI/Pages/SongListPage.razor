@@ -10,10 +10,11 @@
 
 @if (editModalVisible)
 {
-	<EditSongModal IsVisible = "editModalVisible" 
-	OnClose="@ToggleEditModal"
-	Song="selectedSong"
-	OnSave="HandleSaveAsync"/>
+	<EditSongModal IsVisible="editModalVisible"
+				   OnClose="@ToggleEditModal"
+				   Song="selectedSong"
+				   OnSave="HandleSaveAsync"
+				   @key="selectedSong?.SongId" />
 }
 
 @if (deleteModalVisible)
@@ -222,8 +223,17 @@
 		}
 	}
 
-	private void ToggleEditModal()
+	private async Task ToggleEditModal()
 	{
+		if (!editModalVisible && selectedSong != null)
+		{
+			// Hent sangen på nytt med alle relasjoner før modalen åpnes
+			var result = await SongService.GetSongByIdWithArtistsAsync(selectedSong.SongId);
+			if (result.IsSuccess)
+			{
+				selectedSong = result.Value;
+			}
+		}
 		editModalVisible = !editModalVisible;
 	}
 
@@ -233,8 +243,23 @@
 
 	}
 
-	private void ToggleDeleteModal()
+	private async void ToggleDeleteModal()
 	{
+		if (!deleteModalVisible && selectedSong != null)
+		{
+			var result = await SongService.GetSongByIdWithArtistsAsync(selectedSong.SongId);
+
+			if (result.IsSuccess)
+			{
+				selectedSong = result.Value;
+			}
+			else
+			{
+				ToastService.ShowToast("FEIL: Kunne ikke hente sangens artister.", ToastType.Error);
+				return;
+			}
+		}
+
 		deleteModalVisible = !deleteModalVisible;
 	}
 

@@ -66,14 +66,16 @@
                                                 @onclick="() => RemoveArtistRow(row.Key)">
                                             -
                                         </button>
-
-                                        
                                     }
 
 
                                     @if (artistRows.Count <= 5)
                                     {
-                                        <button type="button" class="btn btn-sm btn-light ms-2" @onclick="AddArtistRows">+</button>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-light ms-2"
+                                                @onclick="AddArtistRows">
+                                            +
+                                        </button>
                                     }
 
                                     @if(artistRows.Count >= 5)

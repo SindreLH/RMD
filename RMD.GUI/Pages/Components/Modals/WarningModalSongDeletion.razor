@@ -16,10 +16,16 @@
 				<h3>Advarsel</h3>
 				<h4>Sletting</h4>
 
-				<div class="text_container">
-					<p>Ønsker du å slette <strong>"@Song?.Title" av @Song?.Artists</strong> fra databasen?</p>
-					<p>Handlingen kan ikke angres.</p>
-				</div>
+				<p>
+					<strong>
+						<ul>
+							@foreach (var sa in Song?.SongArtists ?? Enumerable.Empty<SongArtist>())
+							{
+								<li>@(sa.Artist?.Name ?? "(Ukjent artist)")</li>
+							}
+						</ul>
+					</strong>
+				</p>
 
 				<div class="button_container">
 					<div class="cancel_button">
