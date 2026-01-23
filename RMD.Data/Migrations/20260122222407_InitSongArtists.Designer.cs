@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMD.Data.Context;
 
@@ -11,9 +12,11 @@ using RMD.Data.Context;
 namespace RMD.Data.Migrations
 {
     [DbContext(typeof(RMDContext))]
-    partial class RMDContextModelSnapshot : ModelSnapshot
+    [Migration("20260122222407_InitSongArtists")]
+    partial class InitSongArtists
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

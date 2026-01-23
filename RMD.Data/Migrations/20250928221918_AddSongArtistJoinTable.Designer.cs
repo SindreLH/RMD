@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMD.Data.Context;
 
@@ -11,9 +12,11 @@ using RMD.Data.Context;
 namespace RMD.Data.Migrations
 {
     [DbContext(typeof(RMDContext))]
-    partial class RMDContextModelSnapshot : ModelSnapshot
+    [Migration("20250928221918_AddSongArtistJoinTable")]
+    partial class AddSongArtistJoinTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,11 +143,11 @@ namespace RMD.Data.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("SongId", "ArtistId", "Role");
+                    b.HasKey("SongId", "ArtistId");
 
                     b.HasIndex("ArtistId");
 
-                    b.ToTable("SongArtists");
+                    b.ToTable("SongArtist");
                 });
 
             modelBuilder.Entity("ArtistSong", b =>

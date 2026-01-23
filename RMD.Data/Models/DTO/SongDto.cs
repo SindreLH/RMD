@@ -4,11 +4,16 @@ namespace RMD.Data.Models.DTO
 {
 	public class SongDto
 	{
+		public int SongId { get; set; }
+
 		[Required(ErrorMessage = "A song title is required.")]
 		[StringLength(100, ErrorMessage = "The song title cannot exceed 100 characters.")]
 		public required string Title { get; set; }
 
 		public string? RemixArtist { get; set; }
+
+
+		//OLD STRING BASED SETUP - REMOVE:
 
 		//[Required(ErrorMessage = "An artist is required.")]
 		//public required string Artist { get; set; }
@@ -30,7 +35,16 @@ namespace RMD.Data.Models.DTO
 		public bool Favorite { get; set; }
 
 
-		[Required(ErrorMessage = "Artist must be selected.")]
-		public int? ArtistId { get; set; }
+
+		// OLD ONE TO MANY RELATIONSHIP - REMOVE:
+
+		//[Required(ErrorMessage = "Artist must be selected.")]
+		//public int? ArtistId { get; set; }
+
+
+		// NEW - MANY-TO-MANY RELATIONSHIP
+		[Required(ErrorMessage = "At least one artist must be selected.")]
+		public List<int> ArtistIds { get; set; } = new();
+		public List<int> RemixArtistIds { get; set; } = new();
 	}
 }

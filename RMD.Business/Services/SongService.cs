@@ -24,6 +24,7 @@ namespace RMD.Business.Services
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
 		Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId);
+		Task<Result<Song>> GetSongByIdWithArtistsAsync(int songId);
 
 	}
 
@@ -38,29 +39,35 @@ namespace RMD.Business.Services
 
 		public async Task<Result<Song>> CreateNewSongAsync(SongDto newSongDto)
 		{
+			newSongDto.RemixArtistIds ??= new();
+			newSongDto.ArtistIds ??= new();
+
 			try
 			{
-
+				//Checking dupes
 				var existingSong = await _context.Songs.
-					Where(x => x.Title == newSongDto.Title && x.ArtistId == newSongDto.ArtistId).FirstOrDefaultAsync();
+					Where(x => x.Title == newSongDto.Title)
+					.FirstOrDefaultAsync();
 
 				if (existingSong != null)
 				{
 					return Result<Song>.Failure($"A song with the name {newSongDto.Title} by this artist already exists in the database.");
 				}
 
+				//Loading artists
+				var artists = await _context.Artists
+					.Where(a => newSongDto.ArtistIds.Contains(a.ArtistId))
+					.ToListAsync();
 
-				var artist = await _context.Artists.FindAsync(newSongDto.ArtistId);
-
-				if(artist == null)
+				if (!artists.Any())
 				{
-					return Result<Song>.Failure("Artist not found.");
+					return Result<Song>.Failure("No valid artists selected.");
 				}
+
 
 				var newSong = new Song
 				{
 					Title = newSongDto.Title,
-					RemixArtist = newSongDto.RemixArtist,
 					Length = newSongDto.Length,
 					Genre = newSongDto.Genre,
 					ExtendedMix = newSongDto.ExtendedMix,
@@ -70,15 +77,30 @@ namespace RMD.Business.Services
 					Stored = newSongDto.Stored,
 					Wanted = newSongDto.Wanted,
 					WantedSongUrl = newSongDto.WantedSongUrl,
-					Favorite = newSongDto.Favorite,
-
-					ArtistId = newSongDto.ArtistId.Value,
-					Artist = artist
-
+					Favorite = newSongDto.Favorite
 				};
 
-				await _context.Songs.AddAsync(newSong);
+				foreach(var id in newSongDto.ArtistIds.Distinct())
+				{
+					newSong.SongArtists.Add(new SongArtist
+					{
+						ArtistId = id,
+						Role = ArtistRole.Primary
+					});
+				}
+
+				foreach (var id in newSongDto.RemixArtistIds.Distinct())
+				{
+					newSong.SongArtists.Add(new SongArtist
+					{
+						ArtistId = id,
+						Role = ArtistRole.Remix
+					});
+				}
+
+				_context.Songs.Add(newSong);
 				await _context.SaveChangesAsync();
+
 				return Result<Song>.Success(newSong);
 			}
 			catch (Exception ex)
@@ -125,11 +147,25 @@ namespace RMD.Business.Services
 			}
 		}
 
+		//FOR DELETE SONG MODAL - REFECTH SELECTED SONG WITH MANY-TO-MANY RELATIONSHIP
+		public async Task<Result<Song>> GetSongByIdWithArtistsAsync(int songId)
+		{
+			var song = await _context.Songs
+				.Include(s => s.SongArtists)
+					.ThenInclude(sa => sa.Artist)
+				.FirstOrDefaultAsync(s => s.SongId == songId);
+
+			if (song == null)
+				return Result<Song>.Failure("Låten ble ikke funnet.");
+
+			return Result<Song>.Success(song);
+		}
+
 		public async Task<Result<IEnumerable<Song>>> GetAllSongsAsync()
 		{
 			try
 			{
-				var songs = await _context.Songs.ToListAsync();
+				var songs = await _context.Songs.Include(s => s.SongArtists).ThenInclude(sa => sa.Artist).ToListAsync();
 
 				if (songs == null || !songs.Any())
 				{
@@ -145,16 +181,15 @@ namespace RMD.Business.Services
 			}
 		}
 
-		
-		
-
 		public async Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId)
 		{
 
 			try
 			{
 				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
-				var songs = await _context.Songs.Where(x => x.ArtistId.Equals(artistId)).ToListAsync();
+				var songs = await _context.Songs
+					.Where(song => song.Artists.Any(artist => artist.ArtistId == artistId))
+					.ToListAsync();
 
 				if (artist == null)
 				{
@@ -225,29 +260,48 @@ namespace RMD.Business.Services
 		{
 			try
 			{
-				var song = await _context.Songs.FindAsync(songId);
+				var song = await _context.Songs
+					.Include(s => s.SongArtists)
+					.FirstOrDefaultAsync(s => s.SongId == songId);
 
-				if(song == null)
+				if (song == null)
+					return Result<Song>.Failure("Song not found.");
+
+				_context.SongArtists.RemoveRange(song.SongArtists);
+				song.SongArtists.Clear(); //Do not remove, this ensures removal of old/legacy relations
+
+				foreach(var artistId in updatedSongDto.ArtistIds.Distinct())
 				{
-					return Result<Song>.Failure("Update failed. The song ID {songId} does not exist in the database.");
+					song.SongArtists.Add(new SongArtist
+					{
+						SongId = songId,
+						ArtistId = artistId,
+						Role = ArtistRole.Primary
+					});
+				}
 
+				foreach (var artistId in updatedSongDto.RemixArtistIds.Distinct())
+				{
+					song.SongArtists.Add(new SongArtist
+					{
+						SongId = songId,
+						ArtistId = artistId,
+						Role = ArtistRole.Remix
+					});
 				}
 
 				song.Title = updatedSongDto.Title;
-				song.RemixArtist = updatedSongDto.RemixArtist;
-				song.ArtistId = updatedSongDto.ArtistId.Value;
 				song.Length = updatedSongDto.Length;
 				song.Genre = updatedSongDto.Genre;
 				song.ExtendedMix = updatedSongDto.ExtendedMix;
 				song.RadioMix = updatedSongDto.RadioMix;
 				song.Played = updatedSongDto.Played;
 				song.PlayedInEp = updatedSongDto.PlayedInEp;
-				song.Stored = updatedSongDto.Stored;
+				song.Stored =updatedSongDto.Stored;	
 				song.Wanted = updatedSongDto.Wanted;
 				song.Favorite = updatedSongDto.Favorite;
 				song.WantedSongUrl = updatedSongDto.WantedSongUrl;
 
-				_context.Songs.Update(song);
 				await _context.SaveChangesAsync();
 
 				return Result<Song>.Success(song);

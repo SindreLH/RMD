@@ -34,10 +34,16 @@ namespace RMD.Data.Models
         public string? WantedSongUrl { get; set; }
         public bool Favorite { get; set; }
 
-		public int ArtistId { get; set; }
+        //OLD SETUP - ONE TO MANY RELATIONSHIP BETWEEN ARTIST AND SONG
+		//public int ArtistId { get; set; }
 
-        [Required]
-        public Artist Artist { get; set; } = null!;
+  //      [Required]
+  //      public Artist Artist { get; set; } = null!;
+
+        //NEW SETUP - MANY-TO-MANY WHERE A SONG CAN HAVE MULTIPLE ARTISTS
+        public ICollection<Artist> Artists { get; set; } = new List<Artist>();
+		public ICollection<SongArtist> SongArtists { get; set; } = new List<SongArtist>();
+
 
 		public Song()
         {
