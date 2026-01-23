@@ -118,16 +118,27 @@
 					<td>@song.SongId</td>
 					<td class="text-truncate" style="max-width: 200px" title="@song.Title">@song.Title</td>
 					<td>
-						@if (song.Artists != null && song.Artists.Any())
+						@if (song.SongArtists != null && song.SongArtists.Any())
 						{
-							@string.Join(", ", song.Artists.Select(a => a.Name))
+							@string.Join(", ", song.SongArtists
+							.Where(sa => sa.Role == ArtistRole.Primary)
+							.Select(sa => sa.Artist.Name))
 						}
 						else
 						{
 							<em>Ingen artister</em>
 						}
 					</td>
-					<td>@song.RemixArtist</td>
+
+					<td>
+						@if (song.SongArtists != null && song.SongArtists.Any(sa => sa.Role == ArtistRole.Remix))
+						{
+							@string.Join(", ", song.SongArtists
+							.Where(sa => sa.Role == ArtistRole.Remix)
+							.Select(sa => sa.Artist.Name))
+						}
+					</td>
+
 					<td>@song.Length</td>
 					<td>@song.Genre</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
@@ -304,7 +315,7 @@
 			filtered = filtered.Where(song =>
 				(song.Title?.ToLower().Contains(lowerSearch) ?? false) ||
 				(song.RemixArtist?.ToLower().Contains(lowerSearch) ?? false) ||
-				(song.Artists != null && song.Artists.Any(a => a.Name.ToLower().Contains(lowerSearch)))
+				(song.SongArtists != null && song.SongArtists.Any(a => a.Artist.Name.ToLower().Contains(lowerSearch)))
 			);
 		}
 
@@ -373,8 +384,19 @@
 
 		var dto = new RMD.Data.Models.DTO.SongDto
 			{
-				Title = updatedSong.Title,
-				ArtistIds = updatedSong.Artists?.Select(a => a.ArtistId).ToList() ?? new List<int>(),
+			Title = updatedSong.Title,
+
+			ArtistIds = updatedSong.SongArtists?
+							.Where(sa => sa.Role == ArtistRole.Primary)
+							.Select(sa => sa.ArtistId)
+							.ToList() ?? new(),
+
+
+			RemixArtistIds = updatedSong.SongArtists?
+							.Where(sa => sa.Role == ArtistRole.Remix)
+							.Select(sa => sa.ArtistId)
+							.ToList() ?? new(),
+
 				RemixArtist = updatedSong.RemixArtist,
 				Length = updatedSong.Length,
 				Genre = updatedSong.Genre,

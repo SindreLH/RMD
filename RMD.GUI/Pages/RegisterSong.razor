@@ -275,7 +275,7 @@
     }
 
 
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -302,13 +302,18 @@
             .Distinct()
             .ToList();
 
+
         newSongDto.ArtistIds = finalArtistIds;
+        
 
         var remixArtistIds = remixerRows
                 .Where(r => r.SelectedId.HasValue)
                 .Select(r => r.SelectedId!.Value)
                 .Distinct()
                 .ToList();
+        
+        newSongDto.RemixArtistIds = remixArtistIds;
+
         
         // Calling service after DTOs are ready
         var result = await SongService.CreateNewSongAsync(newSongDto);
@@ -324,7 +329,7 @@
             ? result.Value.Title[..30] + "..." : attemptedTitle;
 
             //Calling the toast service, outputting a success message
-            ToastService.ShowToast($"SUKSESS! {title} ble opprettet! ", ToastType.Success);
+            ToastService.ShowToast($"SUKSESS! {newSongDto.Title} ble opprettet! ", ToastType.Success);
 
             // Resetting the form 
             playedIsToggled = false;
