@@ -49,14 +49,7 @@
 
 	private void CloseDeleteModal()
 	{
-		OnClose.InvokeAsync(false);
-
-		// Truncating long song titles
-		var name = Artist?.Name.Length > 15
-			? Artist?.Name[..15] + "..."
-			: Artist?.Name;
-		ToastService.ShowToast($"INFO: Sletting av {name} ble avbrutt.", ToastType.Info);
-		
+		OnClose.InvokeAsync(false);		
 	}
 
 	private void DeleteArtist()
