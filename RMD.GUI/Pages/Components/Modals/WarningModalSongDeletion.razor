@@ -17,8 +17,15 @@
 				<h4>Sletting</h4>
 
 				<p>
-					Ønsker du virkelig å slette @Song?.Title ? 
+					Ønsker du virkelig å slette låten @Song?.Title 
 				</p>
+				<p>
+					av artisten @string.Join(", ",
+									Song?.SongArtists?
+									.Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null)
+									.Select(sa => sa.Artist!.Name)
+									?? Enumerable.Empty<string>()) ?
+			</p>
 
 				<div class="button_container">
 					<div class="cancel_button">
