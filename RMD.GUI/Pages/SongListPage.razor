@@ -22,8 +22,7 @@
 	<WarningModalSongDeletion IsVisible="deleteModalVisible" 
 		OnClose="ToggleDeleteModal"
 		Song="selectedSong"
-		OnDelete="OnSongDeleted"
-		/>
+		OnDelete="OnSongDeleted" />
 }
 
 @if (emptyDbModalVisible)
@@ -82,6 +81,8 @@
 				<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
 					<i class="bi bi-trash3"></i> Fjern låt
 				</button>
+
+				
 			</div>
 		</div>
 	}
@@ -188,7 +189,7 @@
 
 	async Task HandleSaveAsync(SongUpdateDto dto)
 	{
-		
+
 		var songDto = new SongDto
 		{
 			Title = dto.Title,
@@ -231,6 +232,7 @@
 		{
 			selectedSong = song;
 			isSelected = true;
+
 		}
 	}
 
@@ -254,21 +256,25 @@
 
 	}
 
-	private async void ToggleDeleteModal()
+	private async Task ToggleDeleteModal()
 	{
-		if (!deleteModalVisible && selectedSong != null)
+		if (!deleteModalVisible)
 		{
+
+			if (selectedSong == null)
+				return;
+
 			var result = await SongService.GetSongByIdWithArtistsAsync(selectedSong.SongId);
 
-			if (result.IsSuccess)
+			if (!result.IsSuccess)
 			{
-				selectedSong = result.Value;
-			}
-			else
-			{
-				ToastService.ShowToast("FEIL: Kunne ikke hente sangens artister.", ToastType.Error);
+				ToastService.ShowToast(
+			   "FEIL: Kunne ikke hente sangens artister.",
+			   ToastType.Error);
 				return;
 			}
+
+			selectedSong = result.Value;
 		}
 
 		deleteModalVisible = !deleteModalVisible;

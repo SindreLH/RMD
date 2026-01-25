@@ -17,14 +17,7 @@
 				<h4>Sletting</h4>
 
 				<p>
-					<strong>
-						<ul>
-							@foreach (var sa in Song?.SongArtists ?? Enumerable.Empty<SongArtist>())
-							{
-								<li>@(sa.Artist?.Name ?? "(Ukjent artist)")</li>
-							}
-						</ul>
-					</strong>
+					Ønsker du virkelig å slette @Song?.Title ? 
 				</p>
 
 				<div class="button_container">
