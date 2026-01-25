@@ -100,62 +100,89 @@
 			<tr>
 				<th>#</th>
 				<th>Tittel</th>
-				<th>Artist</th>
+				<th>Artister</th>
 				<th>Remixer</th>
 				<th>Lengde</th>
+				<th>URL</th>
 				<th>Sjanger</th>
-				<th>Favoritt</th>
+				<th>EP</th>
 				<th>Extended</th>
-				<th>Episode</th>
+				<th>Favoritt</th>
 				<th>Lagret</th>
-				<th>Kilde</th>
 			</tr>
 		</thead>
 
 		<tbody>
 			@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>()))
 			{
-				<tr @onclick="() => SelectSong(song)" class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
+				// Strings containing tooltip data
+				var remixNames = string.Join(", ",
+					song.SongArtists
+					.Where(sa => sa.Role == ArtistRole.Remix && sa.Artist != null)
+					.Select(sa => sa.Artist!.Name));
+				var artistNames = string.Join(", ",
+					song.SongArtists
+					.Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null)
+					.Select(sa => sa.Artist!.Name));
+					
+				// Table data inserted + tooltip data
+				<tr @onclick="() => SelectSong(song)" 
+					class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
+
 					<td>@song.SongId</td>
-					<td class="text-truncate" style="max-width: 200px" title="@song.Title">@song.Title</td>
-					<td>
-						@if (song.SongArtists != null && song.SongArtists.Any())
-						{
-							@string.Join(", ", song.SongArtists
-							.Where(sa => sa.Role == ArtistRole.Primary)
-							.Select(sa => sa.Artist.Name))
-						}
-						else
-						{
-							<em>Ingen artister</em>
-						}
+					<td class="text-truncate" 
+						style="max-width: 350px" 
+						title="@song.Title">@song.Title</td>
+					<td class="text-truncate" 
+						style="max-width: 200px" 
+						title="@artistNames">
+							@if (song.SongArtists != null && song.SongArtists.Any())
+							{
+								@string.Join(", ", song.SongArtists
+								.Where(sa => sa.Role == ArtistRole.Primary)
+								.Select(sa => sa.Artist.Name))
+							}
+							else
+							{
+								<em>Ingen artister</em>
+							}
 					</td>
+					<td class="text-truncate" 
+						style="max-width: 200px" 
+						title="@remixNames">
 
-					<td>
-						@if (song.SongArtists != null && song.SongArtists.Any(sa => sa.Role == ArtistRole.Remix))
-						{
-							@string.Join(", ", song.SongArtists
-							.Where(sa => sa.Role == ArtistRole.Remix)
-							.Select(sa => sa.Artist.Name))
-						}
+						
+							@if (song.SongArtists != null && song.SongArtists.Any(sa => sa.Role == ArtistRole.Remix))
+							{
+								@string.Join(", ", song.SongArtists
+								.Where(sa => sa.Role == ArtistRole.Remix)
+								.Select(sa => sa.Artist.Name))
+							}
 					</td>
-
 					<td>@song.Length</td>
-					<td>@song.Genre</td>
-					<td>@(song.Favorite ? "⭐" : "❌")</td>
-					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					<td>@song.PlayedInEp</td>
-					<td>@(song.Stored ? "✅" : "❌")</td>
-					<td class="text-truncate" style="max-width: 200px">
-						<a href="@song.WantedSongUrl" target="_blank" rel="noopener noreferrer" title="@song.WantedSongUrl">
-							@song.WantedSongUrl
-						</a>
+					<td class="text-truncate">
+						@if (song.WantedSongUrl != null)
+						{
+							<a href="@song.WantedSongUrl" 
+								target="_blank" 
+								rel="noopener noreferrer" 
+								title="@song.WantedSongUrl" 
+								style="text-decoration: none;">
+								🔗
+							</a>
+
+						}
 					</td>
+					<td>@song.Genre</td>
+					<td>@song.PlayedInEp</td>
+					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
+					<td>@(song.Favorite ? "⭐" : "❌")</td>
+					<td>@(song.Stored ? "✅" : "❌")</td>
 				</tr>
 			}
 		</tbody>
 	</table>
-
+	
 	@if (songs == null)
 	{
 		<div class="load_container">
