@@ -16,16 +16,12 @@
 				<h3>Advarsel</h3>
 				<h4>Sletting</h4>
 
-				<p>
-					<strong>
-						<ul>
-							@foreach (var sa in Song?.SongArtists ?? Enumerable.Empty<SongArtist>())
-							{
-								<li>@(sa.Artist?.Name ?? "(Ukjent artist)")</li>
-							}
-						</ul>
-					</strong>
-				</p>
+				<p class="text_container">
+				Ønsker du virkelig å slette
+				<strong>
+				@string.Join(", ", Song?.SongArtists? .Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null).Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>()) - <strong>"@Song?.Title" ?</strong>
+				</strong> 
+			</p>
 
 				<div class="button_container">
 					<div class="cancel_button">
@@ -56,12 +52,6 @@
 	private void CloseDeleteModal()
 	{
 		OnClose.InvokeAsync(false);
-
-		// Truncating long song titles
-		var title = Song?.Title.Length > 20
-			? Song?.Title[..20] + "..."
-			: Song?.Title;
-		ToastService.ShowToast($"INFO: {title} ble ikke fjernet.", ToastType.Info);
 	}
 
 	private void DeleteSong()

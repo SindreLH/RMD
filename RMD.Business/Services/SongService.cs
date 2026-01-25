@@ -23,7 +23,7 @@ namespace RMD.Business.Services
 
 		Task<Result<bool>> DeleteSongByIdAsync(int songId);
 		Task<Result<Song>> UpdateSongByIdAsync(int songId, SongDto updatedSongDto);
-		Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId);
+		Task<Result<IEnumerable<Song>>> GetSongsByArtistIdAsync(int artistId);
 		Task<Result<Song>> GetSongByIdWithArtistsAsync(int songId);
 
 	}
@@ -181,34 +181,31 @@ namespace RMD.Business.Services
 			}
 		}
 
-		public async Task<Result<ICollection<Song>>> GetSongsByArtistIdAsync(int artistId)
+		public async Task<Result<IEnumerable<Song>>> GetSongsByArtistIdAsync(int artistId)
 		{
 
 			try
 			{
-				var artist = await _context.Artists.Where(x => x.ArtistId.Equals(artistId)).FirstOrDefaultAsync();
-				var songs = await _context.Songs
-					.Where(song => song.Artists.Any(artist => artist.ArtistId == artistId))
-					.ToListAsync();
-
-				if (artist == null)
-				{
-					return Result<ICollection<Song>>.Failure($"No songs could be found because no artist with ID: {artistId} exists in the database.");
-				}
-
+				var songs = await _context.SongArtists
+					.Where(sa => sa.ArtistId == artistId)
+					.Include(sa => sa.Song)
+						.ThenInclude(s => s.SongArtists)
+							.ThenInclude(sa => sa.Artist)
+							.Select(sa => sa.Song)
+							.Distinct()
+							.ToListAsync();
 
 				if (!songs.Any())
 				{
-					return Result<ICollection<Song>>.Failure($"The artist with ID: {artistId} does not hold any songs. Register a song and attach this artist.");
+					return Result<IEnumerable<Song>>.Failure($"The artist with ID: {artistId} does not hold any songs. Register a song and attach this artist.");
 				}
 
-
-				return Result<ICollection<Song>>.Success(songs);
+				return Result<IEnumerable<Song>>.Success(songs);
 			}
 
 			catch (Exception ex)
 			{
-				return Result<ICollection<Song>>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
+				return Result<IEnumerable<Song>>.Failure("An unknown error occured while FETCHING a single artist from the database." + ex.Message);
 			}
 
 		}

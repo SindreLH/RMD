@@ -102,7 +102,7 @@ h4 {
 
 
 @media (max-width: 412px) {
-    |
+    
     .parent_container {
         display: flex;
         justify-content: center;

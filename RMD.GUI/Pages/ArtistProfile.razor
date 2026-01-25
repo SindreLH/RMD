@@ -48,12 +48,25 @@
 					</th>
 
 					<th>
-						Remixartist
+						Lengde
 					</th>
 
 					<th>
-						Lengde
+						Spilt i EP
 					</th>
+
+					<th>
+						Kilde URL
+					</th>
+
+					<th>
+						Lagret
+					</th>
+
+					<th>
+						Favoritt
+					</th>
+
 				</tr>
 
 			</thead>
@@ -64,9 +77,24 @@
 				{
 					<tbody>
 						<tr>
-							<td class="text-truncate" style="max-width: 20px">@song.Title</td>
-							<td class="text-truncate" style="max-width: 20px">@song.RemixArtist</td>
+							<td class="text-truncate" style="max-width: 400px">@song.Title</td>
 							<td>@song.Length</td>
+							<td>@song.PlayedInEp</td>
+							<td>
+								@if (song.WantedSongUrl != null)
+								{
+									<a href="@song.WantedSongUrl"
+									   target="_blank"
+									   rel="noopener noreferrer"
+									   title="@song.WantedSongUrl"
+									   style="text-decoration: none;">
+										🔗
+									</a>
+
+								}
+							</td>
+							<td>@(song.Favorite ? "⭐" : "❌")</td>
+							<td>@(song.Stored ? "✅" : "❌")</td>
 						</tr>
 
 					</tbody>
