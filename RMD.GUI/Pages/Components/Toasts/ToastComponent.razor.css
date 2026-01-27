@@ -1,9 +1,9 @@
 .rmd-toast-container {
     position: fixed;
-    bottom: 15px;
+    bottom: 5px;
+    margin-bottom: -0.5rem;
     right: 15px;
     align-items: flex-end;
-
     display: flex;
     flex-direction: column;
     z-index: 1051;
@@ -34,10 +34,21 @@ p {
     margin-top: 7px;
 }
 
-.text_container {
+.text_container p {
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     gap: 10px;
+    align-items: center;
+}
+
+.message-truncate {
+    display: inline-block;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
 }
 
 /*info*/

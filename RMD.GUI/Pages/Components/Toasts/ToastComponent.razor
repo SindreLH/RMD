@@ -24,8 +24,14 @@
         <div class="toast_contents @toastCss">
             <i class="@iconCss"></i>
 
-            <div class="text_container">
+            @* <div class="text_container">
                 <p class="text-truncate" style="max-width: 350px; height: 100%;">@message</p>
+            </div> *@
+
+            <div class="text_container">
+                <p>
+                    <span style="max-width: 900px;" class="message-truncate">@message</span>
+                </p>
             </div>
 
             <i class="bi bi-x" @onclick="CloseToast"></i>
@@ -46,8 +52,6 @@
 
     private async void ShowToast(string msg, ToastType type)
     {
-
-
         message = msg;
 
         (toastCss, iconCss) = type switch
