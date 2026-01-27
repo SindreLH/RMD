@@ -20,8 +20,7 @@
 	<WarningModalArtistDeletion IsVisible="deleteModalVisible" 
 	OnClose="ToggleDeleteModal"
 	Artist="artist"
-	OnDelete="OnArtistDeleted"
-	/>
+	OnDelete="OnArtistDeleted"/>
 }
 
 
@@ -93,8 +92,9 @@
 
 								}
 							</td>
-							<td>@(song.Favorite ? "⭐" : "❌")</td>
 							<td>@(song.Stored ? "✅" : "❌")</td>
+							<td>@(song.Favorite ? "⭐" : "❌")</td>
+							
 						</tr>
 
 					</tbody>
