@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMD.Business.Services {
+namespace RMD.Business.Services
+{
 
 	/// <summary>
 	/// ToastService is a singleton service which is using an event (OnShow) to notify a the toast component when it's supposed to be displayed.
@@ -14,7 +15,7 @@ namespace RMD.Business.Services {
 
 	public class ToastService
 	{
-		public event Action<string, ToastType>? OnShow;	
+		public event Action<string, ToastType>? OnShow;
 		public void ShowToast(string message, ToastType type = ToastType.Info)
 		{
 			OnShow?.Invoke(message, type);

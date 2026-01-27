@@ -3,7 +3,7 @@
     bottom: 15px;
     right: 15px;
     align-items: flex-end;
-    pointer-events: none;
+
     display: flex;
     flex-direction: column;
     z-index: 1051;

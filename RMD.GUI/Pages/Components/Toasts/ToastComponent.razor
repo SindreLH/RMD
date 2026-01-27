@@ -46,7 +46,7 @@
 
     private async void ShowToast(string msg, ToastType type)
     {
-        
+
 
         message = msg;
 
@@ -70,6 +70,7 @@
     private void CloseToast()
     {
         visible = false;
+        StateHasChanged();
     }
 
     public void Dispose()
