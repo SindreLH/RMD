@@ -250,7 +250,7 @@
 		var result = await ArtistService.GetAllArtistsAsync();
 		if (result.IsSuccess)
 		{
-			allArtists = result.Value.ToList();
+			allArtists = result.Value.OrderBy(a => a.Name).ToList();
 			artistsLoaded = true;
 		}
 	}
