@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,10 @@ namespace RMD.Data.Models.DTO
 	{
 		public int SongId { get; set; }
 		public string Title { get; set; } = string.Empty;
+
+		[Required]
+		[RegularExpression(@"^[0-5]?\d:[0-5]\d$",
+		ErrorMessage = "Length input must match format: MM:SS")]
 		public string Length { get; set; } = string.Empty;
 		public string Genre { get; set; } = string.Empty;
 		public bool ExtendedMix { get; set; }
