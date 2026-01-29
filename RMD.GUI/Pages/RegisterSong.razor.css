@@ -26,7 +26,6 @@
     overflow-y: auto;
     padding-right: 8px; /* keep content clear of scrollbar */
     scrollbar-gutter: stable both-edges; /* avoid layout shift when scrollbar appears */
-    
 }
 
 .artist_selection_container {
@@ -37,26 +36,26 @@
     margin-bottom: 1rem;
 }
 
-.btn,.add_button {
+.btn, .add_button {
     margin-top: 1px;
     height: 2.5rem;
 }
 
 h3 {
     font-weight: 400;
-    font-size:xx-large;
+    font-size: xx-large;
     justify-content: center;
     color: white;
 }
 
-label{
+label {
     color: white;
 }
 
 
 /**Indre skjema - beholder for del a og b**/
-#a_b_container{
-    display: flex; 
+#a_b_container {
+    display: flex;
     flex-direction: row;
     margin-left: 5rem;
     width: 40rem;
@@ -78,7 +77,7 @@ label{
 #reg_song_part_b {
     display: flex;
     flex-direction: column;
-    margin-top:1.5rem;
+    margin-top: 1.5rem;
     width: 15rem;
 }
 
@@ -99,7 +98,7 @@ label{
 }
 
 .save_button {
-    margin-left:5rem;
+    margin-left: 5rem;
     margin-top: 1.5rem;
     position: relative;
     display: inline-block;
@@ -107,8 +106,8 @@ label{
 }
 
     .save_button:hover {
-    transform: scale(1.1);
-    transform-origin: center;
+        transform: scale(1.1);
+        transform-origin: center;
     }
 
 #form-group {
@@ -118,13 +117,13 @@ label{
     margin-bottom: 1rem;
 }
 
-.col-form-label-sm{
+.col-form-label-sm {
     font-size: x-small;
     display: flex;
     flex-direction: column;
 }
 
-.toggledInput{
+.toggledInput {
     width: 12rem;
 }
 
@@ -143,14 +142,14 @@ label{
 
     .main_form_container {
         display: flex;
-        flex-direction:column; 
+        flex-direction: column;
         width: auto;
         padding: 0;
         margin: 0;
         height: auto;
     }
 
-    #a_b_container{
+    #a_b_container {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -158,19 +157,17 @@ label{
         margin: 0;
     }
 
-    #reg_song_part_a{
+    #reg_song_part_a {
         display: flex;
         flex-direction: column;
         padding-left: 5rem;
         width: 60%;
         margin-left: 3rem;
-
     }
 
     #reg_song_part_b {
         display: flex;
         flex-direction: column;
-        
         padding-left: 4rem;
         margin-left: 4rem;
         width: 50%;

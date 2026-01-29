@@ -47,12 +47,11 @@
 }
 
 .grid_container {
-    max-height: 28rem;
+    max-height: 41rem;
     height: auto;
     overflow-y: auto;
-
     background-color: #00000050;
-    margin-top: 2rem;
+    margin-top: 0.8rem;
     padding: 2rem;
     border-radius: 20px;
     display: grid; /*
@@ -117,7 +116,7 @@ h3 {
     flex-direction: row;
     height: 2rem;
     margin-bottom: 2rem;*/
-
+    margin-top:-1rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

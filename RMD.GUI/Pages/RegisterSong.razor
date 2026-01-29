@@ -16,7 +16,7 @@
 
 <div class="container_parent">
     <div class="main_form_container">        
-        <EditForm Model="newSongDto" OnValidSubmit="SaveSong">
+        <EditForm Model="newSongDto" OnValidSubmit="SaveSong" novalidate>
             <DataAnnotationsValidator/>
             <div id="a_b_container">
                 <div id="reg_song_part_a">
@@ -26,8 +26,15 @@
                     </div>
 
                     <div id="form-group">
-                        <label>Lengde (MM:SS)</label>
-                        <InputText @bind-Value="newSongDto.Length" class="form-control" />
+                        <label>Lengde</label>
+                        <InputText 
+                            @bind-Value="newSongDto.Length" 
+                            class="form-control" 
+                            placeholder="MM:SS"
+                            pattern="^[0-5]?\d:[0-5]\d$"
+                            inputmode="numeric"
+                            />
+
                     </div>
 
                     <div id="form-group">
@@ -35,9 +42,8 @@
                         <InputSelect @bind-Value="newSongDto.Genre" class="form-control">
                             <option value="" style="color: gray;">Velg en sjanger</option>
                             <option value="Hands Up">Hands Up</option>
-                            <option value="Hard Trance">Hard Trance</option>
                             <option value="Hardstyle">Hardstyle</option>
-                            <option value="Jumpstyle">Jumpstyle</option>
+                            <option value="House">House</option>
                             <option value="Trance">Trance</option>
                             <option value="Happy Hardcore">Happy Hardcore</option>
                         </InputSelect>
@@ -283,7 +289,9 @@
 
         if (result.IsSuccess)
         {
-            allArtists = result.Value.ToList();
+            allArtists = result.Value
+                .OrderBy(a => a.Name)
+                .ToList();
         }
     }
 

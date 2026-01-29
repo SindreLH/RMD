@@ -103,9 +103,9 @@
 				<th>Artister</th>
 				<th>Remixer</th>
 				<th>Lengde</th>
-				<th>URL</th>
 				<th>Sjanger</th>
 				<th>EP</th>
+				<th>URL</th>
 				<th>Extended</th>
 				<th>Favoritt</th>
 				<th>Lagret</th>
@@ -128,7 +128,6 @@
 				// Table data inserted + tooltip data
 				<tr @onclick="() => SelectSong(song)" 
 					class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
-
 					<td>@song.SongId</td>
 					<td class="text-truncate" 
 						style="max-width: 350px" 
@@ -160,21 +159,21 @@
 							}
 					</td>
 					<td>@song.Length</td>
+					<td>@song.Genre</td>
+					<td>@song.PlayedInEp</td>
 					<td class="text-truncate">
 						@if (song.WantedSongUrl != null)
 						{
-							<a href="@song.WantedSongUrl" 
-								target="_blank" 
-								rel="noopener noreferrer" 
-								title="@song.WantedSongUrl" 
-								style="text-decoration: none;">
+							<a href="@song.WantedSongUrl"
+							   target="_blank"
+							   rel="noopener noreferrer"
+							   title="@song.WantedSongUrl"
+							   style="text-decoration: none;">
 								🔗
 							</a>
 
 						}
 					</td>
-					<td>@song.Genre</td>
-					<td>@song.PlayedInEp</td>
 					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
 					<td>@(song.Favorite ? "⭐" : "❌")</td>
 					<td>@(song.Stored ? "✅" : "❌")</td>

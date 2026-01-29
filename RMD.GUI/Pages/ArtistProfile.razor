@@ -20,8 +20,7 @@
 	<WarningModalArtistDeletion IsVisible="deleteModalVisible" 
 	OnClose="ToggleDeleteModal"
 	Artist="artist"
-	OnDelete="OnArtistDeleted"
-	/>
+	OnDelete="OnArtistDeleted"/>
 }
 
 
@@ -93,8 +92,9 @@
 
 								}
 							</td>
-							<td>@(song.Favorite ? "⭐" : "❌")</td>
 							<td>@(song.Stored ? "✅" : "❌")</td>
+							<td>@(song.Favorite ? "⭐" : "❌")</td>
+							
 						</tr>
 
 					</tbody>
@@ -135,7 +135,11 @@
 				<p><b>@artist?.Nationality</b></p>
 			</div>
 			<div class="text_control">
-				<p><b>🎵@artist?.Songs?.FirstOrDefault()?.Genre</b></p>
+				<p>
+					<b>
+						🎵 @artist?.SongArtists?.Where(sa => sa.Song != null).Select(sa => sa.Song).FirstOrDefault()?.Genre
+					</b>
+				</p>
 			</div>
 			<div class="text_control">
 				<a href="@artist?.FacebookUrl">

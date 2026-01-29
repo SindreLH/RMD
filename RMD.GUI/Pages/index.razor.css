@@ -20,6 +20,20 @@
 
 }
 
+.icon_heading{
+    display: flex;
+    flex-direction: row;
+}
+
+i {
+    margin-left: 3rem;
+    font-size: large;
+    font-style: normal;
+    color: white;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
 p {
     font-size: medium;
     color: white;
@@ -223,12 +237,11 @@ h4 {
 }
 
 h5 {
-    margin-left: 3rem;
+    margin-left: 0.5rem;
     font-size: large;
     font-weight: 400;
     color: white;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 2.2rem;
 }
 
 a{

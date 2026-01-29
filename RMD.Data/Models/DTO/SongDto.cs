@@ -19,6 +19,8 @@ namespace RMD.Data.Models.DTO
 		//public required string Artist { get; set; }
 
 		[Required(ErrorMessage = "Song length is required.")]
+		[RegularExpression(@"^[0-5]?\d:[0-5]\d$",
+		ErrorMessage = "Length input must match format: MM:SS")]
 		public required string Length { get; set; }
 
 		[Required(ErrorMessage = "Song genre is required.")]
