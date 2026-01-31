@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Components.Web.HtmlRendering
+@page "/Login"
+@layout AuthLayout
+
+<PageTitle>RMD | Logg inn</PageTitle>
+
+
+
+<div class="main_container">
+	<img src="images/rmd_logo.png" width="130" height="50">
+	<div class="login_box">
+		<div class="login_contents">
+			
+			<h1> Logg inn</h1>
+
+			<div class="fields_container">
+				<div class="field">
+					<label for="userEmail">E-post</label>
+					<input type="email" />
+				</div>
+
+				<div class="field">
+					<label for="userPassword">Passord</label>
+					<input type="email" />
+				</div>
+			</div>
+
+			<div class="remember_me">
+				<label for="rememberMe">Husk meg</label>
+				<input type="checkbox" />
+				<a>Glemt passord</a>
+			</div>
+
+			<div class="button_container">
+				<button type="submit" class="btn btn-success">
+					Logg inn
+				</button>
+
+				<button type="submit" class="btn btn-success">
+					<i class="bi bi-google"></i> Logg inn med Google
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+@code {
+
+}

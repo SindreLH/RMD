@@ -1,0 +1,37 @@
+﻿.rmd_logo {
+}
+
+.main_container {
+    display: flex;
+    border: red solid 3px;
+    width: 80vw;
+    height: 90vh;
+    margin:0;
+    padding:0;
+}
+
+.login_box {
+    border: green solid 3px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+
+.login_contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.fields_container {
+}
+
+.field {
+}
+
+.remember_me {
+}
+
+h1 {
+}
