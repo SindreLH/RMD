@@ -1,37 +1,82 @@
-﻿.rmd_logo {
-}
+﻿.main_container {
+    width: 40rem;
+    height: 38rem;
+    max-width: 100%;
+    max-height: auto;
 
-.main_container {
     display: flex;
-    border: red solid 3px;
-    width: 80vw;
-    height: 90vh;
-    margin:0;
-    padding:0;
-}
-
-.login_box {
-    border: green solid 3px;
-    display: flex;
-    justify-items: center;
+    justify-content: center;
     align-items: center;
+
+    background-color: rgba(37, 37, 37,0.4);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+
+    position: relative;
 }
 
 .login_contents {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
+    align-items: center;
+    width: 20rem;
+    max-width: 20rem;
+    margin-top: 1rem;
+}
+
+.field_item{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
 }
 
 .fields_container {
+    display: flex;
+    flex-direction: column;
+    height: 9rem;
+    width: 20rem;
+    margin-top: 1rem;
+}
+
+.button_container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    gap: 1rem;
+
+    height: 8rem;
+    width: 20rem;
 }
 
 .field {
 }
 
 .remember_me {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 20rem;
+    margin-top: 3.5rem;
+}
+
+label{
+    color: white;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+button{
+    margin-top: 1rem;
 }
 
 h1 {
+    position: absolute;
+    top: 3rem;
+
+    color: white;
+    font-weight: 600;
+    font-size: 40px;
 }

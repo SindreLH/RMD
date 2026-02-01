@@ -1,0 +1,26 @@
+.rmd_logo {
+    display: flex;
+    max-width: 100%;
+    max-height: auto;
+
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+}
+
+.auth_layout {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+
+    background-image: url("/images/login_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    
+
+}
