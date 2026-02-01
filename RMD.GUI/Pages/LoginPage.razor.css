@@ -3,15 +3,13 @@
     height: 38rem;
     max-width: 100%;
     max-height: auto;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgba(14, 14, 14,0.3);
 
-    background-color: rgba(37, 37, 37,0.4);
     border-radius: 20px;
-    backdrop-filter: blur(6px);
-
+    backdrop-filter: blur(10px);
     position: relative;
 }
 
@@ -48,9 +46,6 @@
     width: 20rem;
 }
 
-.field {
-}
-
 .remember_me {
     display: flex;
     flex-direction: row;
@@ -79,4 +74,14 @@ h1 {
     color: white;
     font-weight: 600;
     font-size: 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bg_video {
+        display: none;
+    }
+
+    .auth_layout {
+        background-image: url("images/login_bg.png");
+    }
 }
