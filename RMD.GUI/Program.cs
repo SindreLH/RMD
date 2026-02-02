@@ -8,6 +8,7 @@ using RMD.GUI.Data;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using ApexCharts;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,20 @@ builder.Services.AddSwaggerGen(c =>
 		Description = "API for managing artists and songs"
 	});
 });
+
+builder.Services.AddDbContext<AuthDbContext>(options =>
+	options.UseSqlServer(
+		builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options =>
+{
+	options.Password.RequireDigit = true;
+	options.Password.RequiredLength = 8;
+	options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<AuthDbContext>()
+.AddDefaultTokenProviders();
+
 
 var app = builder.Build();
 
