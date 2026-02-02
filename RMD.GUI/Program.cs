@@ -42,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<AuthDbContext>(options =>
 	options.UseSqlServer(
-		builder.Configuration.GetConnectionString("DefaultConnection")));
+		builder.Configuration.GetConnectionString("RmdDatabase")));
 
 builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options =>
 {
