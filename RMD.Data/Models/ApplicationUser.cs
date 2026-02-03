@@ -2,5 +2,5 @@
 
 public class ApplicationUser : IdentityUser
 {
-	//TODO: ADD MORE STUFF
+	//TODO: USE THIS CLASS TO EXPAND ON THE BASE CLASS(IdentityUser) IF NEEDED
 }
