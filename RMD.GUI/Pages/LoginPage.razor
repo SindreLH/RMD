@@ -1,4 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.HtmlRendering
+@using RMD.Business.Services;
+@using RMD.Data.Models;
+
+@inject AuthService AuthService
+@inject NavigationManager Nav
+@inject ToastService Toast
+
 @page "/Login"
 @layout AuthLayout
 
@@ -9,35 +16,38 @@
 			
 		<h1> Logg inn</h1>
 
-		<div class="fields_container">
-			<div class="form-group field_item">
-				<label for="email">E-post</label>
-				<input type="email" class="form-control" id="email">
+		<EditForm OnValidSubmit="LoginAsync" Model="loginModel">
+			<DataAnnotationsValidator />
+			<div class="fields_container">
+				<div class="form-group field_item">
+					<label for="email">E-post</label>
+					<InputText @bind-Value="loginModel.Email" class="form-control"></InputText>
+				</div>
+
+				<div class="form-group field_item">
+					<label for="password">Passord</label>
+					<InputText @bind-Value="loginModel.Password" type="password" class="form-control"></InputText>
+				</div>
 			</div>
 
-			<div class="form-group field_item">
-				<label for="password">Passord</label>
-				<input type="password" class="form-control" id="password">
+			<div class="remember_me">
+				<div class="remember_me_content">
+					<label for="rememberMe">Husk meg </label>
+					<InputCheckbox @bind-Value="loginModel.RememberMe" />
+				</div>
+				<a href="https://localhost:7023/Login">Glemt passord(Placeholder)</a>
 			</div>
-		</div>
 
-		<div class="remember_me">
-			<div class="remember_me_content">
-				<label for="rememberMe">Husk meg </label>
-				<input type="checkbox" class="form-conrol" />
+			<div class="button_container">
+				<button type="submit" class="btn btn-success">
+					Logg inn
+				</button>
+@* 
+				<button type="submit" class="btn btn-secondary">
+					<i class="bi bi-google"></i> Logg inn med Google
+				</button> *@
 			</div>
-			<a href="https://localhost:7023/Login">Glemt passord</a>
-		</div>
-
-		<div class="button_container">
-			<button type="submit" class="btn btn-success">
-				Logg inn
-			</button>
-
-			<button type="submit" class="btn btn-secondary">
-				<i class="bi bi-google"></i> Logg inn med Google
-			</button>
-		</div>
+		</EditForm>
 
 	</div>
 </div>
@@ -46,5 +56,22 @@
 
 
 @code {
+	private LoginModel loginModel = new();
+
+	private async Task LoginAsync()
+	{
+		var result = await AuthService.Login(loginModel.Email, loginModel.Password, loginModel.RememberMe);
+
+		if (result.IsSuccess)
+		{
+			Nav.NavigateTo("/");
+		}
+		else
+		{
+			Toast.ShowToast($"Feil ved innlogging: {result.Error}", ToastType.Error);
+		}
+	}
+
+
 
 }

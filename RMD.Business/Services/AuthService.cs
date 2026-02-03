@@ -12,7 +12,7 @@ namespace RMD.Business.Services
 			_signInManager = signInManager;
 		}
 
-		public async Task<Result<bool>> Login(string email, string password)
+		public async Task<Result<bool>> Login(string email, string password, bool rememberMe)
 		{
 			var result = await _signInManager.PasswordSignInAsync(email, password, isPersistent: false, lockoutOnFailure: true);
 
