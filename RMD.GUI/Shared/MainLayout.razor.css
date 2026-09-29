@@ -6,20 +6,50 @@
 
 main {
     flex: 1;
-        /*background-color: #212529;*/
-    /*background-color: #0a0a0a;*/
+    /*background: #10172A;*/
     background-image: linear-gradient(#1f78d7, #25369B);
-      /*background-image: linear-gradient(-225deg, #ff057c 0%, #8d0b93 50%, #321575 100%);*/
-     /*background-image: url("images/wave_background_optimized.png");*/
-    /* background-image: url("images/test.jpg");*/
-    /*background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);*/
-    /*background-blend-mode: multiply;
-    background-size: cover;*/
-    /*background-size:inherit;*/
+    /*  background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
+    background-blend-mode: multiply;*/
+}
+
+.user_pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-top: 7px;
+}
+
+.auth_state_container {
+    margin-top: auto;
+    margin-left: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
+p {
+    color: white;
+    margin:0;
+}
+
+.admin_title_container{
+    display: flex;
+    flex-direction: row;
+}
+
+.auth_text{
+    display: flex;
+    flex-direction: column;
+    margin-top: 9px;
+    margin-left: 10px
 }
 
 .sidebar {
     background-image: linear-gradient(180deg, #212529 0%, #181818 70%);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .top-row {

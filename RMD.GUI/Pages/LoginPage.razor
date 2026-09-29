@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Components.Web.HtmlRendering
+@using RMD.Business.Services;
+@using RMD.Data.Models;
+@using RMD.GUI.Pages.Components.Toasts;
+
+@inject NavigationManager Nav
+@inject ToastService Toast
+
+@page "/"
+@attribute [AllowAnonymous]
+@layout AuthLayout
+
+
+<PageTitle>RMD | Logg inn</PageTitle>
+<div class="main_container">
+	
+	<div class="login_contents">
+			
+		<h1> Logg inn</h1>
+
+		<form method="post" action="/auth/login">
+			<div class="fields_container">
+				<div class="form-group field_item">
+					<label for="email">E-post</label>
+					<input name="Email" class="form-control"/>
+				</div>
+
+				<div class="form-group field_item">
+					<label for="password">Passord</label>
+					<input name="Password" type="password" class="form-control"/>
+				</div>
+			</div>
+
+			<div class="remember_me">
+				<a href="/ForgotPassword">Glemt passord?</a>
+			</div>
+
+			<div class="button_container">
+				<button type="submit" class="btn btn-success">
+					Logg inn
+				</button>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+@code {
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (!firstRender) return;
+
+		var uri = Nav.ToAbsoluteUri(Nav.Uri);
+		var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+		var reason = query["reason"];
+
+		if (reason == "invalid")
+		{
+			Toast.ShowToast(
+				"Innlogging feilet. Kontroller innloggingsdetaljer.",
+				ToastType.Warning
+			);
+		}
+
+		if (reason == "unauthorized")
+		{
+			Toast.ShowToast(
+				"Tilgang til området krever innlogging. Vennligst logg inn. ",
+				ToastType.Warning
+			);
+		}
+	}
+}
+

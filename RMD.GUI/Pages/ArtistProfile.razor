@@ -1,12 +1,16 @@
 ﻿@page "/Artist/{ArtistId:int}"
+@attribute [Authorize]
+
 @using RMD.GUI.Pages.Components.Modals;
 @using RMD.Data.Models
 @using RMD.Business.Services;
+@using RMD.GUI.Pages;
 @inject IArtistService ArtistService;
 @inject ISongService SongService;
 @inject NavigationManager Navigation;
 
-<PageTitle>RMD | @artist?.Name - Artist Page</PageTitle>
+<PageTitle>RMD | @artist?.Name</PageTitle>
+
 
 @if (editModalVisible)
 {
@@ -24,96 +28,69 @@
 }
 
 
-<div class="header_wrapper">
+@if (!notFound)
+{
+	<div class="header_wrapper">
 
-	<div class="header_contents">
+		<div class="header_contents">
 
-		<img src="@(artist?.ProfilePicUrl ?? "images/no_artist_image.png")"
-		alt="Artist Press Picture"
-		class="artist_profile_pic" />
+			<img src="@(artist?.ProfilePicUrl ?? "images/no_artist_image.png")"
+				 alt="Artist Press Picture"
+				 class="artist_profile_pic" />
 
 
-		<h3>@artist?.Name</h3>
+			<h3>@artist?.Name</h3>
+		</div>
 	</div>
-</div>
 
-<div class="table_and_box">
-	<div class="table-container">
-		<table class="table table-bordered table-dark table-striped table-hover">
-			<thead class="thead-light">
-				<tr>
-					<th>
-						Tittel
-					</th>
+	<div class="table_and_box">
+		<div class="table-container">
+			<table class="table table-bordered table-dark table-striped table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th>Tittel</th>
+						<th>Lengde</th>
+						<th>Spilt i EP</th>
+						<th>Kilde URL</th>
+						<th>Lagret</th>
+						<th>Favoritt</th>
+					</tr>
+				</thead>
 
-					<th>
-						Lengde
-					</th>
+				<tbody>
+				@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>()){
+					<tr>
+						<td class="text-truncate" style="max-width: 400px">@song.Title</td>
+						<td>@song.Length</td>
+						<td>@song.PlayedInEp</td>
+						<td>
+							@if (song.WantedSongUrl != null)
+							{
+								<a href="@song.WantedSongUrl"
+									target="_blank"
+									rel="noopener noreferrer"
+									title="@song.WantedSongUrl"
+									style="text-decoration: none;">
+									🔗
+								</a>
+							}
+						</td>
+						<td>@(song.Stored ? "✅" : "❌")</td>
+						<td>@(song.Favorite ? "⭐" : "❌")</td>
+					</tr>}
+				</tbody>
+			</table>
 
-					<th>
-						Spilt i EP
-					</th>
-
-					<th>
-						Kilde URL
-					</th>
-
-					<th>
-						Lagret
-					</th>
-
-					<th>
-						Favoritt
-					</th>
-
-				</tr>
-
-			</thead>
-
-			@if (artistHasNoSongs == false)
+			@if (artistHasNoSongs)
 			{
-				@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>())
-				{
-					<tbody>
-						<tr>
-							<td class="text-truncate" style="max-width: 400px">@song.Title</td>
-							<td>@song.Length</td>
-							<td>@song.PlayedInEp</td>
-							<td>
-								@if (song.WantedSongUrl != null)
-								{
-									<a href="@song.WantedSongUrl"
-									   target="_blank"
-									   rel="noopener noreferrer"
-									   title="@song.WantedSongUrl"
-									   style="text-decoration: none;">
-										🔗
-									</a>
-
-								}
-							</td>
-							<td>@(song.Stored ? "✅" : "❌")</td>
-							<td>@(song.Favorite ? "⭐" : "❌")</td>
-							
-						</tr>
-
-					</tbody>
-				}
-			}
-
-			
-		</table>
-
-		@if (artistHasNoSongs == true)
-		{
-			<div class="load_container">
+				<div class="load_container">
 					<div class="load_contents">
-						<p class="load_text">Denne artisten har ingen låter enda...</p>
+						<p class="load_text">Artisten er ikke tilknyttet noen låter ennå...</p>
 					</div>
 				</div>
-		}
+			}
 
-		@if (artist == null)
+			@if (isLoading)
 			{
 				<div class="load_container">
 					<div class="load_contents">
@@ -122,77 +99,77 @@
 					</div>
 				</div>
 			}
-	</div>
-
-	<div class="info_box">
-
-
-		<div class="info_box_text">
-
-			<h4><b>Artistinformasjon</b></h4>
-
-			<div class="text_control">
-				<p><b>@artist?.Nationality</b></p>
-			</div>
-			<div class="text_control">
-				<p>
-					<b>
-						🎵 @artist?.SongArtists?.Where(sa => sa.Song != null).Select(sa => sa.Song).FirstOrDefault()?.Genre
-					</b>
-				</p>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.FacebookUrl">
-					<img src="images/fb_icon.png" class="socials_icons" />
-					Facebook
-				</a>
-				<br>
-				<br>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.SoundcloudUrl">
-					<img src="images/sc_icon.png" class="socials_icons" />
-					Soundcloud
-				</a>
-				<br>
-				<br>
-			</div>
-			<div class="text_control">
-				<a href="@artist?.DiscogsUrl">
-					<img src="images/discogs_icon.png" class="socials_icons" />
-					Discogs
-				</a>
-			</div>
 		</div>
 
-		<div class="info_box_buttons">
+		<div class="info_box">
 
-			<div class="button_wrapper">
-				<div class="edit_button">
-					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
-						<i class="bi bi-pencil"></i> Rediger artist
-					</button>
+
+			<div class="info_box_text">
+
+				<h4><b>Artistinformasjon</b></h4>
+
+				<div class="text_control">
+					<p><b>@artist?.Nationality</b></p>
 				</div>
-
-				<div class="delete_button">
-					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
-						<i class="bi bi-trash3"></i> Fjern artist
-					</button>
+				<div class="text_control">
+					<p>
+						<b>
+							🎵 @artist?.SongArtists?.Where(sa => sa.Song != null).Select(sa => sa.Song).FirstOrDefault()?.Genre
+						</b>
+					</p>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.FacebookUrl">
+						<img src="images/fb_icon.png" class="socials_icons" />
+						Facebook
+					</a>
+					<br>
+					<br>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.SoundcloudUrl">
+						<img src="images/sc_icon.png" class="socials_icons" />
+						Soundcloud
+					</a>
+					<br>
+					<br>
+				</div>
+				<div class="text_control">
+					<a href="@artist?.DiscogsUrl">
+						<img src="images/discogs_icon.png" class="socials_icons" />
+						Discogs
+					</a>
 				</div>
 			</div>
-		</div>
 
+			<div class="info_box_buttons">
+
+				<div class="button_wrapper">
+					<div class="edit_button">
+						<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
+							<i class="bi bi-pencil"></i> Rediger artist
+						</button>
+					</div>
+
+					<div class="delete_button">
+						<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
+							<i class="bi bi-trash3"></i> Fjern artist
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
 	</div>
-</div>
+}
 
 @code {
 	private bool isLoading = false;
+	private bool notFound = false;
 	private bool artistHasNoSongs = false;
 	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
-	private bool editArtistModalVisible = false;
-	private bool emptyDbModalVisible = false;
 	private Result<IEnumerable<Artist>>? artists;
 	private Result<IEnumerable<Song>>? songs;
 	private Artist? artist;
@@ -210,53 +187,54 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
+		isLoading = true;
+		notFound = false;
+		artist = null;
+
 		var result = await ArtistService.GetArtistById(ArtistId);
 
-		if (result.IsSuccess)
+		if (result.IsSuccess && result.Value != null)
 		{
 			artist = result.Value;
-			isLoading = false;
 		}
 
 		else
 		{
-			isLoading = true;
-			Console.WriteLine("No artist found by this ID.");
+			notFound = true;
+		}
+
+		isLoading = false;
+
+
+		if (notFound)
+		{
+			Navigation.NavigateTo("/notfound", replace: true);
+			return;
 		}
 	}
 
 	protected override async Task OnInitializedAsync()
 	{
-
+		isLoading = true;
 		await Task.Delay(300);
 
 		var songsByArtist = await SongService.GetSongsByArtistIdAsync(ArtistId);
 		artistHasNoSongs = false;
-		isLoading = false;
-
 
 		if (!songsByArtist.IsSuccess)
 		{
 			artistHasNoSongs = true;
-			isLoading = true;
-			Console.WriteLine(songsByArtist.Error);
 			return;
 		}
 
 		songs = Result<IEnumerable<Song>>.Success(songsByArtist.Value);
 
-
-
 		if(songs.Value == null)
 		{
-			isLoading = true;
 			artistHasNoSongs = true;
 			Console.WriteLine(songs.Error);
 			return;
 		}
-
-
-
 	}
 
 	private async Task OnArtistDeleted(Artist artist)
