@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@using RMD.GUI.Pages.Components.Toasts;
+@using RMD.Business.Services;
+
 
 <div class="auth_layout">
     <video class="bg_video"
@@ -11,7 +14,10 @@
 
 	<img class="rmd_logo" src="images/rmd_logo.png" width="130" height="50">
 
+    <ToastComponent />
+
     <div class="auth_content">
+        
         @Body
     </div>
 </div>

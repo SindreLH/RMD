@@ -2,5 +2,5 @@
 
 public class ApplicationUser : IdentityUser
 {
-	//TODO: USE THIS CLASS TO EXPAND ON THE BASE CLASS(IdentityUser) IF NEEDED
+// Hvis ApplicationUser-klassen må utvides - legg til props her
 }

@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using ApexCharts;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RMD.GUI.Controllers;
+using Microsoft.OpenApi.Models;
 using RMD.Business.Services;
 using RMD.Data.Context;
 using RMD.GUI.Data;
-using System.Reflection;
-using Microsoft.OpenApi.Models;
-using ApexCharts;
-using Microsoft.AspNetCore.Identity;
+using RMD.GUI.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,15 +19,15 @@ builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddSingleton<ToastService>();
-builder.Services.AddScoped<AuthService>();
-
 builder.Services.AddApexCharts();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
-//Registering DbContext and getting connection string from appsettings.json
+//DbContext (connection string from appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");
 builder.Services.AddDbContext<RMDContext>(options =>
 	options.UseSqlServer(connectionString));
 
+//Swagger Config
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -41,21 +40,34 @@ builder.Services.AddSwaggerGen(c =>
 	});
 });
 
+//Auth and cookie config
 builder.Services.AddDbContext<AuthDbContext>(options =>
 	options.UseSqlServer(
 		builder.Configuration.GetConnectionString("RmdDatabase")));
-
-builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+	.AddEntityFrameworkStores<AuthDbContext>()
+	.AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.Password.RequireDigit = true;
-	options.Password.RequiredLength = 8;
-	options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<AuthDbContext>()
-.AddDefaultTokenProviders();
+	options.LoginPath = "/";
+	options.LogoutPath = "/auth/logout";
 
+	options.Cookie.Name = ".AspNetCore.Identity.Application";
+	options.Cookie.HttpOnly = true;
+	options.Cookie.IsEssential = true;
+	options.Cookie.SameSite = SameSiteMode.Lax;
+	options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
+	options.ExpireTimeSpan = TimeSpan.FromDays(7);
+	options.SlidingExpiration = true;
+});
+
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
+
+// Seed RMD's sole user to the database
+await IdentitySeeder.SeedUserAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -75,9 +87,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
 app.MapControllers();
 
 app.Run();

@@ -5,7 +5,7 @@
     height: 21rem;
     margin-bottom: 3rem;
     margin-top: 1.5rem;
-    background-image: linear-gradient(rgba(0, 0, 139, 0.5), rgba(0, 0, 139, 0.5)), url('images/newheader.png');
+    background-image: linear-gradient(rgba(0, 0, 139, 0.0), rgba(0, 0, 139, 0.3)), url('images/newheader4.png');
     background-position-y: bottom;
     border-radius: 20px;
 }

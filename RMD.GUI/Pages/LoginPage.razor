@@ -1,13 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.HtmlRendering
 @using RMD.Business.Services;
 @using RMD.Data.Models;
+@using RMD.GUI.Pages.Components.Toasts;
 
-@inject AuthService AuthService
 @inject NavigationManager Nav
 @inject ToastService Toast
 
-@page "/Login"
+@page "/"
+@attribute [AllowAnonymous]
 @layout AuthLayout
+
 
 <PageTitle>RMD | Logg inn</PageTitle>
 <div class="main_container">
@@ -16,62 +18,57 @@
 			
 		<h1> Logg inn</h1>
 
-		<EditForm OnValidSubmit="LoginAsync" Model="loginModel">
-			<DataAnnotationsValidator />
+		<form method="post" action="/auth/login">
 			<div class="fields_container">
 				<div class="form-group field_item">
 					<label for="email">E-post</label>
-					<InputText @bind-Value="loginModel.Email" class="form-control"></InputText>
+					<input name="Email" class="form-control"/>
 				</div>
 
 				<div class="form-group field_item">
 					<label for="password">Passord</label>
-					<InputText @bind-Value="loginModel.Password" type="password" class="form-control"></InputText>
+					<input name="Password" type="password" class="form-control"/>
 				</div>
 			</div>
 
 			<div class="remember_me">
-				<div class="remember_me_content">
-					<label for="rememberMe">Husk meg </label>
-					<InputCheckbox @bind-Value="loginModel.RememberMe" />
-				</div>
-				<a href="https://localhost:7023/Login">Glemt passord(Placeholder)</a>
+				<a href="/ForgotPassword">Glemt passord?</a>
 			</div>
 
 			<div class="button_container">
 				<button type="submit" class="btn btn-success">
 					Logg inn
 				</button>
-@* 
-				<button type="submit" class="btn btn-secondary">
-					<i class="bi bi-google"></i> Logg inn med Google
-				</button> *@
 			</div>
-		</EditForm>
+		</form>
 
 	</div>
 </div>
 
-
-
-
 @code {
-	private LoginModel loginModel = new();
-
-	private async Task LoginAsync()
+	protected override void OnAfterRender(bool firstRender)
 	{
-		var result = await AuthService.Login(loginModel.Email, loginModel.Password, loginModel.RememberMe);
+		if (!firstRender) return;
 
-		if (result.IsSuccess)
+		var uri = Nav.ToAbsoluteUri(Nav.Uri);
+		var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+		var reason = query["reason"];
+
+		if (reason == "invalid")
 		{
-			Nav.NavigateTo("/");
+			Toast.ShowToast(
+				"Innlogging feilet. Kontroller innloggingsdetaljer.",
+				ToastType.Warning
+			);
 		}
-		else
+
+		if (reason == "unauthorized")
 		{
-			Toast.ShowToast($"Feil ved innlogging: {result.Error}", ToastType.Error);
+			Toast.ShowToast(
+				"Tilgang til området krever innlogging. Vennligst logg inn. ",
+				ToastType.Warning
+			);
 		}
 	}
-
-
-
 }
+

@@ -19,6 +19,14 @@
     top: -2px;
 }
 
+.logout-button{
+    cursor: pointer;
+}
+
+.logout_text{
+    display: flex;
+    margin-left: 10px;
+}
 
 .nav-item {
     font-size: 0.9rem;

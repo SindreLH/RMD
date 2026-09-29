@@ -1,0 +1,19 @@
+﻿@inject NavigationManager Nav
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        var path = new Uri(Nav.Uri).AbsolutePath.ToLower();
+
+        if (path == "/")
+            return;
+
+
+        if (firstRender)
+        {
+            Nav.NavigateTo("/?reason=unauthorized", replace: true);
+        }
+        
+    }
+}

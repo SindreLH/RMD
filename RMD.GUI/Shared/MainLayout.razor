@@ -5,20 +5,39 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <AuthorizeView>
+            <Authorized>
+
+                <NavMenu />
+
+                <div class="auth_state_container">
+
+                    <img src="images/creator.png" class="user_pic" />
+
+                    <div class="auth_text">
+                        <div class="admin_title_container">
+                            <p style="font-size: 0.9rem;"> Sindre</p>
+                        </div>
+                        <p style="font-size: 0.7rem;">Admin</p>
+                    </div> 
+
+                </div>
+
+
+            </Authorized>
+        </AuthorizeView>
     </div>
 
     <main>
-@*         <div class="top-row px-4">
-            <a href="/">
-                <img class="logo" src="images/rejack_logo.png" width="200" height="25"/>
-            </a>
-        </div>
- *@
         <article class="content px-4">
-            
             @Body
-            <ToastComponent />
+          
         </article>
     </main>
+
+     <ToastComponent />
 </div>
+
+@code{
+
+}
