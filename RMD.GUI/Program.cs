@@ -60,6 +60,24 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 	options.ExpireTimeSpan = TimeSpan.FromDays(7);
 	options.SlidingExpiration = true;
+
+	// API callers get status codes instead of a redirect to the login page
+	options.Events.OnRedirectToLogin = context =>
+	{
+		if (context.Request.Path.StartsWithSegments("/api"))
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+		else
+			context.Response.Redirect(context.RedirectUri);
+		return Task.CompletedTask;
+	};
+	options.Events.OnRedirectToAccessDenied = context =>
+	{
+		if (context.Request.Path.StartsWithSegments("/api"))
+			context.Response.StatusCode = StatusCodes.Status403Forbidden;
+		else
+			context.Response.Redirect(context.RedirectUri);
+		return Task.CompletedTask;
+	};
 });
 
 builder.Services.AddCascadingAuthenticationState();
@@ -78,7 +96,9 @@ if (app.Environment.IsDevelopment())
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "RMD API v1");
 		c.RoutePrefix = "swagger";
 	});
-
+}
+else
+{
 	app.UseExceptionHandler("/Error");
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
@@ -92,7 +112,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
 app.MapControllers();
+// Unknown /api routes return 404 instead of falling through to the Blazor host page
+app.MapFallback("/api/{**path}", () => Results.NotFound());
+app.MapFallbackToPage("/_Host");
 
 app.Run();
