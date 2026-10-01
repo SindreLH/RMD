@@ -1,4 +1,4 @@
-﻿@page "/Artists"
+@page "/Artists"
 @attribute [Authorize]
 @using RMD.Business.Services
 @using RMD.Data.Models
@@ -18,10 +18,10 @@
 <div class="search-button-wrapper">
 
 	<div class="input-group mb-3 searchbar">
-		<input 
+		<input
 		type="text"
-		class="form-control search" 
-		placeholder="Søk etter artist" 
+		class="form-control search"
+		placeholder="Søk etter artist"
 		aria-label="Søk etter artist"
 		value="@searchString"
 		@oninput="OnSearchInputChanged"/>
@@ -37,17 +37,13 @@
 	</div>
 </div>
 
-@if (emptyDbModalVisible)
-{
-	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
-}
-
 <div class="grid_container">
-	@foreach (var artist in (isFiltering ? filteredArtists : artists?.Value ?? Enumerable.Empty<Artist>()))
-	{	
+	@foreach (var artist in VisibleArtists)
+	{
+		var picture = SafeUrl.ForHref(artist.ProfilePicUrl);
 		<a href="/Artist/@artist.ArtistId">
 			<div class="artist_card">
-				@if(string.IsNullOrWhiteSpace(artist.ProfilePicUrl))
+				@if(picture == null)
 				{
 					<img src="images/no_artist_image.png"
 					alt="Default artist icon"
@@ -55,7 +51,7 @@
 				}
 				else
 				{
-					<img src="@artist.ProfilePicUrl"
+					<img src="@picture"
 					alt="Artist Press Picture"
 					class="artist_profile_pic" />
 				}
@@ -65,7 +61,12 @@
 	}
 </div>
 
-@if (artists == null)
+@if (isLoaded && allArtists.Count > 0 && !VisibleArtists.Any())
+{
+	<p class="text-center mt-3">Ingen artister matcher "@searchString".</p>
+}
+
+@if (!isLoaded)
 {
 	<div class="load_container">
 		<div class="load_contents">
@@ -76,14 +77,9 @@
 }
 
 @code {
-	private Result<IEnumerable<Artist>>? artists;
-	private IEnumerable<Artist> filteredArtists = new List<Artist>();
-	private IEnumerable<Artist> alphabeticallySorted = new List<Artist>();
-
 	private List<Artist> allArtists = new();
+	private bool isLoaded;
 
-	private bool isSelected = false;
-	private bool isFiltering = false;
 	private bool emptyDbModalVisible = false;
 	private bool sortAlphabetically
 	{
@@ -93,7 +89,9 @@
 			if (_sortAlphabetically != value)
 			{
 				_sortAlphabetically = value;
-				_ = UpdateArtistListDisplayAsync();
+				ToastService.ShowToast(value
+					? "INFO: Alfabetisk sortering aktivert."
+					: "INFO: Kronologisk sortering aktivert.", ToastType.Info);
 			}
 		}
 	}
@@ -101,92 +99,35 @@
 
 	private string searchString = string.Empty;
 
+	/// <summary>The loaded artists with search and sorting applied in memory (no database call per keystroke).</summary>
+	private IEnumerable<Artist> VisibleArtists
+	{
+		get
+		{
+			IEnumerable<Artist> list = allArtists;
+
+			if (!string.IsNullOrWhiteSpace(searchString))
+				list = list.Where(a => a.Name.Contains(searchString.Trim(), StringComparison.CurrentCultureIgnoreCase));
+
+			return sortAlphabetically
+				? list.OrderBy(a => a.Name, StringComparer.CurrentCultureIgnoreCase)
+				: list;
+		}
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
-		await Task.Delay(300);
-
 		var result = await ArtistService.GetAllArtistsAsync();
 
-		if (result.IsSuccess)
-		{
-			allArtists = result.Value.ToList();
-			artists = Result<IEnumerable<Artist>>.Success(allArtists);
-		}
-		else
-		{
-			artists = Result<IEnumerable<Artist>>.Success(new List<Artist>());
-		}
-
+		allArtists = result.IsSuccess ? result.Value.ToList() : new();
+		isLoaded = true;
 
 		emptyDbModalVisible = !allArtists.Any();
 	}
 
-	private async Task OnSearchInputChanged(ChangeEventArgs e)
+	private void OnSearchInputChanged(ChangeEventArgs e)
 	{
 		searchString = e.Value?.ToString() ?? "";
-		await ApplyFilteringAndSortingAsync();
-	}
-
-	private async Task OnSortChanged(ChangeEventArgs e)
-	{
-		if (sortAlphabetically)
-		{
-			var result = await ArtistService.GetAllArtistsAsync();
-			var baseList = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
-
-			if (isFiltering)
-			{
-				filteredArtists = filteredArtists.OrderBy(a => a.Name).ToList();
-				
-			}
-			else
-			{
-				artists = Result<IEnumerable<Artist>>.Success(baseList.OrderBy(a => a.Name).ToList());
-
-			}
-		}
-		else
-		{
-			artists = await ArtistService.GetAllArtistsAsync();
-			if (isFiltering)
-			{
-				await ApplyFilteringAndSortingAsync();
-			}
-		}
-	}
-
-	private async Task ApplyFilteringAndSortingAsync()
-	{
-		var result = await ArtistService.GetAllArtistsAsync();
-		var baseList = result.IsSuccess ? result.Value : Enumerable.Empty<Artist>();
-
-		bool hasFilter = !string.IsNullOrWhiteSpace(searchString);
-		isFiltering = hasFilter;
-
-		if (hasFilter)
-		{
-			string lowerSearch = searchString.ToLower();
-			baseList = baseList.Where(artist =>
-				artist.Name?.ToLower().Contains(lowerSearch) ?? false
-			);
-		}
-
-		if (sortAlphabetically)
-		{
-			baseList = baseList.OrderBy(a => a.Name);
-		}
-
-		var finalList = baseList.ToList();
-		emptyDbModalVisible = !finalList.Any();
-
-		if (isFiltering)
-		{
-			filteredArtists = finalList;
-		}
-		else
-		{
-			artists = Result<IEnumerable<Artist>>.Success(finalList);
-		}
 	}
 
 	private void ToggleEmptyDbModal()
@@ -194,44 +135,4 @@
 		emptyDbModalVisible = !emptyDbModalVisible;
 
 	}
-
-	private async Task UpdateArtistListDisplayAsync()
-	{
-		if (!sortAlphabetically)
-		{
-			// Reset everything to the original list
-			ToastService.ShowToast("INFO: Kronologisk sortering aktivert.", ToastType.Info);
-			isFiltering = false;
-			filteredArtists = new List<Artist>();
-			artists = Result<IEnumerable<Artist>>.Success(allArtists);
-			emptyDbModalVisible = !allArtists.Any();
-			return;
-		}
-
-		// If sorting is enabled, apply filtering (if any), and sort alphabetically
-		ToastService.ShowToast("INFO: Alfabetisk sortering aktivert.", ToastType.Info);
-		isFiltering = !string.IsNullOrWhiteSpace(searchString);
-		IEnumerable<Artist> baseList = allArtists;
-
-		if (isFiltering)
-		{
-			string lowerSearch = searchString.ToLower();
-			baseList = baseList.Where(artist =>
-				artist.Name?.ToLower().Contains(lowerSearch) ?? false
-			);
-		}
-
-		var sorted = baseList.OrderBy(a => a.Name).ToList();
-		emptyDbModalVisible = !sorted.Any();
-
-		if (isFiltering)
-		{
-			filteredArtists = sorted;
-		}
-		else
-		{
-			artists = Result<IEnumerable<Artist>>.Success(sorted);
-		}
-	}
-	
 }

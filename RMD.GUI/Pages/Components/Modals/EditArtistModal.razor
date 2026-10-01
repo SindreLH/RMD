@@ -19,17 +19,20 @@
 
                 @if(editableArtist != null)
                 {
-                    <form id="reg_artist_form">
+                    @* EditForm is required: InputSelect throws without a cascading EditContext *@
+                    <EditForm id="reg_artist_form" Model="editableArtist" OnValidSubmit="SaveChangesAsync">
+                        <DataAnnotationsValidator />
                         <div class="artist_information">
 
                             <div class="info_child">
                                 <label for="artistName">Navn</label>
-                                <input type="text" class="form-control" @bind="editableArtist.Name" />
+                                <InputText id="artistName" class="form-control" @bind-Value="editableArtist.Name" />
+                                <ValidationMessage For="@(() => editableArtist.Name)" />
                             </div>
 
                             <div class="info_child">
                                 <label for="artistNationality">Land </label>
-                                <InputSelect @bind-Value="editableArtist.Nationality" class="form-control">
+                                <InputSelect id="artistNationality" @bind-Value="editableArtist.Nationality" class="form-control">
                                     <option value="" disabled selected>Nasjonalitet</option>
                                     <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
                                     <option value="🇳🇴 Norge" class="fw-bold"> 🇳🇴 Norge</option>
@@ -62,8 +65,8 @@
                                     <option value="🇱🇻 Latvia"> 🇱🇻 Latvia</option>
                                     <option value="🇰🇷 Sør-Korea"> 🇰🇷 Sør-Korea</option>
                                     <option value="🇯🇵 Japan"> 🇯🇵 Japan</option>
-                                    <option value="Italy"> 🇮🇹 Italia</option>
-                                    <option value="🇮🇹 Italia"> 🇮🇱 Israel</option>
+                                    <option value="🇮🇹 Italia"> 🇮🇹 Italia</option>
+                                    <option value="🇮🇱 Israel"> 🇮🇱 Israel</option>
                                     <option value="🇮🇪 Irland"> 🇮🇪 Irland</option>
                                     <option value="🇭🇺 Ungarn"> 🇭🇺 Ungarn</option>
                                     <option value="🇬🇱 Grønland"> 🇬🇱 Grønland</option>
@@ -86,43 +89,41 @@
 
                         <div class="artist_links">
                             <div class="links_child">
-                                <label for="artistName">Facebook</label>
-                                <input type="url" class="form-control" @bind="editableArtist.FacebookUrl" />
+                                <label for="artistFacebook">Facebook</label>
+                                <input id="artistFacebook" type="url" class="form-control" @bind="editableArtist.FacebookUrl" />
                             </div>
 
                             <div class="links_child">
-                                <label for="artistName">Soundcloud</label>
-                                <input type="url" class="form-control" @bind="editableArtist.SoundcloudUrl" />
+                                <label for="artistSoundcloud">Soundcloud</label>
+                                <input id="artistSoundcloud" type="url" class="form-control" @bind="editableArtist.SoundcloudUrl" />
                             </div>
 
                             <div class="links_child">
                                 <label for="profilePicture">Profilbilde</label>
-                                <input type="url" class="form-control" @bind="editableArtist.ProfilePicUrl" />
+                                <input id="profilePicture" type="url" class="form-control" @bind="editableArtist.ProfilePicUrl" />
                             </div>
 
                             <div class="links_child">
-                                <label for="profilePicture">Discogs</label>
-                                <input type="url" class="form-control" @bind="editableArtist.DiscogsUrl" />
+                                <label for="artistDiscogs">Discogs</label>
+                                <input id="artistDiscogs" type="url" class="form-control" @bind="editableArtist.DiscogsUrl" />
                             </div>
                         </div>
 
-                    </form>
+                        <div class="button_container">
+                            <div class="cancel_button">
+                                <button type="button" @onclick="CloseEditModal" class="btn btn-secondary">
+                                    Avbryt
+                                </button>
+                            </div>
+
+                            <div class="save_button">
+                                <button type="submit" class="btn btn-success" disabled="@isSaving">
+                                    @(isSaving ? "Lagrer..." : "Lagre endringer")
+                                </button>
+                            </div>
+                        </div>
+                    </EditForm>
                 }
-
-
-                <div class="button_container">
-                    <div class="cancel_button">
-                        <button type="button" @onclick="CloseEditModal" class="btn btn-secondary">
-                            Avbryt
-                        </button>
-                    </div>
-
-                    <div class="save_button">
-                        <button type="button" class="btn btn-success" @onclick="SaveChangesAsync">
-                            Lagre endringer
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -133,10 +134,13 @@
         [Parameter]
         public bool IsVisible { get; set; }
         [Parameter] public EventCallback<bool> OnClose{ get; set; }
+        /// <summary>The parent saves, shows the result toast and closes the modal on success.</summary>
         [Parameter] public EventCallback<Artist> OnSave{ get; set; }
         [Parameter] public Artist? Artist { get; set; }
 
     private Artist? editableArtist;
+    private int editingArtistId;
+    private bool isSaving;
 
     private void CloseEditModal()
     {
@@ -154,27 +158,26 @@
 
     private async Task SaveChangesAsync()
     {
-        if(editableArtist != null)
+        if (editableArtist == null || isSaving)
+            return;
+
+        isSaving = true;
+        try
         {
             await OnSave.InvokeAsync(editableArtist);
-
-            // Truncating long artist names
-            var name = editableArtist?.Name.Length > 18
-                ? editableArtist.Name[..18] + "..."
-                : editableArtist?.Name;
-            ToastService.ShowToast($"SUKSESS! {name} ble endret! ", ToastType.Success);
         }
-
-        else
+        finally
         {
-            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
+            isSaving = false;
         }
     }
 
     protected override void OnParametersSet()
     {
-        if(Artist != null)
+        // Only copy when a different artist is passed in, so a parent re-render doesn't wipe the user's edits
+        if(Artist != null && Artist.ArtistId != editingArtistId)
         {
+            editingArtistId = Artist.ArtistId;
             editableArtist = new Artist
                 {
                     ArtistId = Artist.ArtistId,

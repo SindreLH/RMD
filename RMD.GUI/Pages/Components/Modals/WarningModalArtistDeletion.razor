@@ -1,9 +1,6 @@
-﻿
+
 @using RMD.Data.Models
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Toasts
-
-@inject ToastService ToastService
 
 @if (IsVisible)
 {
@@ -18,6 +15,10 @@
 
 				<div class="text_container">
 					<p>Ønsker du virkelig å slette <strong>"@Artist?.Name"</strong> fra databasen?</p>
+					@if (SongsLeftWithoutArtist > 0)
+					{
+						<p><strong>@SongsLeftWithoutArtist @(SongsLeftWithoutArtist == 1 ? "låt" : "låter")</strong> vil stå uten artist etter slettingen.</p>
+					}
 					<p>Handlingen kan ikke angres.</p>
 				</div>
 
@@ -29,8 +30,8 @@
 					</div>
 
 					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteArtist">
-							Slett artist
+						<button type="button" class="btn btn-danger" @onclick="DeleteArtist" disabled="@isDeleting">
+							@(isDeleting ? "Sletter..." : "Slett artist")
 						</button>
 					</div>
 				</div>
@@ -44,24 +45,33 @@
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
+	/// <summary>The parent deletes, shows the result toast and closes the modal.</summary>
 	[Parameter] public EventCallback<Artist> OnDelete { get; set; }
 	[Parameter] public Artist? Artist { get; set; }
+	/// <summary>Songs whose only primary artist is this one (they keep existing, but without an artist).</summary>
+	[Parameter] public int SongsLeftWithoutArtist { get; set; }
+
+	private bool isDeleting;
 
 	private void CloseDeleteModal()
 	{
-		OnClose.InvokeAsync(false);		
+		OnClose.InvokeAsync(false);
 	}
 
-	private void DeleteArtist()
+	private async Task DeleteArtist()
 	{
-		OnDelete.InvokeAsync(Artist);
+		if (Artist == null || isDeleting)
+			return;
 
-		// Truncating long song titles
-		var name = Artist?.Name.Length > 15
-			? Artist?.Name[..15] + "..."
-			: Artist?.Name;
-		ToastService.ShowToast($"SUKSESS! {name} ble fjernet.", ToastType.Success);
+		isDeleting = true;
+		try
+		{
+			await OnDelete.InvokeAsync(Artist);
+		}
+		finally
+		{
+			isDeleting = false;
+		}
 	}
 }
-
 

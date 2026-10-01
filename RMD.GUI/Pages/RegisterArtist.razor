@@ -61,8 +61,8 @@
 						<option value="🇱🇻 Latvia"> 🇱🇻 Latvia</option>
 						<option value="🇰🇷 Sør-Korea"> 🇰🇷 Sør-Korea</option>
 						<option value="🇯🇵 Japan"> 🇯🇵 Japan</option>
-						<option value="Italy"> 🇮🇹 Italia</option>
-						<option value="🇮🇹 Italia"> 🇮🇱 Israel</option>
+						<option value="🇮🇹 Italia"> 🇮🇹 Italia</option>
+						<option value="🇮🇱 Israel"> 🇮🇱 Israel</option>
 						<option value="🇮🇪 Irland"> 🇮🇪 Irland</option>
 						<option value="🇭🇺 Ungarn"> 🇭🇺 Ungarn</option>
 						<option value="🇬🇱 Grønland"> 🇬🇱 Grønland</option>
@@ -122,9 +122,6 @@
 
 
 @code {
-	private bool warningModalDuplicateVisible = false;
-	private string? attemptedArtistName;
-	private List<Artist> allArtists = new();
 	private ArtistDto newArtistDto = new ArtistDto
 	{
 
@@ -150,11 +147,7 @@
 			newArtistDto = new ArtistDto
 				{
 					Name = string.Empty,
-					Nationality = string.Empty,
-					FacebookUrl = "",
-					SoundcloudUrl = "",
-					ProfilePicUrl = "",
-					DiscogsUrl = ""
+					Nationality = string.Empty
 				};
 
 			StateHasChanged();
@@ -163,8 +156,6 @@
 		{
 			if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
 			{
-				attemptedArtistName = newArtistDto.Name;
-
 				// Truncating long artist names
 				var name = newArtistDto.Name.Length > 18
 					? newArtistDto.Name[..18] + "..."
