@@ -129,12 +129,15 @@
 							<td class="hide-mobile">@(song.ExtendedMix ? "✅" : "❌")</td>
 							<td class="hide-mobile">@song.Genre</td>
 							<td class="text-truncate" style="max-width: 180px">
-								<a href="@song.WantedSongUrl"
-								   target="_blank"
-								   rel="noopener noreferrer"
-								   title="@song.WantedSongUrl">
-									@song.WantedSongUrl
-								</a>
+								@if (SafeUrl.ForHref(song.WantedSongUrl) is string wantedUrl)
+								{
+									<a href="@wantedUrl"
+									   target="_blank"
+									   rel="noopener noreferrer"
+									   title="@wantedUrl">
+										@wantedUrl
+									</a>
+								}
 							</td>
 						</tr>
 					}
@@ -200,10 +203,10 @@
 				<a href="https://bootlegs-load.de/">🔗 Bootlegs-load.de</a>
 			</div>
 			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 Handsup.dance</a>
+				<a href="https://www.handsup.dance">🔗 Handsup.dance</a>
 			</div>
 			<div class="resource_item">
-				<a href="https://www.handsup.dance">🔗 Handsuppowo.pl</a>
+				<a href="https://handsuppowo.pl">🔗 Handsuppowo.pl</a>
 			</div>
 			<div class="resource_item">
 				<a href="https://ytmp3.cc/5Hcs/">🔗 ytmp3.cc</a>
@@ -244,8 +247,6 @@
 	private Result<int>? playedSongCount;
 	private Result<int>? artistNationCount;
 	private Result<IEnumerable<Song>>? wantedSongs;
-	private Result<Dictionary<string, double>>? genreDictionary;
-	private Result<Dictionary<string, int>>? genreCount;
 
 	private bool isLoading = true;
 	private bool showPieChart = true;
@@ -262,7 +263,6 @@
 		playedSongCount = await DashboardService.GetPlayedSongCountAsync();
 		artistNationCount = await DashboardService.GetArtistNationCountAsync();
 		wantedSongs = await DashboardService.GetWantedSongsAsync();
-		genreCount = await DashboardService.GetGenreCountAsync();
 
 		//Load PieChart with data
 		var genreCountsResult = await DashboardService.GetGenreCountAsync();
@@ -290,7 +290,8 @@
 				{
 					Custom = @"
 				function({ series, seriesIndex, w }) {
-					const label = w.globals.labels[seriesIndex];
+					// The tooltip is inserted as HTML, so escape the genre name
+					const label = String(w.globals.labels[seriesIndex]).replace(/[&<>""']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','""':'&quot;',""'"":'&#39;'}[c]));
 					const count = series[seriesIndex];
 					const total = series.reduce((a, b) => a + b, 0);
 					const percentage = ((count / total) * 100).toFixed(1);

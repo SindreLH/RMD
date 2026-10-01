@@ -19,7 +19,7 @@
                             <p style="font-size: 0.9rem;"> Sindre</p>
                         </div>
                         <p style="font-size: 0.7rem;">Admin</p>
-                    </div> 
+                    </div>
 
                 </div>
 
@@ -30,8 +30,19 @@
 
     <main>
         <article class="content px-4">
-            @Body
-          
+            @* An exception in a page shows this message instead of killing the whole session *@
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div class="alert alert-danger mt-4" role="alert">
+                        <h4>Noe gikk galt</h4>
+                        <p>Siden kunne ikke vises. Prøv igjen, eller gå til en annen side.</p>
+                        <button type="button" class="btn btn-outline-light" @onclick="() => errorBoundary?.Recover()">Prøv igjen</button>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </article>
     </main>
 
@@ -39,5 +50,11 @@
 </div>
 
 @code{
+    private ErrorBoundary? errorBoundary;
 
+    // Navigating to another page clears a previous error
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
 }
