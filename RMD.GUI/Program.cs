@@ -90,8 +90,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 	};
 });
 
+// Cookies are re-checked against the security stamp every 5 minutes (default 30)
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+	options.ValidationInterval = TimeSpan.FromMinutes(5));
+
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 var app = builder.Build();
 
 // Seed RMD's sole user to the database
