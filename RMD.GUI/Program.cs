@@ -102,7 +102,15 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+// Hosting: Data Protection keys and health checks (see docs/azure-deployment.md)
+builder.Services.AddRmdDataProtection(builder.Configuration);
+builder.Services.AddRmdHealthChecks();
+
 var app = builder.Build();
+
+app.WarnAboutLocalConnectionString();
+await app.MigrateDatabasesIfConfiguredAsync();
 
 // Seed RMD's sole user to the database
 await IdentitySeeder.SeedUserAsync(app.Services);
@@ -120,10 +128,10 @@ if (app.Environment.IsDevelopment())
 else
 {
 	app.UseExceptionHandler("/Error");
-	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
 
+app.UseRmdSecurityHeaders();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -132,6 +140,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
 
+app.MapHealthChecks("/healthz");
 app.MapBlazorHub();
 app.MapControllers();
 // Unknown /api routes return 404 instead of falling through to the Blazor host page
