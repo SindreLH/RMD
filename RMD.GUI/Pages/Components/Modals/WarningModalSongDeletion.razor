@@ -1,44 +1,25 @@
-
 @using RMD.Data.Models
 @using RMD.Business.Services
 
 @if (IsVisible)
 {
-	<div class="modal-backdrop">
-		<div class="parent_container">
-			<div class="main_container">
-
-				<i class="bi bi-exclamation-triangle"></i>
-
-				<h3>Advarsel</h3>
-				<h4>Sletting</h4>
-
-				<p class="text_container">
+	<ModalShell Title="Advarsel" Subtitle="Sletting" Icon="bi-exclamation-triangle" OnClose="CloseDeleteModal">
+		<ChildContent>
+			<p class="text-center">
 				Ønsker du virkelig å slette
-				<strong>
-				@string.Join(", ", Song?.SongArtists? .Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null).Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>()) - <strong>"@Song?.Title" ?</strong>
-				</strong>
+				<strong>@ArtistNames - "@Song?.Title"</strong>?
 			</p>
-
-				<div class="button_container">
-					<div class="cancel_button">
-						<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
-							Avbryt
-						</button>
-					</div>
-
-					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteSong" disabled="@isDeleting">
-							@(isDeleting ? "Sletter..." : "Slett låt")
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+		</ChildContent>
+		<Footer>
+			<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+				Avbryt
+			</button>
+			<button type="button" class="btn btn-danger" @onclick="DeleteSong" disabled="@isDeleting">
+				@(isDeleting ? "Sletter..." : "Slett låt")
+			</button>
+		</Footer>
+	</ModalShell>
 }
-
-
 
 @code {
 	[Parameter] public bool IsVisible { get; set; }
@@ -49,10 +30,11 @@
 
 	private bool isDeleting;
 
-	private void CloseDeleteModal()
-	{
-		OnClose.InvokeAsync(false);
-	}
+	private string ArtistNames => string.Join(", ", Song?.SongArtists
+		.Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null)
+		.Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>());
+
+	private Task CloseDeleteModal() => OnClose.InvokeAsync(false);
 
 	private async Task DeleteSong()
 	{
@@ -69,5 +51,4 @@
 			isDeleting = false;
 		}
 	}
- }
-
+}

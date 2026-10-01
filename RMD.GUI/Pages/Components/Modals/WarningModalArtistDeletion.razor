@@ -1,46 +1,29 @@
-
 @using RMD.Data.Models
 @using RMD.Business.Services
 
 @if (IsVisible)
 {
-	<div class="modal-backdrop">
-		<div class="parent_container">
-			<div class="main_container">
-
-				<i class="bi bi-exclamation-triangle"></i>
-
-				<h3>Advarsel</h3>
-				<h4>Sletting</h4>
-
-				<div class="text_container">
-					<p>Ønsker du virkelig å slette <strong>"@Artist?.Name"</strong> fra databasen?</p>
-					@if (SongsLeftWithoutArtist > 0)
-					{
-						<p><strong>@SongsLeftWithoutArtist @(SongsLeftWithoutArtist == 1 ? "låt" : "låter")</strong> vil stå uten artist etter slettingen.</p>
-					}
-					<p>Handlingen kan ikke angres.</p>
-				</div>
-
-				<div class="button_container">
-					<div class="cancel_button">
-						<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
-							Avbryt
-						</button>
-					</div>
-
-					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteArtist" disabled="@isDeleting">
-							@(isDeleting ? "Sletter..." : "Slett artist")
-						</button>
-					</div>
-				</div>
+	<ModalShell Title="Advarsel" Subtitle="Sletting" Icon="bi-exclamation-triangle" OnClose="CloseDeleteModal">
+		<ChildContent>
+			<div class="text-center">
+				<p>Ønsker du virkelig å slette <strong>"@Artist?.Name"</strong> fra databasen?</p>
+				@if (SongsLeftWithoutArtist > 0)
+				{
+					<p><strong>@SongsLeftWithoutArtist @(SongsLeftWithoutArtist == 1 ? "låt" : "låter")</strong> vil stå uten artist etter slettingen.</p>
+				}
+				<p>Handlingen kan ikke angres.</p>
 			</div>
-		</div>
-	</div>
+		</ChildContent>
+		<Footer>
+			<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+				Avbryt
+			</button>
+			<button type="button" class="btn btn-danger" @onclick="DeleteArtist" disabled="@isDeleting">
+				@(isDeleting ? "Sletter..." : "Slett artist")
+			</button>
+		</Footer>
+	</ModalShell>
 }
-
-
 
 @code {
 	[Parameter] public bool IsVisible { get; set; }
@@ -53,10 +36,7 @@
 
 	private bool isDeleting;
 
-	private void CloseDeleteModal()
-	{
-		OnClose.InvokeAsync(false);
-	}
+	private Task CloseDeleteModal() => OnClose.InvokeAsync(false);
 
 	private async Task DeleteArtist()
 	{
@@ -74,4 +54,3 @@
 		}
 	}
 }
-

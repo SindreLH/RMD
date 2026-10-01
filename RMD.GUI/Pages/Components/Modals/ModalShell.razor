@@ -1,0 +1,65 @@
+@* Shared modal frame: backdrop, header with icon, scrollable body and an always-visible footer.
+   On phones it becomes a full-screen sheet. Esc or a click on the backdrop closes it. *@
+
+<div class="rmd-modal-backdrop" @onclick="OnBackdropClick">
+    <div class="rmd-modal @(Large ? "rmd-modal--lg" : "")"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="@titleId"
+         tabindex="-1"
+         @ref="dialog"
+         @onclick:stopPropagation="true"
+         @onkeydown="OnKeyDown">
+
+        <header class="rmd-modal__header">
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <i class="bi @Icon" aria-hidden="true"></i>
+            }
+            <h3 id="@titleId">@Title</h3>
+            @if (!string.IsNullOrEmpty(Subtitle))
+            {
+                <h4>@Subtitle</h4>
+            }
+        </header>
+
+        <div class="rmd-modal__body">
+            @ChildContent
+        </div>
+
+        @if (Footer != null)
+        {
+            <footer class="rmd-modal__footer">
+                @Footer
+            </footer>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string? Subtitle { get; set; }
+    /// <summary>Bootstrap icon class, e.g. "bi-pencil-square".</summary>
+    [Parameter] public string? Icon { get; set; }
+    /// <summary>Wide variant for forms.</summary>
+    [Parameter] public bool Large { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    /// <summary>Forms should not close (and lose input) on a stray click outside.</summary>
+    [Parameter] public bool CloseOnBackdrop { get; set; } = true;
+
+    private readonly string titleId = "modal-title-" + Guid.NewGuid().ToString("N")[..8];
+    private ElementReference dialog;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Move keyboard focus into the dialog so Esc works straight away
+        if (firstRender)
+            await dialog.FocusAsync(preventScroll: true);
+    }
+
+    private Task OnBackdropClick() => CloseOnBackdrop ? OnClose.InvokeAsync() : Task.CompletedTask;
+
+    private Task OnKeyDown(KeyboardEventArgs e) => e.Key == "Escape" ? OnClose.InvokeAsync() : Task.CompletedTask;
+}
