@@ -40,7 +40,7 @@
                     <div id="form-group">
                         <label for="song-genre">Sjanger</label>
                         <InputSelect id="song-genre" @bind-Value="newSongDto.Genre" class="form-control">
-                            <option value="" style="color: gray;">Velg en sjanger</option>
+                            <option value="" style="color: var(--rmd-option-placeholder);">Velg en sjanger</option>
                             <option value="Hands Up">Hands Up</option>
                             <option value="Hardstyle">Hardstyle</option>
                             <option value="House">House</option>
@@ -58,7 +58,7 @@
                             {
                                 <div class="artist_selection_container" @key="row.Key">
                                     <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                        <option value="" style="color: gray;">Velg en artist</option>
+                                        <option value="" style="color: var(--rmd-option-placeholder);">Velg en artist</option>
                                         @foreach (var artist in allArtists)
                                         {
                                             <option value="@artist.ArtistId">@artist.Name</option>
@@ -99,7 +99,7 @@
                                 {
                                     <div class="artist_selection_container" @key="row.Key">
                                         <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                            <option value="" style="color: gray;">Velg en remix artist</option>
+                                            <option value="" style="color: var(--rmd-option-placeholder);">Velg en remix artist</option>
                                             @foreach (var artist in allArtists)
                                             {
                                                 <option value="@artist.ArtistId">@artist.Name</option>

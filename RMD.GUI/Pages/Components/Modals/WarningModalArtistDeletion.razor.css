@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
     backdrop-filter: blur(5px);
-    background: rgba(1, 2, 3, 0.6);
+    background: var(--rmd-backdrop);
 }
 
 .parent_container {
@@ -27,12 +27,12 @@
     align-items: center;
     width: 42rem;
     height: 40rem;
-    background-image: linear-gradient(#1f78d7, #25369B);
+    background-image: var(--rmd-modal-bg-image);
     border-radius: 20px;
 }
 
 .bi-exclamation-triangle {
-    background: -webkit-linear-gradient(#fff, #fff);
+    background: -webkit-linear-gradient(var(--rmd-modal-icon), var(--rmd-modal-icon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 8rem;
@@ -41,16 +41,16 @@
 
 h3 {
     font-size: 3rem;
-    color: white;
+    color: var(--rmd-text);
 }
 
 h4 {
     font-size: 1.5rem;
-    color: white;
+    color: var(--rmd-text);
 }
 
 .text_container {
-    color: white;
+    color: var(--rmd-text);
     text-align: center;
     margin-top: 2rem;
     display: flex;
@@ -67,7 +67,7 @@ h4 {
 }
 
 .btn-secondary {
-    background-color: #1f78d7;
+    background-color: var(--rmd-modal-cancel-bg);
 }
 
 .cancel_button {
@@ -116,8 +116,8 @@ h4 {
             width: 100%;
             height: 40rem;
             /*background-color: rgba(37, 37, 37, 0.5);*/
-            background: rgba(5, 5, 5, 0.5);
-            background: linear-gradient(180deg, rgb(91, 0, 0, 0.50), rgb(125, 29, 29, 0.50));
+            background: var(--rmd-modal-m-danger-bg);
+            background: var(--rmd-modal-m-danger-bg);
             backdrop-filter: blur(5px);
             border-radius: 20px;
             margin-bottom: 0;

@@ -7,7 +7,7 @@
 main {
     flex: 1;
     /*background: #10172A;*/
-    background-image: linear-gradient(#1f78d7, #25369B);
+    background-image: var(--rmd-bg-image);
     /*  background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
     background-blend-mode: multiply;*/
 }
@@ -25,11 +25,11 @@ main {
     margin-bottom: 20px;
     display: flex;
     flex-direction: row;
-    color: white;
+    color: var(--rmd-text);
 }
 
 p {
-    color: white;
+    color: var(--rmd-text);
     margin:0;
 }
 
@@ -46,14 +46,14 @@ p {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, #212529 0%, #181818 70%);
+    background-image: var(--rmd-sidebar-bg-image);
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
 .top-row {
-    background-image: linear-gradient(180deg, #181818 0%, #212529 70%);
+    background-image: var(--rmd-sidebar-bg-image);
     justify-content: flex-end;
     height: 5.5rem;
     display: flex;

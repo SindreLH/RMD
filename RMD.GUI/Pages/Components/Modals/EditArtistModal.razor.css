@@ -11,12 +11,12 @@
     height: 100%;
     z-index: 1040;
     backdrop-filter: blur(5px);
-    background: rgba(1, 2, 3, 0.6);
+    background: var(--rmd-backdrop);
 }
 
 .bi-pencil-square {
     display: inline-block;
-    background: -webkit-linear-gradient(#fff, #fff);
+    background: -webkit-linear-gradient(var(--rmd-modal-icon), var(--rmd-modal-icon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 5rem;
@@ -33,7 +33,7 @@
     align-items: center;
     width: 42rem;
     height: 49rem;
-    background-image: linear-gradient(#1f78d7, #25369B);
+    background-image: var(--rmd-modal-bg-image);
     border-radius: 20px;
 }
 
@@ -70,12 +70,12 @@ h3 {
     font-weight: 400;
     font-size: xx-large;
     justify-content: center;
-    color: white;
+    color: var(--rmd-text);
     margin-bottom: 2rem;
 }
 
 label {
-    color: white;
+    color: var(--rmd-text);
 }
 
 .form-control {
@@ -92,7 +92,7 @@ label {
 }
 
 .btn-secondary{
-    background-color: #1f78d7;
+    background-color: var(--rmd-modal-cancel-bg);
 }
 
 .cancel_button {

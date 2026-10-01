@@ -5,7 +5,7 @@
     height: 21rem;
     margin-bottom: 3rem;
     margin-top: 1.5rem;
-    background-image: linear-gradient(rgba(0, 0, 139, 0.0), rgba(0, 0, 139, 0.3)), url('images/newheader4.png');
+    background-image: var(--rmd-header-overlay), url('images/newheader4.png');
     background-position-y: bottom;
     border-radius: 20px;
 }
@@ -23,7 +23,7 @@
     width: 65rem;
     height: 20rem;
     border-radius: 25px;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
 }
 
 .load_contents{
@@ -42,7 +42,7 @@
 }
 
 .load_text {
-    color: white;
+    color: var(--rmd-text);
     font-family: Arial, Helvetica, sans-serif;
     justify-self: center;
     align-self: center;
@@ -52,7 +52,7 @@
 }
 
 .bi-exclamation-triangle {
-    background: -webkit-linear-gradient(#ff0844, #ffb199);
+    background: -webkit-linear-gradient(var(--rmd-danger), var(--rmd-danger-hover));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 4rem;
@@ -61,11 +61,11 @@
 
 /* Text */
 a {
-    color: white;
+    color: var(--rmd-text);
     text-decoration: none;
 }
     a:hover {
-        color: #43C000;
+        color: var(--rmd-link-hover);
     }
 h3 {
     margin-top: 4.5rem;
@@ -73,14 +73,14 @@ h3 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 5.5rem;
     letter-spacing: -4px;
-    color: white;
+    color: var(--rmd-text);
 }
 p {
-    color: white;
+    color: var(--rmd-text);
     font-family: Arial, Helvetica, sans-serif;
 }
 h4 {
-    color: white;
+    color: var(--rmd-text);
     margin-bottom: 2rem;
     font-weight: 400;
 }
@@ -107,7 +107,7 @@ h4 {
 
 .info_box {
     display: flex;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
     backdrop-filter: blur(5px);
     border-radius: 20px;
     width: 35rem;
@@ -151,17 +151,17 @@ h4 {
         transition: 0.5s ease-in-out;
     }
 .btn-warning {
-    color: white;
-    background-color: #d9a300;
+    color: var(--rmd-on-warning);
+    background-color: var(--rmd-warning);
 }
 .btn-danger {
-    background-color: #b11f2d;
+    background-color: var(--rmd-danger);
 }
 .btn-warning:hover {
-    background-color: #ffc107;
+    background-color: var(--rmd-warning-hover);
 }
 .btn-danger:hover {
-    background-color: #f86775;
+    background-color: var(--rmd-danger-hover);
 }
 .fixed-width {
     width: 150px;
@@ -169,8 +169,8 @@ h4 {
 
 /* Table section */
 .table-hover > tbody > tr:hover {
-    --bs-table-accent-bg: #010622;
-    color: #aee1ff;
+    --bs-table-accent-bg: var(--rmd-table-hover-bg);
+    color: var(--rmd-table-hover-text);
 }
 .table-container {
     max-height: 26.5rem;
@@ -179,7 +179,7 @@ h4 {
     border-radius: 20px;
 }
 .table {
-    opacity: 80%;
+    opacity: var(--rmd-table-opacity);
     width: 65rem;
     border-collapse: separate;
     border-spacing: 0;
@@ -237,7 +237,7 @@ th {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 2.5rem;
         letter-spacing: -2px;
-        color: white;
+        color: var(--rmd-text);
     }
 
     h4{

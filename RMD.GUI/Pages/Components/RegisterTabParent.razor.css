@@ -20,16 +20,16 @@
 }
 
 a{
-	color: white;
+	color: var(--rmd-tab-text);
 }
 
 a:hover {
-	color: #25369B;
+	color: var(--rmd-tab-hover-text);
 	border: none;
 }
 
 .active-tab:hover {
-	color: #0075FF;
+	color: var(--rmd-tab-active-text);
 	border: none;
 }
 
@@ -41,12 +41,12 @@ a:hover {
 }
 
 h3{
-	color: red;
+	color: var(--rmd-invalid);
 }
 
 .active-tab {
-	background-color: #fff;
-	color: #0075FF; 
+	background-color: var(--rmd-tab-active-bg);
+	color: var(--rmd-tab-active-text); 
 	border: none;
 	border-radius: 4px;
 }

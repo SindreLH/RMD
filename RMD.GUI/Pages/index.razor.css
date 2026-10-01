@@ -29,31 +29,31 @@ i {
     margin-left: 3rem;
     font-size: large;
     font-style: normal;
-    color: white;
+    color: var(--rmd-text);
     margin-top: 2rem;
     margin-bottom: 1rem;
 }
 
 p {
     font-size: medium;
-    color: white;
+    color: var(--rmd-text);
     font-weight: normal;
 }
 
 h3{
-    color: white;
+    color: var(--rmd-text);
     font-size: 2.5rem;
     font-weight: 900;
 }
 
 h2 {
-    color: white;
+    color: var(--rmd-text);
   
 }
 
 
 a:hover {
-    color: #43C000;
+    color: var(--rmd-link-hover);
 }
 
 .data_card {
@@ -62,7 +62,7 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
     border-radius: 20px;
     width: 31rem;
     height: 12rem;
@@ -70,7 +70,7 @@ a:hover {
 
 .green_plus {
     margin-right: 13px;
-    color: #43C000;
+    color: var(--rmd-accent-2);
 }
 
 .newly_added{
@@ -90,7 +90,7 @@ a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
     border-radius: 20px;
     width: 31rem;
     height: 15rem;
@@ -113,7 +113,7 @@ a:hover {
     width: 100%;
     height: 20rem;
     border-radius: 25px;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
 }
 
 .load_contents {
@@ -134,7 +134,7 @@ a:hover {
 }
 
 .load_text {
-    color: white;
+    color: var(--rmd-text);
     font-family: Arial, Helvetica, sans-serif;
     justify-self: center;
     align-self: center;
@@ -145,8 +145,8 @@ a:hover {
 
 
 .table-hover > tbody > tr:hover {
-    --bs-table-accent-bg: #010622;
-    color: #aee1ff;
+    --bs-table-accent-bg: var(--rmd-table-hover-bg);
+    color: var(--rmd-table-hover-text);
 }
 
 .table_container {
@@ -157,7 +157,7 @@ a:hover {
 }
 
 .table {
-    opacity: 80%;
+    opacity: var(--rmd-table-opacity);
     width: 65rem;
     border-collapse: separate;
     border-spacing: 0;
@@ -221,7 +221,7 @@ th {
     height: 50rem;
     max-height: 50rem;
     border-radius: 20px;
-    background-color: rgba(37, 37, 37, 0.5);
+    background-color: var(--rmd-surface);
     padding-bottom: 2rem;
 }
 
@@ -233,20 +233,20 @@ th {
 h4 {
     margin: 3rem;
     font-size: x-large;
-    color: white;
+    color: var(--rmd-text);
 }
 
 h5 {
     margin-left: 0.5rem;
     font-size: large;
     font-weight: 400;
-    color: white;
+    color: var(--rmd-text);
     margin-top: 2.2rem;
 }
 
 a{
     text-decoration: none;
-    color: lightgray;
+    color: var(--rmd-text-muted);
     font-size: small;
 }
 
@@ -254,21 +254,21 @@ a{
     h4 {
         margin: 3rem;
         font-size: large;
-        color: white;
+        color: var(--rmd-text);
     }
 
     h5 {
         margin-left: 3rem;
         font-size: medium;
         font-weight: 400;
-        color: white;
+        color: var(--rmd-text);
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
 
     a {
         text-decoration: none;
-        color: lightgray;
+        color: var(--rmd-text-muted);
         font-size: small;
     }
 

@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(1, 2, 3, 0.6);
+    background: var(--rmd-backdrop);
 }
 
 /*WORKING HERE: 21.01.2026*/
@@ -41,7 +41,7 @@
 }
 
 .bi-pencil-square {
-    background: -webkit-linear-gradient(#FFFF, #fFF);
+    background: -webkit-linear-gradient(var(--rmd-modal-icon), var(--rmd-modal-icon));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 5rem;
@@ -59,7 +59,7 @@
     max-height: 70rem;
     height: auto;
     /*background: radial-gradient(circle at 50% 50%, rgba(0, 120, 255, 0.7) 0%, rgba(0, 188, 212, 0.5) 0%, rgba(10, 54, 129, 0.2) 100%);*/
-    background-image: linear-gradient(#1f78d7, #25369B);
+    background-image: var(--rmd-modal-bg-image);
     backdrop-filter: blur(4px);
     border-radius: 20px;
 }
@@ -68,11 +68,11 @@ h3 {
     font-weight: 400;
     font-size: xx-large;
     justify-content: center;
-    color: white;
+    color: var(--rmd-text);
 }
 
 label {
-    color: white;
+    color: var(--rmd-text);
 }
 
 
@@ -137,7 +137,7 @@ label {
 }
 
 .btn-secondary {
-    background-color: #1f78d7;
+    background-color: var(--rmd-modal-cancel-bg);
 }
 
 .cancel_button {
@@ -175,7 +175,7 @@ label {
         top: 0;
         left: 0;
         backdrop-filter: blur(5px);
-        background: rgba(0, 0, 0, 0.5);
+        background: var(--rmd-modal-m-backdrop);
     }
 
     .container_parent {
@@ -185,7 +185,7 @@ label {
     }
 
     .bi-pencil-square {
-        background: -webkit-linear-gradient(#2F82FF, #00E0FF);
+        background: -webkit-linear-gradient(var(--rmd-modal-m-icon-from), var(--rmd-modal-m-icon-to));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 5rem;
@@ -202,7 +202,7 @@ label {
         align-items: center;
         max-width: 100%;
         height: auto;
-        background: linear-gradient(0deg, rgba(28, 22, 5, 0.5) 0%, rgba(2, 43, 91, 0.5) 100%);
+        background: var(--rmd-modal-m-edit-bg);
         backdrop-filter: blur(5px);
         border-radius: 20px;
     }
@@ -212,11 +212,11 @@ label {
         font-weight: 400;
         font-size: xx-large;
         justify-content: center;
-        color: white;
+        color: var(--rmd-text);
     }
 
     label {
-        color: white;
+        color: var(--rmd-text);
     }
 
 
@@ -299,7 +299,7 @@ label {
     }
 
     .btn-secondary {
-        background-color: #1f78d7;
+        background-color: var(--rmd-modal-cancel-bg);
         width: 19rem;
         max-width: 100%;
         height: auto;

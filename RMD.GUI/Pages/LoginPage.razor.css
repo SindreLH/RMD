@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(14, 14, 14,0.3);
+    background-color: var(--rmd-surface-glass);
 
     border-radius: 20px;
     backdrop-filter: blur(10px);
@@ -55,11 +55,11 @@
 }
 
 label{
-    color: white;
+    color: var(--rmd-text);
 }
 
 a{
-    color: white;
+    color: var(--rmd-text);
     text-decoration: none;
 }
 
@@ -71,7 +71,7 @@ h1 {
     position: absolute;
     top: 3rem;
 
-    color: white;
+    color: var(--rmd-text);
     font-weight: 600;
     font-size: 40px;
 }
