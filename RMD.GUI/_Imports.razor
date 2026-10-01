@@ -10,3 +10,5 @@
 @using RMD.GUI.Shared
 @using ApexCharts
 @using RMD.GUI.Pages.Components
+@* Every routable page requires login unless it opts out with [AllowAnonymous] *@
+@attribute [Authorize]

@@ -49,7 +49,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 	.AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/";
+	options.LoginPath = "/login";
+	options.AccessDeniedPath = "/login";
 	options.LogoutPath = "/auth/logout";
 
 	options.Cookie.Name = ".AspNetCore.Identity.Application";

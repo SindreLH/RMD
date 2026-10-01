@@ -1,0 +1,12 @@
+﻿@page "/"
+@attribute [AllowAnonymous]
+@inject NavigationManager Nav
+
+@* The site root forwards to the dashboard; the dashboard itself handles the login redirect. *@
+
+@code {
+	protected override void OnInitialized()
+	{
+		Nav.NavigateTo("/dashboard", replace: true);
+	}
+}

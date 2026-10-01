@@ -1,26 +1,24 @@
-﻿<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData"
-                                DefaultLayout="@typeof(MainLayout)">
-                <NotAuthorized>
-                    <RedirectToLogin />
-                </NotAuthorized>
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData"
+                            DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin IsAuthenticated="@(context.User.Identity?.IsAuthenticated == true)" />
+            </NotAuthorized>
 
-                <Authorizing>
-                    <p>Checking permissions...</p>
-                </Authorizing>
+            <Authorizing>
+                <p>Checking permissions...</p>
+            </Authorizing>
 
-            </AuthorizeRouteView>
-        </Found>
+        </AuthorizeRouteView>
+    </Found>
 
 
-        <NotFound>
-            <LayoutView Layout="@typeof(AuthLayout)">
-                
-                <RMD.GUI.Pages.NotFound/>
+    <NotFound>
+        <LayoutView Layout="@typeof(AuthLayout)">
 
-            </LayoutView>
-        </NotFound>
-    </Router>
-</CascadingAuthenticationState>
+            <RMD.GUI.Pages.NotFound/>
+
+        </LayoutView>
+    </NotFound>
+</Router>

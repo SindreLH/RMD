@@ -39,7 +39,7 @@ namespace RMD.GUI.Controllers
 			);
 
 			if (!result.Succeeded)
-				return Redirect("/?reason=invalid");
+				return Redirect("/login?reason=invalid");
 
 			if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
 				return LocalRedirect(returnUrl);
@@ -52,7 +52,7 @@ namespace RMD.GUI.Controllers
 		public async Task<IActionResult> Logout()
 		{
 			await _signInManager.SignOutAsync();
-			return Redirect("/");
+			return Redirect("/login");
 		}
 
 		[AllowAnonymous]
@@ -141,7 +141,7 @@ namespace RMD.GUI.Controllers
 );
 			}
 
-			return Redirect("/?reset=success");
+			return Redirect("/login?reset=success");
 		}
 
 	}

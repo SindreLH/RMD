@@ -1,19 +1,22 @@
 ﻿@inject NavigationManager Nav
 
+@* Rendered by AuthorizeRouteView when the user may not see a page.
+   During prerendering NavigateTo becomes a server-side 302, so anonymous visitors never see the app shell. *@
+
+@if (IsAuthenticated)
+{
+    <p>Du har ikke tilgang til denne siden.</p>
+}
+
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    [Parameter] public bool IsAuthenticated { get; set; }
+
+    protected override void OnInitialized()
     {
-
-        var path = new Uri(Nav.Uri).AbsolutePath.ToLower();
-
-        if (path == "/")
+        if (IsAuthenticated)
             return;
 
-
-        if (firstRender)
-        {
-            Nav.NavigateTo("/?reason=unauthorized", replace: true);
-        }
-        
+        var returnUrl = "/" + Nav.ToBaseRelativePath(Nav.Uri);
+        Nav.NavigateTo($"/login?returnUrl={Uri.EscapeDataString(returnUrl)}", replace: true);
     }
 }
