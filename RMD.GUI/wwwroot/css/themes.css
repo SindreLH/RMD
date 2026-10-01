@@ -18,7 +18,6 @@
     --rmd-bg-image: linear-gradient(#1f78d7, #25369B);
     --rmd-text: #ffffff;
     --rmd-text-muted: #d3d3d3;
-    --rmd-text-subtle: #b3b3b3;
     --rmd-link: #0071c1;
     --rmd-link-hover: #43c000;
     --rmd-highlight-text: #aee1ff;
@@ -80,13 +79,6 @@
     --rmd-modal-bg-image: linear-gradient(#1f78d7, #25369B);
     --rmd-modal-cancel-bg: #1f78d7;
     --rmd-modal-icon: #ffffff;
-    /* Phone-sized modals (max-width 412px) */
-    --rmd-modal-m-backdrop: rgba(0, 0, 0, 0.5);
-    --rmd-modal-m-edit-bg: linear-gradient(0deg, rgba(28, 22, 5, 0.5) 0%, rgba(2, 43, 91, 0.5) 100%);
-    --rmd-modal-m-icon-from: #2f82ff;
-    --rmd-modal-m-icon-to: #00e0ff;
-    --rmd-modal-m-danger-bg: linear-gradient(180deg, rgb(91, 0, 0, 0.50), rgb(125, 29, 29, 0.50));
-    --rmd-modal-m-info-bg: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 50%, rgba(58, 58, 58, 0.5) 100%);
 
     /* Inputs (Bootstrap defaults of the original look) */
     --rmd-input-bg: #ffffff;
@@ -123,7 +115,6 @@
     --rmd-bg-image: linear-gradient(180deg, #1f1f1f 0, #121212 22rem);
     --rmd-text: #ffffff;
     --rmd-text-muted: #b3b3b3;
-    --rmd-text-subtle: #a7a7a7;
     --rmd-link: #1ed760;
     --rmd-link-hover: #1ed760;
     --rmd-highlight-text: #ffffff;
@@ -178,12 +169,6 @@
     --rmd-modal-bg-image: linear-gradient(#282828, #282828);
     --rmd-modal-cancel-bg: #3e3e3e;
     --rmd-modal-icon: #1ed760;
-    --rmd-modal-m-backdrop: rgba(0, 0, 0, 0.75);
-    --rmd-modal-m-edit-bg: linear-gradient(#282828, #282828);
-    --rmd-modal-m-icon-from: #1ed760;
-    --rmd-modal-m-icon-to: #1db954;
-    --rmd-modal-m-danger-bg: linear-gradient(#282828, #282828);
-    --rmd-modal-m-info-bg: linear-gradient(#282828, #282828);
 
     --rmd-input-bg: #242424;
     --rmd-input-text: #ffffff;
@@ -217,7 +202,6 @@
     --rmd-bg-image: linear-gradient(#f4f6fb, #f4f6fb);
     --rmd-text: #1a1d24;
     --rmd-text-muted: #5b6475;
-    --rmd-text-subtle: #6b7280;
     --rmd-link: #1d4ed8;
     --rmd-link-hover: #15803d;
     --rmd-highlight-text: #1d4ed8;
@@ -272,12 +256,6 @@
     --rmd-modal-bg-image: linear-gradient(#ffffff, #ffffff);
     --rmd-modal-cancel-bg: #64748b;
     --rmd-modal-icon: #2563eb;
-    --rmd-modal-m-backdrop: rgba(15, 23, 42, 0.45);
-    --rmd-modal-m-edit-bg: linear-gradient(#ffffff, #ffffff);
-    --rmd-modal-m-icon-from: #2563eb;
-    --rmd-modal-m-icon-to: #0891b2;
-    --rmd-modal-m-danger-bg: linear-gradient(#fff5f5, #ffffff);
-    --rmd-modal-m-info-bg: linear-gradient(#ffffff, #ffffff);
 
     --rmd-input-bg: #ffffff;
     --rmd-input-text: #1a1d24;
@@ -311,7 +289,6 @@
     --rmd-bg-image: linear-gradient(180deg, #2e3440, #292e39);
     --rmd-text: #eceff4;
     --rmd-text-muted: #b8c1d1;
-    --rmd-text-subtle: #a3adbf;
     --rmd-link: #88c0d0;
     --rmd-link-hover: #a3be8c;
     --rmd-highlight-text: #eceff4;
@@ -366,12 +343,6 @@
     --rmd-modal-bg-image: linear-gradient(#3b4252, #3b4252);
     --rmd-modal-cancel-bg: #4c566a;
     --rmd-modal-icon: #88c0d0;
-    --rmd-modal-m-backdrop: rgba(20, 23, 30, 0.7);
-    --rmd-modal-m-edit-bg: linear-gradient(#3b4252, #3b4252);
-    --rmd-modal-m-icon-from: #88c0d0;
-    --rmd-modal-m-icon-to: #8fbcbb;
-    --rmd-modal-m-danger-bg: linear-gradient(#3b4252, #3b4252);
-    --rmd-modal-m-info-bg: linear-gradient(#3b4252, #3b4252);
 
     --rmd-input-bg: #2e3440;
     --rmd-input-text: #eceff4;
@@ -405,7 +376,6 @@
     --rmd-bg-image: linear-gradient(180deg, #241447 0%, #1a1033 55%, #120a24 100%);
     --rmd-text: #f5f0ff;
     --rmd-text-muted: #c4b5e8;
-    --rmd-text-subtle: #a898d6;
     --rmd-link: #36f9f6;
     --rmd-link-hover: #36f9f6;
     --rmd-highlight-text: #36f9f6;
@@ -460,12 +430,6 @@
     --rmd-modal-bg-image: linear-gradient(160deg, #2a1b4d, #1a1033);
     --rmd-modal-cancel-bg: #35225f;
     --rmd-modal-icon: #ff4fd8;
-    --rmd-modal-m-backdrop: rgba(8, 4, 20, 0.75);
-    --rmd-modal-m-edit-bg: linear-gradient(160deg, #2a1b4d, #1a1033);
-    --rmd-modal-m-icon-from: #ff4fd8;
-    --rmd-modal-m-icon-to: #36f9f6;
-    --rmd-modal-m-danger-bg: linear-gradient(160deg, #3a1340, #1a1033);
-    --rmd-modal-m-info-bg: linear-gradient(160deg, #2a1b4d, #1a1033);
 
     --rmd-input-bg: #140c28;
     --rmd-input-text: #f5f0ff;

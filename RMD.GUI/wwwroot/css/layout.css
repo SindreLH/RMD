@@ -1,0 +1,193 @@
+/*
+    RMD layout primitives
+    ---------------------
+    Mobile first. One breakpoint scale, the same as Bootstrap so its utilities agree:
+        sm 576px · md 768px · lg 992px (sidebar appears) · xl 1200px · xxl 1400px
+    Media queries can't read custom properties, so only these values are used in @media rules.
+    Colours live in themes.css; this file only does structure, spacing and type.
+*/
+
+:root {
+    --rmd-font-sans: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    --rmd-gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
+    --rmd-space-1: 0.25rem;
+    --rmd-space-2: 0.5rem;
+    --rmd-space-3: 0.75rem;
+    --rmd-space-4: 1rem;
+    --rmd-space-5: 1.5rem;
+    --rmd-space-6: 2rem;
+
+    --rmd-fs-sm: 0.875rem;
+    --rmd-fs-h1: clamp(1.6rem, 1.2rem + 1.5vw, 2.5rem);
+    --rmd-fs-h2: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
+    --rmd-fs-stat: clamp(1.6rem, 1.1rem + 1.8vw, 2.4rem);
+
+    --rmd-radius-sm: 6px;
+    --rmd-radius-md: 10px;
+    --rmd-radius-lg: 20px;
+
+    --rmd-content-max: 1800px;
+    --rmd-sidebar-w: 250px;
+    --rmd-topbar-h: 3.5rem;
+
+    --rmd-z-sticky: 10;
+    --rmd-z-topbar: 100;
+    --rmd-z-scrim: 800;
+    --rmd-z-drawer: 900;
+    --rmd-z-modal: 1000;
+    --rmd-z-toast: 1100;
+    --rmd-z-error: 1200;
+}
+
+/* ---------- Page container ---------- */
+
+.rmd-page {
+    width: 100%;
+    max-width: var(--rmd-content-max);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-5);
+}
+
+.rmd-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rmd-space-3);
+}
+
+    .rmd-page-header h1,
+    .rmd-page-header h2 {
+        margin: 0;
+        color: var(--rmd-text);
+    }
+
+/* ---------- Generic building blocks ---------- */
+
+/* Horizontal group that wraps on small screens */
+.rmd-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rmd-space-3);
+}
+
+/* Search + filters + actions above a list */
+.rmd-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rmd-space-3) var(--rmd-space-5);
+}
+
+    .rmd-toolbar .rmd-search {
+        flex: 1 1 16rem;
+        max-width: 32rem;
+    }
+
+    .rmd-toolbar .rmd-toolbar__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--rmd-space-2);
+        margin-left: auto;
+    }
+
+/* Rounded translucent box */
+.rmd-panel {
+    background-color: var(--rmd-surface);
+    border-radius: var(--rmd-radius-lg);
+    padding: clamp(1rem, 0.6rem + 1.5vw, 2rem);
+    color: var(--rmd-text);
+    min-width: 0;
+}
+
+    .rmd-panel h2,
+    .rmd-panel h3,
+    .rmd-panel h4,
+    .rmd-panel h5,
+    .rmd-panel p {
+        color: var(--rmd-text);
+    }
+
+/* Responsive grid of equal cards: as many columns as fit */
+.rmd-card-grid {
+    display: grid;
+    gap: var(--rmd-space-5);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--rmd-card-min, 15rem)), 1fr));
+}
+
+/* Form fields in as many columns as fit (one column on phones) */
+.rmd-form-grid {
+    display: grid;
+    gap: var(--rmd-space-4) var(--rmd-space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    align-items: start;
+}
+
+    .rmd-form-grid .rmd-span-full {
+        grid-column: 1 / -1;
+    }
+
+.rmd-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-1);
+    min-width: 0;
+}
+
+    .rmd-field > label,
+    .rmd-fieldset > legend {
+        color: var(--rmd-text);
+        font-size: var(--rmd-fs-sm);
+        margin: 0;
+    }
+
+.rmd-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-3);
+}
+
+    .rmd-fieldset > legend {
+        float: none;
+        width: auto;
+        margin-bottom: var(--rmd-space-1);
+    }
+
+/* Bootstrap switch with a short help text under the label */
+.rmd-switch .form-check-label {
+    color: var(--rmd-text);
+}
+
+.rmd-switch small {
+    display: block;
+    color: var(--rmd-text-muted);
+    font-size: 0.75rem;
+}
+
+/* Small helpers */
+.rmd-muted {
+    color: var(--rmd-text-muted);
+}
+
+.rmd-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Never wider than ~a quarter of the screen, so tables fit on tablets */
+    max-width: min(var(--rmd-truncate-max, 22rem), 24vw);
+}
+
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+}
