@@ -1,4 +1,6 @@
-﻿<CascadingValue Name="AntiforgeryToken" Value="AntiforgeryToken">
+﻿@using RMD.GUI.Infrastructure
+<CascadingValue Name="AntiforgeryToken" Value="AntiforgeryToken">
+<CascadingValue Value="ThemeCatalog.Get(Theme)">
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData"
@@ -24,8 +26,12 @@
     </NotFound>
 </Router>
 </CascadingValue>
+</CascadingValue>
 
 @code {
     /// <summary>Request token generated in _Host.cshtml, consumed by AntiforgeryInput.</summary>
     [Parameter] public string? AntiforgeryToken { get; set; }
+
+    /// <summary>Active theme id from the rmd-theme cookie (read in _Host.cshtml).</summary>
+    [Parameter] public string? Theme { get; set; }
 }

@@ -5,6 +5,7 @@
 @using RMD.Data.Models.Dashboard
 @inject IDashboardService DashboardService
 @inject NavigationManager Navigation
+@using RMD.GUI.Infrastructure
 
 <PageTitle>RMD | Dashboard</PageTitle>
 
@@ -164,7 +165,7 @@
 			<h2 style="margin-left:3rem;">Ressurser</h2>
 
 			<div class="icon_heading">
-				<i class="bi bi-info-circle-fill" style="color: #00e396;"></i>
+				<i class="bi bi-info-circle-fill" style="color: var(--rmd-icon-accent);"></i>
 				<h5> Informasjon</h5>
 			</div>
 			
@@ -176,7 +177,7 @@
 			</div>
 
 			<div class="icon_heading">
-				<i class="bi bi-cart4" style="color: #00e396;"></i>
+				<i class="bi bi-cart4" style="color: var(--rmd-icon-accent);"></i>
 				<h5> Nettbutikker</h5>
 			</div>
 
@@ -194,7 +195,7 @@
 			</div>
 
 			<div class="icon_heading">
-				<i class="bi bi-download" style="color: #00e396;"></i>
+				<i class="bi bi-download" style="color: var(--rmd-icon-accent);"></i>
 				<h5> Nedlasting</h5>
 			</div>
 
@@ -230,6 +231,8 @@
 
 
 @code {
+	[CascadingParameter] private ThemeInfo Theme { get; set; } = ThemeCatalog.Get(null);
+
 	private ApexChartOptions<BarChartData> ChartOptions { get; set; } = new();
 	private List<BarChartData> Data { get; set; } = new();
 	private ApexChartOptions<PieChartData> PieChartOptions { get; set; } = new();
@@ -304,7 +307,7 @@
 					Text = "Sjangerfordeling",
 					Style = new TitleStyle
 					{
-						Color = "#ffffff",
+						Color = Theme.Chart.Text,
 						FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
 						FontWeight = 500
 					}
@@ -324,7 +327,7 @@
 					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
 					Labels = new LegendLabels
 					{
-						Colors = "#ffffff"
+						Colors = Theme.Chart.Text
 					}
 				},
 
@@ -334,6 +337,7 @@
 					Width = new List<int> { 0 }
 				}
 			};
+			ApplyThemeColors(PieChartOptions);
 		}
 
 
@@ -368,7 +372,7 @@
 				Text = "Tilskudd per måned",
 				Style = new TitleStyle
 				{
-					Color = "#ffffff",
+					Color = Theme.Chart.Text,
 					FontFamily = "Franklin Gothic Medium, Arial Narrow, Arial, sans-serif",
 					FontWeight = 500,
 
@@ -383,7 +387,7 @@
 				{
 					Style = new AxisLabelStyle
 					{
-						Colors = "#ffffff"
+						Colors = Theme.Chart.Text
 					}
 				}
 			},
@@ -396,7 +400,7 @@
 						{
 							Style = new AxisLabelStyle
 							{
-								Colors = "#ffffff"
+								Colors = Theme.Chart.Text
 							}
 						}
 					}
@@ -407,10 +411,14 @@
 				Show = true,
 				Labels = new LegendLabels
 				{
-					Colors = "#ffffff"
+					Colors = Theme.Chart.Text
 				}
 			}
 		};
+
+		ApplyThemeColors(ChartOptions);
+		if (Theme.Chart.Grid != null)
+			ChartOptions.Grid = new Grid { BorderColor = Theme.Chart.Grid };
 
 		isLoading = false;
 		StateHasChanged();
@@ -421,6 +429,17 @@
 			await barChart.UpdateOptionsAsync(true, true, true);
 		}		
 	}
+
+	// Theme colours for things CSS can't reach. Standard leaves ApexCharts' defaults untouched.
+	private void ApplyThemeColors<T>(ApexChartOptions<T> options) where T : class
+	{
+		if (Theme.Chart.Palette != null)
+			options.Colors = Theme.Chart.Palette.ToList();
+
+		if (Theme.IsDark)
+		{
+			options.Tooltip ??= new Tooltip();
+			options.Tooltip.Theme = Mode.Dark;
+		}
+	}
 }
-
-
