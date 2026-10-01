@@ -6,8 +6,8 @@ namespace RMD.Data.Models.DTO
 	{
 		public int SongId { get; set; }
 
-		[Required(ErrorMessage = "A song title is required.")]
-		[StringLength(100, ErrorMessage = "The song title cannot exceed 100 characters.")]
+		[Required(ErrorMessage = "Tittel må fylles ut.")]
+		[StringLength(150, ErrorMessage = "Tittelen kan ikke være lengre enn 150 tegn.")]
 		public required string Title { get; set; }
 
 		public string? RemixArtist { get; set; }
@@ -18,12 +18,12 @@ namespace RMD.Data.Models.DTO
 		//[Required(ErrorMessage = "An artist is required.")]
 		//public required string Artist { get; set; }
 
-		[Required(ErrorMessage = "Song length is required.")]
+		[Required(ErrorMessage = "Lengde må fylles ut.")]
 		[RegularExpression(@"^[0-5]?\d:[0-5]\d$",
-		ErrorMessage = "Length input must match format: MM:SS")]
+		ErrorMessage = "Lengde må ha formatet MM:SS")]
 		public required string Length { get; set; }
 
-		[Required(ErrorMessage = "Song genre is required.")]
+		[Required(ErrorMessage = "Velg en sjanger.")]
 		public required string Genre { get; set; }
 
 
@@ -45,7 +45,7 @@ namespace RMD.Data.Models.DTO
 
 
 		// NEW - MANY-TO-MANY RELATIONSHIP
-		[Required(ErrorMessage = "At least one artist must be selected.")]
+		[Required(ErrorMessage = "Velg minst én artist.")]
 		public List<int> ArtistIds { get; set; } = new();
 		public List<int> RemixArtistIds { get; set; } = new();
 	}
