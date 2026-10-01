@@ -1,104 +1,80 @@
-.rmd-toast-container {
+/* Bottom-right on desktop, full width at the bottom on phones */
+.rmd-toast-region {
     position: fixed;
-    bottom: 5px;
-    margin-bottom: -0.5rem;
-    right: 15px;
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
-    z-index: 1051;
-    animation: fadeinout 5s ease-in-out forwards;
+    right: var(--rmd-gutter);
+    bottom: var(--rmd-gutter);
+    left: auto;
+    z-index: var(--rmd-z-toast);
+    width: min(calc(100vw - 2 * var(--rmd-gutter)), 30rem);
+    pointer-events: none;
 }
 
-.toast-success,
-.toast-info,
-.toast-warning,
-.toast-error
-{
-    position: relative;
-    width: 500px;
-    height: 70px;
-    padding: 16px;
+.rmd-toast {
+    display: flex;
+    align-items: center;
+    gap: var(--rmd-space-3);
+    padding: var(--rmd-space-3) var(--rmd-space-4);
     border-radius: 8px;
-    margin: 20px;
     background-color: var(--rmd-toast-bg);
-    display: flex;
-    align-content: center;
-    opacity: 100%;
-    z-index: 1050;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    animation: fadeinout 4s ease-in-out forwards;
 }
 
-p {
+.rmd-toast__icon {
+    flex: 0 0 auto;
+    font-size: 24px;
+}
+
+.rmd-toast__message {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
     color: var(--rmd-text);
     font-size: 15px;
-    margin-top: 7px;
+    overflow-wrap: anywhere;
 }
 
-.text_container p {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
-}
-
-.message-truncate {
-    display: inline-block;
-    max-width: 300px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-}
-
-/*info*/
-.bi-info-circle-fill {
-    color: var(--rmd-toast-info);
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-/*success*/
-.bi-check-circle-fill {
-    color: var(--rmd-toast-success);
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-/*warning*/
-.bi-exclamation-circle-fill {
-    color: var(--rmd-toast-warning);
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-/*error*/
-.bi-x-circle-fill {
-    color: var(--rmd-toast-error);
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-/*close*/
-.bi-x {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+.rmd-toast__close {
+    flex: 0 0 auto;
+    border: 0;
+    background: transparent;
     color: var(--rmd-text);
-    font-size: 16px;
+    font-size: 14px;
+    padding: var(--rmd-space-1);
     cursor: pointer;
+}
+
+/* Icon colours per toast type */
+.toast-info .rmd-toast__icon {
+    color: var(--rmd-toast-info);
+}
+
+.toast-success .rmd-toast__icon {
+    color: var(--rmd-toast-success);
+}
+
+.toast-warning .rmd-toast__icon {
+    color: var(--rmd-toast-warning);
+}
+
+.toast-error .rmd-toast__icon {
+    color: var(--rmd-toast-error);
 }
 
 @keyframes fadeinout {
     0% {
         opacity: 0;
+        transform: translateY(0.5rem);
     }
 
-    33% {
+    10% {
         opacity: 1;
+        transform: none;
     }
 
-    66% {
+    85% {
         opacity: 1;
     }
 

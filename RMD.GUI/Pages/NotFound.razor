@@ -1,12 +1,12 @@
-﻿@layout AuthLayout
+@layout AuthLayout
 @page "/notfound"
 @attribute [AllowAnonymous]
 
-<div class="notfound_container">
-    <h1 style="color: var(--rmd-text);">404</h1>
-    <h3 style="color: var(--rmd-text);">Fant ikke siden</h3>
+<PageTitle>RMD | Fant ikke siden</PageTitle>
 
-    <p style="color: var(--rmd-text);">
-        Siden du prøvde å nå finnes ikke, eller er flyttet.
-    </p>
+<div class="rmd-auth-card text-center">
+    <h1>404</h1>
+    <h2 class="h4">Fant ikke siden</h2>
+    <p>Siden du prøvde å nå finnes ikke, eller er flyttet.</p>
+    <a href="/dashboard" class="btn btn-success">Til dashboardet</a>
 </div>

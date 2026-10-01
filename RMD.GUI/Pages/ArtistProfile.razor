@@ -1,4 +1,4 @@
-@page "/Artist/{ArtistId:int}"
+﻿@page "/Artist/{ArtistId:int}"
 @attribute [Authorize]
 
 @using RMD.GUI.Pages.Components.Modals;
@@ -32,124 +32,107 @@
 
 @if (!notFound)
 {
-	<div class="header_wrapper">
-
-		<div class="header_contents">
-
+	<div class="rmd-page">
+		<section class="artist-hero">
 			<img src="@(SafeUrl.ForHref(artist?.ProfilePicUrl) ?? "images/no_artist_image.png")"
-				 alt="Artist Press Picture"
-				 class="artist_profile_pic" />
+				 alt=""
+				 class="artist-hero__pic" />
+			<h1 class="artist-hero__name">@artist?.Name</h1>
+		</section>
 
+		<div class="artist-layout">
+			<section class="rmd-panel artist-info" aria-label="Artistinformasjon">
+				<h2 class="h4">Artistinformasjon</h2>
 
-			<h3>@artist?.Name</h3>
-		</div>
-	</div>
+				<dl class="artist-info__facts">
+					<dt>Nasjonalitet</dt>
+					<dd>@artist?.Nationality</dd>
 
-	<div class="table_and_box">
-		<div class="table-container">
-			<table class="table table-bordered table-dark table-striped table-hover">
-				<thead class="thead-light">
-					<tr>
-						<th>Tittel</th>
-						<th>Lengde</th>
-						<th>Spilt i EP</th>
-						<th>Kilde URL</th>
-						<th>Lagret</th>
-						<th>Favoritt</th>
-					</tr>
-				</thead>
+					@if (genres.Length > 0)
+					{
+						<dt>Sjanger</dt>
+						<dd>🎵 @genres</dd>
+					}
 
-				<tbody>
-				@foreach (var song in songs){
-					var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
-					<tr>
-						<td class="text-truncate" style="max-width: 400px">@song.Title</td>
-						<td>@song.Length</td>
-						<td>@song.PlayedInEp</td>
-						<td>
-							@if (songUrl != null)
-							{
-								<a href="@songUrl"
-									target="_blank"
-									rel="noopener noreferrer"
-									title="@songUrl"
-									style="text-decoration: none;">
-									🔗
+					<dt>Låter</dt>
+					<dd>@songs.Count</dd>
+				</dl>
+
+				@if (SocialLinks.Any())
+				{
+					<ul class="artist-info__links">
+						@foreach (var (label, icon, url) in SocialLinks)
+						{
+							<li>
+								<a href="@url" target="_blank" rel="noopener noreferrer">
+									<img src="@icon" alt="" class="socials_icons" />
+									@label
 								</a>
-							}
-						</td>
-						<td>@(song.Stored ? "✅" : "❌")</td>
-						<td>@(song.Favorite ? "⭐" : "❌")</td>
-					</tr>}
-				</tbody>
-			</table>
+							</li>
+						}
+					</ul>
+				}
 
-			@if (!isLoading && songs.Count == 0)
-			{
-				<div class="load_container">
-					<div class="load_contents">
-						<p class="load_text">Artisten er ikke tilknyttet noen låter ennå...</p>
-					</div>
+				<div class="rmd-cluster">
+					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning">
+						<i class="bi bi-pencil"></i> Rediger artist
+					</button>
+					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger">
+						<i class="bi bi-trash3"></i> Fjern artist
+					</button>
 				</div>
-			}
+			</section>
 
-			@if (isLoading)
-			{
-				<div class="load_container">
-					<div class="load_contents">
-						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-						<p class="load_text">Laster inn låter...</p>
-					</div>
-				</div>
-			}
-		</div>
-
-		<div class="info_box">
-
-
-			<div class="info_box_text">
-
-				<h4><b>Artistinformasjon</b></h4>
-
-				<div class="text_control">
-					<p><b>@artist?.Nationality</b></p>
-				</div>
-				@if (genres.Length > 0)
+			<section class="artist-songs" aria-label="Låter">
+				@if (isLoading)
 				{
-					<div class="text_control">
-						<p><b>🎵 @genres</b></p>
+					<div class="rmd-loader">
+						<img src="/images/Loader.gif" alt="" />
+						<p>Laster inn låter...</p>
 					</div>
 				}
-				@foreach (var (label, icon, url) in SocialLinks)
+				else if (songs.Count == 0)
 				{
-					<div class="text_control">
-						<a href="@url" target="_blank" rel="noopener noreferrer">
-							<img src="@icon" class="socials_icons" />
-							@label
-						</a>
-						<br>
-						<br>
+					<div class="rmd-empty">
+						<p>Artisten er ikke tilknyttet noen låter ennå...</p>
 					</div>
 				}
-			</div>
+				else
+				{
+					<div class="rmd-table-wrap">
+						<table class="table table-bordered table-dark table-striped table-hover rmd-table rmd-table--stack">
+							<thead>
+								<tr>
+									<th>Tittel</th>
+									<th>Lengde</th>
+									<th>Spilt i EP</th>
+									<th>Kilde URL</th>
+									<th>Lagret</th>
+									<th>Favoritt</th>
+								</tr>
+							</thead>
 
-			<div class="info_box_buttons">
-
-				<div class="button_wrapper">
-					<div class="edit_button">
-						<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
-							<i class="bi bi-pencil"></i> Rediger artist
-						</button>
+							<tbody>
+								@foreach (var song in songs)
+								{
+									var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
+									<tr>
+										<td class="rmd-cell-title rmd-truncate" style="--rmd-truncate-max: 26rem" title="@song.Title">@song.Title</td>
+										<td data-label="Lengde">@song.Length</td>
+										<td data-label="Spilt i EP">@song.PlayedInEp</td>
+										<td data-label="Kilde">@if (songUrl != null)
+											{
+												<a href="@songUrl" target="_blank" rel="noopener noreferrer" title="@songUrl">🔗</a>
+											}</td>
+										<td data-label="Lagret">@(song.Stored ? "✅" : "❌")</td>
+										<td data-label="Favoritt">@(song.Favorite ? "⭐" : "❌")</td>
+									</tr>
+								}
+							</tbody>
+						</table>
 					</div>
-
-					<div class="delete_button">
-						<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
-							<i class="bi bi-trash3"></i> Fjern artist
-						</button>
-					</div>
-				</div>
-			</div>
-
+				}
+			</section>
 		</div>
 	</div>
 }

@@ -1,4 +1,4 @@
-@page "/Songs"
+﻿@page "/Songs"
 @attribute [Authorize]
 @using RMD.GUI.Pages.Components.Modals;
 @using RMD.Data.Models;
@@ -31,158 +31,135 @@
 	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
 }
 
-<div class="search-button-checkbox-wrapper">
+<div class="rmd-page">
+	<div class="rmd-toolbar">
+		<input type="search"
+			   class="form-control rmd-search"
+			   placeholder="Søk etter låt eller artist"
+			   aria-label="Søk etter låt eller artist"
+			   value="@searchString"
+			   @oninput="OnSearchInputChanged" />
 
-	<div class="input-group mb-3 searchbar">
-		<input
-		type="text"
-		class="form-control search"
-		placeholder="Søk etter låt"
-		value="@searchString"
-		@oninput="OnSearchInputChanged"/>
-	</div>
+		<div class="rmd-cluster" role="group" aria-label="Filtre">
+			<div class="form-check form-check-inline m-0">
+				<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="e => SetTableFilters(SongFilterType.Played, e.Value is true)" />
+				<label class="form-check-label" for="playedFilter">Avspilt</label>
+			</div>
 
-	<div class="checkboxes">
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="e => SetTableFilters(SongFilterType.Played, e.Value is true)" />
-			<label class="form-check-label" for="playedFilter">Avspilt</label>
+			<div class="form-check form-check-inline m-0">
+				<input class="form-check-input" type="checkbox" id="storedFilter" @onchange="e => SetTableFilters(SongFilterType.Stored, e.Value is true)" />
+				<label class="form-check-label" for="storedFilter">Lagret</label>
+			</div>
+
+			<div class="form-check form-check-inline m-0">
+				<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="e => SetTableFilters(SongFilterType.Wanted, e.Value is true)" />
+				<label class="form-check-label" for="wantedFilter">Ønsket</label>
+			</div>
+
+			<div class="form-check form-check-inline m-0">
+				<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="e => SetTableFilters(SongFilterType.ExtendedMix, e.Value is true)" />
+				<label class="form-check-label" for="extendedMixFilter">Extended Mix</label>
+			</div>
+
+			<div class="form-check form-check-inline m-0">
+				<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="e => SetTableFilters(SongFilterType.Favorite, e.Value is true)" />
+				<label class="form-check-label" for="favoriteFilter">Favoritt</label>
+			</div>
 		</div>
 
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="storedFilter" @onchange="e => SetTableFilters(SongFilterType.Stored, e.Value is true)" />
-			<label class="form-check-label" for="storedFilter">Lagret</label>
-		</div>
-
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="e => SetTableFilters(SongFilterType.Wanted, e.Value is true)" />
-			<label class="form-check-label" for="wantedFilter">Ønsket</label>
-		</div>
-
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="e => SetTableFilters(SongFilterType.ExtendedMix, e.Value is true)" />
-			<label class="form-check-label" for="extendedMixFilter">Extended Mix</label>
-		</div>
-
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="e => SetTableFilters(SongFilterType.Favorite, e.Value is true)" />
-			<label class="form-check-label" for="favoriteFilter">Favoritt</label>
-		</div>
-	</div>
-
-	@if (isSelected)
-	{
-		<div class="button_wrapper">
-			<div class="edit_button">
-				<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
+		@if (isSelected)
+		{
+			<div class="rmd-toolbar__actions">
+				<button type="button" @onclick="ToggleEditModal" class="btn btn-warning">
 					<i class="bi bi-pencil"></i> Rediger låt
 				</button>
-			</div>
-
-			<div class="delete_button">
-				<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
+				<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger">
 					<i class="bi bi-trash3"></i> Fjern låt
 				</button>
-
-
 			</div>
-		</div>
-	}
+		}
+	</div>
 
-</div>
-
-@if (loadError != null)
-{
-	<p class="text-danger">@loadError</p>
-}
-
-<div class="table-container">
-	<table class="table table-bordered table-dark table-striped table-hover">
-		<thead class="thead-light">
-			<tr>
-				<th>#</th>
-				<th>Tittel</th>
-				<th>Artister</th>
-				<th>Remixer</th>
-				<th>Lengde</th>
-				<th>Sjanger</th>
-				<th>EP</th>
-				<th>URL</th>
-				<th>Extended</th>
-				<th>Favoritt</th>
-				<th>Lagret</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			@foreach (var song in VisibleSongs)
-			{
-				// Strings containing tooltip data
-				var remixNames = ArtistNames(song, ArtistRole.Remix);
-				var artistNames = ArtistNames(song, ArtistRole.Primary);
-				var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
-
-				// Table data inserted + tooltip data
-				<tr @onclick="() => SelectSong(song)"
-					class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
-					<td>@song.SongId</td>
-					<td class="text-truncate"
-						style="max-width: 350px"
-						title="@song.Title">@song.Title</td>
-					<td class="text-truncate"
-						style="max-width: 200px"
-						title="@artistNames">
-							@if (artistNames.Length > 0)
-							{
-								@artistNames
-							}
-							else
-							{
-								<em>Ingen artister</em>
-							}
-					</td>
-					<td class="text-truncate"
-						style="max-width: 200px"
-						title="@remixNames">@remixNames</td>
-					<td>@song.Length</td>
-					<td>@song.Genre</td>
-					<td>@song.PlayedInEp</td>
-					<td class="text-truncate">
-						@if (songUrl != null)
-						{
-							<a href="@songUrl"
-							   target="_blank"
-							   rel="noopener noreferrer"
-							   title="@songUrl"
-							   style="text-decoration: none;"
-							   @onclick:stopPropagation="true">
-								🔗
-							</a>
-
-						}
-					</td>
-					<td>@(song.ExtendedMix ? "✅" : "❌")</td>
-					<td>@(song.Favorite ? "⭐" : "❌")</td>
-					<td>@(song.Stored ? "✅" : "❌")</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-
-	@if (isLoaded && allSongs.Count > 0 && !VisibleSongs.Any())
+	@if (loadError != null)
 	{
-		<p class="text-center mt-3">Ingen låter matcher søket eller filtrene.</p>
+		<p class="text-danger">@loadError</p>
 	}
 
 	@if (!isLoaded)
 	{
-		<div class="load_container">
-			<div class="load_contents">
-				<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-				<p class="load_text">Laster inn låter...</p>
-			</div>
+		<div class="rmd-loader">
+			<img src="/images/Loader.gif" alt="" />
+			<p>Laster inn låter...</p>
 		</div>
 	}
+	else if (allSongs.Count > 0 && !VisibleSongs.Any())
+	{
+		<div class="rmd-empty">
+			<p>Ingen låter matcher søket eller filtrene.</p>
+		</div>
+	}
+	else if (allSongs.Count > 0)
+	{
+		<p class="rmd-muted m-0 d-md-none">Trykk på en låt for å redigere eller slette den.</p>
 
+		<div class="rmd-table-wrap songs-table">
+			<table class="table table-bordered table-dark table-striped table-hover rmd-table rmd-table--stack is-selectable">
+				<thead>
+					<tr>
+						<th class="rmd-col-xl">#</th>
+						<th>Tittel</th>
+						<th>Artister</th>
+						<th class="rmd-col-lg">Remixer</th>
+						<th>Lengde</th>
+						<th class="rmd-col-lg">Sjanger</th>
+						<th class="rmd-col-xl">EP</th>
+						<th>URL</th>
+						<th class="rmd-col-xl">Extended</th>
+						<th>Favoritt</th>
+						<th class="rmd-col-lg">Lagret</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@foreach (var song in VisibleSongs)
+					{
+						var remixNames = ArtistNames(song, ArtistRole.Remix);
+						var artistNames = ArtistNames(song, ArtistRole.Primary);
+						var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
+
+						<tr @onclick="() => SelectSong(song)"
+							class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")"
+							aria-selected="@(selectedSong?.SongId == song.SongId ? "true" : "false")">
+							<td class="rmd-col-xl rmd-hide-stack" data-label="#">@song.SongId</td>
+							<td class="rmd-cell-title rmd-truncate" style="--rmd-truncate-max: 22rem" title="@song.Title">@song.Title</td>
+							<td class="rmd-truncate" style="--rmd-truncate-max: 14rem" title="@artistNames" data-label="Artister">
+								@if (artistNames.Length > 0)
+								{
+									@artistNames
+								}
+								else
+								{
+									<em>Ingen artister</em>
+								}
+							</td>
+							<td class="rmd-col-lg rmd-truncate" style="--rmd-truncate-max: 14rem" title="@remixNames" data-label="Remix">@remixNames</td>
+							<td data-label="Lengde">@song.Length</td>
+							<td class="rmd-col-lg" data-label="Sjanger">@song.Genre</td>
+							<td class="rmd-col-xl" data-label="Spilt i EP">@song.PlayedInEp</td>
+							<td data-label="Kilde">@if (songUrl != null)
+								{
+									<a href="@songUrl" target="_blank" rel="noopener noreferrer" title="@songUrl"
+									   @onclick:stopPropagation="true">🔗</a>
+								}</td>
+							<td class="rmd-col-xl" data-label="Extended">@(song.ExtendedMix ? "✅" : "❌")</td>
+							<td data-label="Favoritt">@(song.Favorite ? "⭐" : "❌")</td>
+							<td class="rmd-col-lg" data-label="Lagret">@(song.Stored ? "✅" : "❌")</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
 </div>
 
 

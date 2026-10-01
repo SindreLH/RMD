@@ -1,23 +1,23 @@
 ﻿@inherits LayoutComponentBase
 @using RMD.GUI.Pages.Components.Toasts;
-@using RMD.Business.Services;
-
 
 <div class="auth_layout">
     <video class="bg_video"
            autoplay
            muted
            loop
-           playsinline>
+           playsinline
+           aria-hidden="true">
         <source src="video/video_bg_login_3.mp4" type="video/mp4" />
     </video>
 
-	<img class="rmd_logo" src="images/rmd_logo.png" width="130" height="50" alt="RMD">
+    <header class="auth_header">
+        <img class="rmd_logo" src="images/rmd_logo.png" width="130" height="50" alt="RMD">
+    </header>
 
     <ToastComponent />
 
-    <div class="auth_content">
-        
+    <main class="auth_content">
         @Body
-    </div>
+    </main>
 </div>

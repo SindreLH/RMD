@@ -1,4 +1,4 @@
-@page "/Artists"
+﻿@page "/Artists"
 @attribute [Authorize]
 @using RMD.Business.Services
 @using RMD.Data.Models
@@ -15,66 +15,48 @@
 	<ErrorModalEmptyDb IsVisible="true" OnClose="ToggleEmptyDbModal" />
 }
 
-<div class="search-button-wrapper">
+<div class="rmd-page">
+	<div class="rmd-toolbar">
+		<input type="search"
+			   class="form-control rmd-search"
+			   placeholder="Søk etter artist"
+			   aria-label="Søk etter artist"
+			   value="@searchString"
+			   @oninput="OnSearchInputChanged" />
 
-	<div class="input-group mb-3 searchbar">
-		<input
-		type="text"
-		class="form-control search"
-		placeholder="Søk etter artist"
-		aria-label="Søk etter artist"
-		value="@searchString"
-		@oninput="OnSearchInputChanged"/>
-	</div>
-
-
-	<div class="checkboxes">
-		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="alphabetical"
-			@bind="sortAlphabetically" />
+		<div class="form-check form-check-inline m-0">
+			<input class="form-check-input" type="checkbox" id="alphabetical" @bind="sortAlphabetically" />
 			<label class="form-check-label" for="alphabetical">Alfabetisk</label>
 		</div>
 	</div>
-</div>
 
-<div class="grid_container">
-	@foreach (var artist in VisibleArtists)
+	@if (!isLoaded)
 	{
-		var picture = SafeUrl.ForHref(artist.ProfilePicUrl);
-		<a href="/Artist/@artist.ArtistId">
-			<div class="artist_card">
-				@if(picture == null)
-				{
-					<img src="images/no_artist_image.png"
-					alt="Default artist icon"
-					class="artist_profile_pic" />
-				}
-				else
-				{
-					<img src="@picture"
-					alt="Artist Press Picture"
-					class="artist_profile_pic" />
-				}
-				<h3 class="text-truncate" style="max-width: 200px" title="@artist.Name">@artist.Name</h3>
-			</div>
-		</a>
+		<div class="rmd-loader">
+			<img src="/images/Loader.gif" alt="" />
+			<p>Laster inn artister...</p>
+		</div>
+	}
+	else if (allArtists.Count > 0 && !VisibleArtists.Any())
+	{
+		<div class="rmd-empty">
+			<p>Ingen artister matcher "@searchString".</p>
+		</div>
+	}
+	else if (allArtists.Count > 0)
+	{
+		<div class="rmd-card-grid artist-grid">
+			@foreach (var artist in VisibleArtists)
+			{
+				var picture = SafeUrl.ForHref(artist.ProfilePicUrl) ?? "images/no_artist_image.png";
+				<a href="/Artist/@artist.ArtistId" class="artist-card">
+					<img src="@picture" alt="" class="artist-card__pic" loading="lazy" />
+					<span class="artist-card__name" title="@artist.Name">@artist.Name</span>
+				</a>
+			}
+		</div>
 	}
 </div>
-
-@if (isLoaded && allArtists.Count > 0 && !VisibleArtists.Any())
-{
-	<p class="text-center mt-3">Ingen artister matcher "@searchString".</p>
-}
-
-@if (!isLoaded)
-{
-	<div class="load_container">
-		<div class="load_contents">
-			<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-			<p class="load_text">Laster inn artister...</p>
-		</div>
-	</div>
-}
 
 @code {
 	private List<Artist> allArtists = new();

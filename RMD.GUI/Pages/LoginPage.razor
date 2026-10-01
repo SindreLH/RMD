@@ -12,44 +12,35 @@
 
 
 <PageTitle>RMD | Logg inn</PageTitle>
-<div class="main_container">
+<div class="rmd-auth-card">
+	<h1>Logg inn</h1>
 
-	<div class="login_contents">
+	<form method="post" action="/auth/login" class="d-flex flex-column gap-3">
+		<AntiforgeryInput />
+		<input type="hidden" name="returnUrl" value="@safeReturnUrl" />
 
-		<h1> Logg inn</h1>
+		<div class="rmd-field">
+			<label for="email">E-post</label>
+			<input id="email" name="Email" type="email" autocomplete="username" class="form-control" required />
+		</div>
 
-		<form method="post" action="/auth/login">
-			<AntiforgeryInput />
-			<input type="hidden" name="returnUrl" value="@safeReturnUrl" />
+		<div class="rmd-field">
+			<label for="password">Passord</label>
+			<input id="password" name="Password" type="password" autocomplete="current-password" class="form-control" required />
+		</div>
 
-			<div class="fields_container">
-				<div class="form-group field_item">
-					<label for="email">E-post</label>
-					<input id="email" name="Email" type="email" autocomplete="username" class="form-control" required />
-				</div>
+		<div class="rmd-auth-row">
+			<label class="d-inline-flex align-items-center gap-2">
+				<input type="checkbox" name="RememberMe" value="true" class="form-check-input m-0" />
+				Husk meg
+			</label>
+			<a href="/ForgotPassword">Glemt passord?</a>
+		</div>
 
-				<div class="form-group field_item">
-					<label for="password">Passord</label>
-					<input id="password" name="Password" type="password" autocomplete="current-password" class="form-control" required />
-				</div>
-			</div>
-
-			<div class="remember_me">
-				<label>
-					<input type="checkbox" name="RememberMe" value="true" />
-					Husk meg
-				</label>
-				<a href="/ForgotPassword">Glemt passord?</a>
-			</div>
-
-			<div class="button_container">
-				<button type="submit" class="btn btn-success">
-					Logg inn
-				</button>
-			</div>
-		</form>
-
-	</div>
+		<button type="submit" class="btn btn-success mt-3">
+			Logg inn
+		</button>
+	</form>
 </div>
 
 @code {

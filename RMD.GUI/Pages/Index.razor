@@ -9,69 +9,50 @@
 
 <PageTitle>RMD | Dashboard</PageTitle>
 
-<div class="main_container">
-	<div class="left_container">
+<div class="dashboard">
+	<div class="dashboard__stats">
+		<section class="rmd-panel stat-card" aria-label="Låter">
+			@if (isLoading)
+			{
+				<div class="stat-card__loader">
+					<img src="/images/Loader.gif" alt="" />
+					<p>Laster inn låter...</p>
+				</div>
+			}
+			else
+			{
+				<p class="stat-card__value">@(songCount?.Value ?? 0) Låter</p>
+				<p>@(playedSongCount?.Value ?? 0) Promoterte</p>
+				<p class="stat-card__latest">
+					<span class="green_plus">+</span>
+					@(latestSong != null && latestSong.IsSuccess ? latestSong.Value.Title : "Ingen sanger funnet")
+				</p>
+			}
+		</section>
 
-		<div class="cards_container">
-			<div class="data_card">
-				@if (isLoading)
-				{
-					<div class="card_loader">
-						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-						<p class="card_loader_text">Laster inn låter...</p>
-					</div>
-				}
-				else
-				{
-					<h3><strong>@songCount?.Value Låter</strong></h3>
-					<p>@playedSongCount?.Value Promoterte</p>
-					<div class="newly_added">
-						@if (latestSong != null && latestSong.IsSuccess)
-						{
-							<p class="green_plus">+</p>
-							<p>@latestSong.Value.Title</p>
-						}
-						else
-						{
-							<p class="green_plus">+</p>
-							<p>Ingen sanger funnet</p>
-						}
-					</div>
-				}
-			</div>
+		<section class="rmd-panel stat-card" aria-label="Artister">
+			@if (isLoading)
+			{
+				<div class="stat-card__loader">
+					<img src="/images/Loader.gif" alt="" />
+					<p>Laster inn artister...</p>
+				</div>
+			}
+			else
+			{
+				<p class="stat-card__value">@(artistCount?.Value ?? 0) Artister</p>
+				<p>@(artistNationCount?.Value ?? 0) Nasjonaliteter</p>
+				<p class="stat-card__latest">
+					<span class="green_plus">+</span>
+					@(latestArtist != null && latestArtist.IsSuccess ? latestArtist.Value.Name : "Ingen artister funnet")
+				</p>
+			}
+		</section>
+	</div>
 
-
-			<div class="data_card">
-				@if (isLoading)
-				{
-					<div class="card_loader">
-						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-						<p class="card_loader_text">Laster inn artister...</p>
-					</div>
-				}
-				else
-				{
-					<h3><strong>@artistCount?.Value Artister</strong></h3>
-					<p>@artistNationCount?.Value Nasjonaliteter</p>
-					<div class="newly_added">
-						@if (latestArtist != null && latestArtist.IsSuccess)
-						{
-							<p class="green_plus">+</p>
-							<p>@latestArtist.Value.Name</p>
-						}
-						else
-						{
-							<p class="green_plus">+</p>
-							<p>Ingen artister funnet</p>
-						}
-					</div>
-				}
-			</div>
-		</div>
-
-		<div class="graphs_container">
-			<div class="chart">
-				<ApexChart TItem="BarChartData"
+	<div class="dashboard__charts">
+		<section class="rmd-panel chart-card" aria-label="Tilskudd per måned">
+			<ApexChart TItem="BarChartData"
 						   @ref="barChart"
 						   Options="ChartOptions">
 					<ApexPointSeries TItem="BarChartData"
@@ -87,10 +68,10 @@
 									 XValue="e => e.Month"
 									 YValue="e => e.NewArtists" />
 				</ApexChart>
-			</div>
+		</section>
 
-			<div class="chart">
-				@if (showPieChart)
+		<section class="rmd-panel chart-card" aria-label="Sjangerfordeling">
+			@if (showPieChart)
 				{
 					<ApexChart TItem="PieChartData"
 							   @ref="pieChart"
@@ -102,20 +83,19 @@
 										 XValue="e => e.Label" />
 					</ApexChart>
 				}
+		</section>
+	</div>
 
-			</div>
-
-		</div>
-
-		<div class="table_container">
-			<table class="table table-bordered table-dark table-striped table-hover">
-				<thead class="thead-light">
+	<section class="dashboard__wanted" aria-label="Ønskede låter">
+		<div class="rmd-table-wrap">
+			<table class="table table-bordered table-dark table-striped table-hover rmd-table rmd-table--stack">
+				<thead>
 					<tr>
-						<th class="hide-mobile">#</th>
+						<th class="rmd-col-xl">#</th>
 						<th>Ønsket låt</th>
-						<th class="hide-mobile">Lengde</th>
-						<th class="hide-mobile">Extended</th>
-						<th class="hide-mobile">Sjanger</th>
+						<th class="rmd-col-lg">Lengde</th>
+						<th class="rmd-col-xl">Extended</th>
+						<th class="rmd-col-lg">Sjanger</th>
 						<th>Kilde</th>
 					</tr>
 				</thead>
@@ -124,109 +104,100 @@
 					@foreach (var song in wantedSongs?.Value ?? Enumerable.Empty<Song>())
 					{
 						<tr>
-							<td class="hide-mobile">@song.SongId</td>
-							<td>@song.Title</td>
-							<td class="hide-mobile">@song.Length</td>
-							<td class="hide-mobile">@(song.ExtendedMix ? "✅" : "❌")</td>
-							<td class="hide-mobile">@song.Genre</td>
-							<td class="text-truncate" style="max-width: 180px">
-								@if (SafeUrl.ForHref(song.WantedSongUrl) is string wantedUrl)
+							<td class="rmd-col-xl rmd-hide-stack" data-label="#">@song.SongId</td>
+							<td class="rmd-cell-title">@song.Title</td>
+							<td class="rmd-col-lg" data-label="Lengde">@song.Length</td>
+							<td class="rmd-col-xl" data-label="Extended">@(song.ExtendedMix ? "✅" : "❌")</td>
+							<td class="rmd-col-lg" data-label="Sjanger">@song.Genre</td>
+							<td class="rmd-truncate" style="--rmd-truncate-max: 16rem" data-label="Kilde">@if (SafeUrl.ForHref(song.WantedSongUrl) is string wantedUrl)
 								{
-									<a href="@wantedUrl"
-									   target="_blank"
-									   rel="noopener noreferrer"
-									   title="@wantedUrl">
-										@wantedUrl
-									</a>
-								}
-							</td>
+									<a href="@wantedUrl" target="_blank" rel="noopener noreferrer" title="@wantedUrl">@wantedUrl</a>
+								}</td>
 						</tr>
 					}
-
 				</tbody>
 			</table>
-
-			@if (wantedSongs == null)
-			{
-				<div class="load_container">
-					<div class="load_contents">
-						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-						<p class="load_text">Laster inn låter...</p>
-					</div>
-				</div>
-			}
-
 		</div>
-	</div>
 
-	<div class="right_container">
+		@if (wantedSongs == null)
+		{
+			<div class="rmd-loader">
+				<img src="/images/Loader.gif" alt="" />
+				<p>Laster inn låter...</p>
+			</div>
+		}
+		else if (!wantedSongs.IsSuccess)
+		{
+			<div class="rmd-empty">
+				<p>Ingen ønskede låter akkurat nå.</p>
+			</div>
+		}
+	</section>
 
-		<div class="resources_container">
-			<h2 style="margin-left:3rem;">Ressurser</h2>
+	<aside class="rmd-panel dashboard__resources" aria-label="Ressurser">
+		<h2>Ressurser</h2>
 
-			<div class="icon_heading">
-				<i class="bi bi-info-circle-fill" style="color: var(--rmd-icon-accent);"></i>
-				<h5> Informasjon</h5>
-			</div>
-			
-			<div class="resource_item">
-				<a href="https://www.discogs.com">🔗 Discogs.com</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.lololyrics.com">🔗 Lololyrics.com</a>
-			</div>
-
-			<div class="icon_heading">
-				<i class="bi bi-cart4" style="color: var(--rmd-icon-accent);"></i>
-				<h5> Nettbutikker</h5>
-			</div>
-
-			<div class="resource_item">
-				<a href="https://www.beatport.com">🔗 Beatport.com</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.junodownload.com">🔗 Junodownload.com</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.hardstyle.com">🔗 Hardstyle.com</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.trackitdown.com">🔗 Trackitdown.com</a>
-			</div>
-
-			<div class="icon_heading">
-				<i class="bi bi-download" style="color: var(--rmd-icon-accent);"></i>
-				<h5> Nedlasting</h5>
-			</div>
-
-			
-			<div class="resource_item">
-				<a href="https://bootlegs-load.de/">🔗 Bootlegs-load.de</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.handsup.dance">🔗 Handsup.dance</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://handsuppowo.pl">🔗 Handsuppowo.pl</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://ytmp3.cc/5Hcs/">🔗 ytmp3.cc</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.domegarecords.com/bootlegs">🔗 Domega Records Bootlegs</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://www.youtube.com/watch?v=UyOZo6rzDvc">🔗 HHH YouTube Channel</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://drive.google.com/drive/folders/1m73grdC9----GRBPkwRjh1RfPXFfqmZG">🔗 Unreal Project Promo Drive</a>
-			</div>
-			<div class="resource_item">
-				<a href="https://nuteczki.eu/tags/hands+up">🔗 Nuteczki.eu Forums</a>
-			</div>
+		<div class="icon_heading">
+			<i class="bi bi-info-circle-fill" style="color: var(--rmd-icon-accent);"></i>
+			<h5> Informasjon</h5>
 		</div>
-	</div>
-
+		
+		<div class="resource_item">
+			<a href="https://www.discogs.com" target="_blank" rel="noopener noreferrer">🔗 Discogs.com</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.lololyrics.com" target="_blank" rel="noopener noreferrer">🔗 Lololyrics.com</a>
+		</div>
+		
+		<div class="icon_heading">
+			<i class="bi bi-cart4" style="color: var(--rmd-icon-accent);"></i>
+			<h5> Nettbutikker</h5>
+		</div>
+		
+		<div class="resource_item">
+			<a href="https://www.beatport.com" target="_blank" rel="noopener noreferrer">🔗 Beatport.com</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.junodownload.com" target="_blank" rel="noopener noreferrer">🔗 Junodownload.com</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.hardstyle.com" target="_blank" rel="noopener noreferrer">🔗 Hardstyle.com</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.trackitdown.com" target="_blank" rel="noopener noreferrer">🔗 Trackitdown.com</a>
+		</div>
+		
+		<div class="icon_heading">
+			<i class="bi bi-download" style="color: var(--rmd-icon-accent);"></i>
+			<h5> Nedlasting</h5>
+		</div>
+		
+		
+		<div class="resource_item">
+			<a href="https://bootlegs-load.de/" target="_blank" rel="noopener noreferrer">🔗 Bootlegs-load.de</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.handsup.dance" target="_blank" rel="noopener noreferrer">🔗 Handsup.dance</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://handsuppowo.pl" target="_blank" rel="noopener noreferrer">🔗 Handsuppowo.pl</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://ytmp3.cc/5Hcs/" target="_blank" rel="noopener noreferrer">🔗 ytmp3.cc</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.domegarecords.com/bootlegs" target="_blank" rel="noopener noreferrer">🔗 Domega Records Bootlegs</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://www.youtube.com/watch?v=UyOZo6rzDvc" target="_blank" rel="noopener noreferrer">🔗 HHH YouTube Channel</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://drive.google.com/drive/folders/1m73grdC9----GRBPkwRjh1RfPXFfqmZG" target="_blank" rel="noopener noreferrer">🔗 Unreal Project Promo Drive</a>
+		</div>
+		<div class="resource_item">
+			<a href="https://nuteczki.eu/tags/hands+up" target="_blank" rel="noopener noreferrer">🔗 Nuteczki.eu Forums</a>
+		</div>
+	</aside>
 </div>
 
 
@@ -256,9 +227,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await Task.Delay(300);
-
-
 		latestSong = await DashboardService.GetLatestSongAsync();
 		latestArtist = await DashboardService.GetLatestArtistAsync();
 		artistCount = await DashboardService.GetArtistCountAsync();
@@ -316,8 +284,8 @@
 				Chart = new Chart
 				{
 					Type = ChartType.Pie,
-					Width = "150%",
-					Height = "91%"
+					Width = "100%",
+					Height = 260
 				},
 
 				Legend = new Legend
@@ -363,8 +331,8 @@
 			Chart = new Chart
 			{
 				Type = ChartType.Bar,
-				Width = "139%",
-				Height = "90%"
+				Width = "100%",
+				Height = 260
 			},
 
 			Title = new Title

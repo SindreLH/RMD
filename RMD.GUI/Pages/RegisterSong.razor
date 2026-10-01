@@ -2,7 +2,6 @@
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Modals
 @using RMD.GUI.Pages.Components.Toasts
 
 @inject ToastService ToastService
@@ -13,231 +12,120 @@
 
 <PageTitle>RMD | Legg til låt</PageTitle>
 
+<section class="rmd-panel register-card">
+    <h2 class="h4 mb-4">Ny låt</h2>
 
-<div class="container_parent">
-    <div class="main_form_container">
-        <EditForm Model="newSongDto" OnValidSubmit="SaveSong" novalidate>
-            <DataAnnotationsValidator/>
-            <div id="a_b_container">
-                <div id="reg_song_part_a">
-                    <div id="form-group">
-                        <label for="song-title">Tittel</label>
-                        <InputText id="song-title" @bind-Value="newSongDto.Title" class="form-control"/>
-                    </div>
+    <EditForm Model="newSongDto" OnValidSubmit="SaveSong" novalidate>
+        <DataAnnotationsValidator/>
 
-                    <div id="form-group">
-                        <label for="song-length">Lengde</label>
-                        <InputText
-                            id="song-length"
-                            @bind-Value="newSongDto.Length"
-                            class="form-control"
-                            placeholder="MM:SS"
-                            pattern="^[0-5]?\d:[0-5]\d$"
-                            />
-
-                    </div>
-
-                    <div id="form-group">
-                        <label for="song-genre">Sjanger</label>
-                        <InputSelect id="song-genre" @bind-Value="newSongDto.Genre" class="form-control">
-                            <option value="" style="color: var(--rmd-option-placeholder);">Velg en sjanger</option>
-                            <option value="Hands Up">Hands Up</option>
-                            <option value="Hardstyle">Hardstyle</option>
-                            <option value="House">House</option>
-                            <option value="Trance">Trance</option>
-                            <option value="Happy Hardcore">Happy Hardcore</option>
-                        </InputSelect>
-                    </div>
-
-
-                    <div class="artist_rows_windows">
-                        <div id="form-group" >
-                            <label>Artister</label>
-
-                            @foreach (var row in artistRows)
-                            {
-                                <div class="artist_selection_container" @key="row.Key">
-                                    <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                        <option value="" style="color: var(--rmd-option-placeholder);">Velg en artist</option>
-                                        @foreach (var artist in allArtists)
-                                        {
-                                            <option value="@artist.ArtistId">@artist.Name</option>
-                                        }
-                                    </InputSelect>
-
-                                    @if (artistRows.Count > 1)
-                                    {
-                                        <button type="button"
-                                                class="btn btn-sm btn-danger ms-2"
-                                                @onclick="() => RemoveArtistRow(row.Key)">
-                                            -
-                                        </button>
-                                    }
-
-
-                                    @if (row == artistRows[^1] && artistRows.Count < MaxRows)
-                                    {
-                                        <button type="button"
-                                                class="btn btn-sm btn-light ms-2"
-                                                title="Legg til artist"
-                                                @onclick="AddArtistRows">
-                                            +
-                                        </button>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    @if(remixIsToggled == true)
-                    {
-                        <div class="artist_rows_windows" style="margin-top: 1rem;">
-                            <div id="form-group">
-                                <label>Remix artister</label>
-
-                                @foreach (var row in remixerRows)
-                                {
-                                    <div class="artist_selection_container" @key="row.Key">
-                                        <InputSelect @bind-Value="row.SelectedId" TValue="int?" class="form-control">
-                                            <option value="" style="color: var(--rmd-option-placeholder);">Velg en remix artist</option>
-                                            @foreach (var artist in allArtists)
-                                            {
-                                                <option value="@artist.ArtistId">@artist.Name</option>
-                                            }
-                                        </InputSelect>
-
-                                        @if (remixerRows.Count > 1)
-                                        {
-                                            <button type="button"
-                                                    class="btn btn-sm btn-danger ms-lg-3"
-                                                    @onclick="() => RemoveRemixRow(row.Key)">
-                                                -
-                                            </button>
-
-
-                                        }
-
-
-                                        @if (row == remixerRows[^1] && remixerRows.Count < MaxRows)
-                                        {
-                                            <button type="button" class="btn btn-sm btn-light ms-2" title="Legg til remixartist" @onclick="AddRemixRows">+</button>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    }
-
-
-
+        <div class="rmd-form-grid">
+            <div class="rmd-fieldset">
+                <div class="rmd-field">
+                    <label for="song-title">Tittel</label>
+                    <InputText id="song-title" @bind-Value="newSongDto.Title" class="form-control"/>
+                    <ValidationMessage For="@(() => newSongDto.Title)" />
                 </div>
-                <div id="reg_song_part_b">
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="remixSwitch" @bind="remixIsToggled">
-                        <label class="form-check-label" for="remixSwitch">Remix</label>
-                        <label class="col-form-label-sm">Aktiver artistvalg for remixartist.</label>
-                    </div>
-
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="newSongDto.ExtendedMix">
-                        <label class="form-check-label" for="extendedMixSwitch">Extended Mix</label>
-                        <label class="col-form-label-sm">Mix med intro og outro.</label>
-                    </div>
-
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="favoriteSwitch" @bind="newSongDto.Favorite">
-                        <label class="form-check-label" for="favoriteSwitch">Favoritt</label>
-                        <label class="col-form-label-sm">Låten har favorittstatus.</label>
-                    </div>
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input"
-                        type="checkbox"
-                        id="playedSwitch"
-                        @bind="playedIsToggled" />
-                        <label class="form-check-label" for="playedSwitch">Spilt</label>
-                        <label class="col-form-label-sm">Låten er spilt i en tidligere mixtape.</label>
-                    </div>
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="storedSwitch" @bind="newSongDto.Stored">
-                        <label class="form-check-label" for="storedSwitch">Lagret</label>
-                        <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
-                    </div>
-
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input"
-                        type="checkbox"
-                        id="wantedSwitch"
-                        @bind="wantedIsToggled" />
-                        <label class="form-check-label" for="wantedSwitch">Ønsket</label>
-                        <label class="col-form-label-sm">Låten er ønsket og må skaffes.</label>
-                    </div>
-
-                    @if (playedIsToggled)
-                    {
-                        <div class="toggledInput">
-                            <div id="form-group">
-                                <label for="song-ep">Mixtape vol.</label>
-                                <InputNumber id="song-ep" min="0" class="form-control number_ticker" @bind-Value="newSongDto.PlayedInEp" />
-                                <label class="col-form-label-sm">Låten er spilt i ep</label>
-                            </div>
-                        </div>
-                    }
-
-                    @if (wantedIsToggled)
-                    {
-                        <div class="toggledInput">
-                            <div id="form-group">
-                                <label for="song-url">Låtkilde</label>
-                                <InputText id="song-url" type="url" class="form-control" @bind-Value="newSongDto.WantedSongUrl" />
-                                <label class="col-form-label-sm">URL til låten</label>
-                            </div>
-                        </div>
-                    }
-
+                <div class="rmd-field">
+                    <label for="song-length">Lengde</label>
+                    <InputText id="song-length"
+                               @bind-Value="newSongDto.Length"
+                               class="form-control"
+                               placeholder="MM:SS"
+                               pattern="^[0-5]?\d:[0-5]\d$" />
+                    <ValidationMessage For="@(() => newSongDto.Length)" />
                 </div>
+
+                <div class="rmd-field">
+                    <label for="song-genre">Sjanger</label>
+                    <InputSelect id="song-genre" @bind-Value="newSongDto.Genre" class="form-control">
+                        @GenreOptions.Options
+                    </InputSelect>
+                    <ValidationMessage For="@(() => newSongDto.Genre)" />
+                </div>
+
+                <ArtistPicker Label="Artister" Artists="allArtists" Rows="artistRows" />
+
+                @if (remixIsToggled)
+                {
+                    <ArtistPicker Label="Remix artister" Placeholder="Velg en remix artist" Artists="allArtists" Rows="remixerRows" />
+                }
             </div>
 
-            <div class="save_button">
-                <button type="submit" class="btn btn-success" disabled="@isSaving">
-                    <i class="bi bi-floppy-fill"></i> @(isSaving ? "Lagrer..." : "Lagre låt")
-                </button>
+            <div class="rmd-fieldset">
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="remixSwitch" @bind="remixIsToggled">
+                    <label class="form-check-label" for="remixSwitch">Remix</label>
+                    <small>Aktiver artistvalg for remixartist.</small>
+                </div>
+
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="newSongDto.ExtendedMix">
+                    <label class="form-check-label" for="extendedMixSwitch">Extended Mix</label>
+                    <small>Mix med intro og outro.</small>
+                </div>
+
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="favoriteSwitch" @bind="newSongDto.Favorite">
+                    <label class="form-check-label" for="favoriteSwitch">Favoritt</label>
+                    <small>Låten har favorittstatus.</small>
+                </div>
+
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="playedSwitch" @bind="playedIsToggled" />
+                    <label class="form-check-label" for="playedSwitch">Spilt</label>
+                    <small>Låten er spilt i en tidligere mixtape.</small>
+                </div>
+
+                @if (playedIsToggled)
+                {
+                    <div class="rmd-field">
+                        <label for="song-ep">Mixtape vol.</label>
+                        <InputNumber id="song-ep" min="0" class="form-control" @bind-Value="newSongDto.PlayedInEp" />
+                    </div>
+                }
+
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="storedSwitch" @bind="newSongDto.Stored">
+                    <label class="form-check-label" for="storedSwitch">Lagret</label>
+                    <small>Låten er lagret i samlingen.</small>
+                </div>
+
+                <div class="form-check form-switch rmd-switch">
+                    <input class="form-check-input" type="checkbox" id="wantedSwitch" @bind="wantedIsToggled" />
+                    <label class="form-check-label" for="wantedSwitch">Ønsket</label>
+                    <small>Låten er ønsket og må skaffes.</small>
+                </div>
+
+                @if (wantedIsToggled)
+                {
+                    <div class="rmd-field">
+                        <label for="song-url">Låtkilde (URL)</label>
+                        <InputText id="song-url" type="url" class="form-control" @bind-Value="newSongDto.WantedSongUrl" />
+                    </div>
+                }
             </div>
+        </div>
 
-            <div class="validation-container-song">
-                <ValidationSummary class="fade-in"/>
-            </div>
-        </EditForm>
-    </div>
-
-
-
-</div>
+        <div class="register-card__actions">
+            <button type="submit" class="btn btn-success" disabled="@isSaving">
+                <i class="bi bi-floppy-fill"></i> @(isSaving ? "Lagrer..." : "Lagre låt")
+            </button>
+        </div>
+    </EditForm>
+</section>
 
 @code {
-    private const int MaxRows = 5;
-
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
     private bool remixIsToggled = false;
     private bool isSaving = false;
-    private List<Artist> allArtists = new();
+    private List<Artist>? allArtists;
     private SongDto newSongDto = EmptySong();
+
     // Row set up for both artists and remixers
-
-    private class ArtistRow
-    {
-        public Guid Key { get; } = Guid.NewGuid();
-        public int? SelectedId { get; set; } = null;
-    }
-
-    private List<ArtistRow> artistRows = new() { new ArtistRow() };
-    private List<ArtistRow> remixerRows = new() { new ArtistRow() };
+    private List<ArtistPickerRow> artistRows = new() { new ArtistPickerRow() };
+    private List<ArtistPickerRow> remixerRows = new() { new ArtistPickerRow() };
 
     private static SongDto EmptySong() => new SongDto
     {
@@ -248,43 +136,10 @@
         Genre = String.Empty,
     };
 
-    void AddArtistRows()
-    {
-        if (artistRows.Count < MaxRows) artistRows.Add(new ArtistRow());
-        else WarnRowLimit();
-    }
-    void RemoveArtistRow(Guid key)
-    {
-        if(artistRows.Count == 1) return;
-        var idx = artistRows.FindIndex(r => r.Key == key);
-        if (idx >= 0) artistRows.RemoveAt(idx);
-
-    }
-
-    void AddRemixRows()
-    {
-        if (remixerRows.Count < MaxRows) remixerRows.Add(new ArtistRow());
-        else WarnRowLimit();
-    }
-    void RemoveRemixRow(Guid key)
-    {
-        if (remixerRows.Count == 1) return;
-        remixerRows.RemoveAll(r => r.Key == key);
-    }
-
-    void WarnRowLimit() => ToastService.ShowToast($"ADVARSEL: Maks {MaxRows} artister per låt.", ToastType.Warning);
-
-
     protected override async Task OnInitializedAsync()
     {
         var result = await ArtistService.GetAllArtistsAsync();
-
-        if (result.IsSuccess)
-        {
-            allArtists = result.Value
-                .OrderBy(a => a.Name)
-                .ToList();
-        }
+        allArtists = result.IsSuccess ? result.Value.OrderBy(a => a.Name).ToList() : new();
     }
 
     private async Task SaveSong()
@@ -296,21 +151,10 @@
         newSongDto.Played = playedIsToggled;
         newSongDto.Wanted = wantedIsToggled;
 
-        // New 22.09.25: On Save - Filter Non-Null Selections
-        newSongDto.ArtistIds = artistRows
-            .Where(r => r.SelectedId.HasValue)
-            .Select(r => r.SelectedId!.Value)
-            .Distinct()
-            .ToList();
+        newSongDto.ArtistIds = ArtistPicker.SelectedIds(artistRows);
 
         // Turning the Remix switch off drops any remix artists chosen earlier
-        newSongDto.RemixArtistIds = remixIsToggled
-            ? remixerRows
-                .Where(r => r.SelectedId.HasValue)
-                .Select(r => r.SelectedId!.Value)
-                .Distinct()
-                .ToList()
-            : new();
+        newSongDto.RemixArtistIds = remixIsToggled ? ArtistPicker.SelectedIds(remixerRows) : new();
 
         if (newSongDto.ArtistIds.Count == 0)
         {
@@ -335,8 +179,8 @@
             ToastService.ShowToast($"SUKSESS! {Shorten(result.Value.Title)} ble opprettet! ", ToastType.Success);
 
             // Resetting the form
-            artistRows = new() {new ArtistRow()};
-            remixerRows = new() {new ArtistRow()};
+            artistRows = new() { new ArtistPickerRow() };
+            remixerRows = new() { new ArtistPickerRow() };
             playedIsToggled = false;
             wantedIsToggled = false;
             remixIsToggled = false;
@@ -345,7 +189,7 @@
         else if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
         {
             //Displaying the first artist in instances where there are multiple, defaults to "Ukjent artist" when there are none
-            var artistName = allArtists
+            var artistName = allArtists?
                 .FirstOrDefault(a => newSongDto.ArtistIds.Contains(a.ArtistId))?.Name ?? "(Ukjent artist)";
 
             ToastService.ShowToast($"ADVARSEL: {Shorten(newSongDto.Title)} av {artistName} finnes allerede.", ToastType.Warning);
@@ -362,4 +206,3 @@
 
     private static string Shorten(string title) => title.Length > 30 ? title[..30] + "..." : title;
 }
-

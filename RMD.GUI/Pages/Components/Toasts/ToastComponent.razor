@@ -19,26 +19,18 @@
     The Dispose method is handling clean up and unsubscribing from the event when it is destroyed. This prevents memory leaks and various unwanted behaviors.
 </summary> *@
 
-@if (visible && !string.IsNullOrWhiteSpace(message))
-{
-    <div class="rmd-toast-container">
-        <div class="toast_contents @toastCss">
-            <i class="@iconCss"></i>
-
-            @* <div class="text_container">
-                <p class="text-truncate" style="max-width: 350px; height: 100%;">@message</p>
-            </div> *@
-
-            <div class="text_container">
-                <p>
-                    <span style="max-width: 900px;" class="message-truncate">@message</span>
-                </p>
-            </div>
-
-            <i class="bi bi-x" @onclick="CloseToast"></i>
+<div class="rmd-toast-region" role="status" aria-live="polite">
+    @if (visible && !string.IsNullOrWhiteSpace(message))
+    {
+        <div class="rmd-toast @toastCss" @key="toastVersion">
+            <i class="rmd-toast__icon @iconCss" aria-hidden="true"></i>
+            <p class="rmd-toast__message" title="@message">@message</p>
+            <button type="button" class="rmd-toast__close" aria-label="Lukk" @onclick="CloseToast">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
         </div>
-    </div>
-}
+    }
+</div>
 
 @code {
     private string? message;
@@ -46,6 +38,7 @@
     private bool visible = true;
     private string iconCss = "";
     private CancellationTokenSource? hideTimer;
+    private int toastVersion; // a new key restarts the CSS animation
 
     protected override void OnInitialized()
     {
@@ -64,6 +57,7 @@
         var timer = hideTimer = new CancellationTokenSource();
 
         message = msg;
+        toastVersion++;
 
         (toastCss, iconCss) = type switch
         {
