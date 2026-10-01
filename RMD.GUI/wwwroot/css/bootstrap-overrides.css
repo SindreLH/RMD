@@ -1,0 +1,105 @@
+/*
+    Maps Bootstrap 5.3 components onto the RMD theme tokens (themes.css).
+    With the "standard" theme the values equal Bootstrap 5.1's defaults, so the original look is kept.
+*/
+
+body {
+    background-color: var(--rmd-body-bg);
+    scrollbar-color: var(--rmd-scrollbar-thumb) transparent;
+}
+
+/* Inputs */
+.form-control,
+.form-select {
+    background-color: var(--rmd-input-bg);
+    color: var(--rmd-input-text);
+    border-color: var(--rmd-input-border);
+}
+
+    .form-control::placeholder {
+        color: var(--rmd-input-placeholder);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: var(--rmd-input-bg);
+        color: var(--rmd-input-text);
+        border-color: var(--rmd-input-focus-border);
+        box-shadow: 0 0 0 0.25rem var(--rmd-focus-ring);
+    }
+
+    .form-control:disabled,
+    .form-select:disabled {
+        opacity: 0.7;
+    }
+
+/* Native dropdown lists follow dark themes (Standard keeps the browser default) */
+:root:not([data-theme="standard"]) select.form-control option {
+    background-color: var(--rmd-input-bg);
+    color: var(--rmd-input-text);
+}
+
+.form-check-input {
+    background-color: var(--rmd-input-bg);
+    border-color: var(--rmd-check-border);
+}
+
+    .form-check-input:checked {
+        background-color: var(--rmd-check-checked);
+        border-color: var(--rmd-check-checked);
+    }
+
+    .form-check-input:focus {
+        border-color: var(--rmd-input-focus-border);
+        box-shadow: 0 0 0 0.25rem var(--rmd-focus-ring);
+    }
+
+/* Tables: the app uses .table-dark everywhere */
+.table {
+    --bs-table-color: var(--rmd-table-text);
+    --bs-table-border-color: var(--rmd-table-border);
+}
+
+.table-dark {
+    --bs-table-color: var(--rmd-table-text);
+    --bs-table-bg: var(--rmd-table-bg);
+    --bs-table-border-color: var(--rmd-table-border);
+    --bs-table-striped-bg: var(--rmd-table-striped-bg);
+    --bs-table-striped-color: var(--rmd-table-text);
+    --bs-table-active-bg: var(--rmd-table-active-bg);
+    --bs-table-active-color: var(--rmd-table-text);
+    --bs-table-hover-bg: var(--rmd-table-hover-bg);
+    --bs-table-hover-color: var(--rmd-table-hover-text);
+    color: var(--rmd-table-text);
+    border-color: var(--rmd-table-border);
+}
+
+/* Selected song row (the original rule never painted because cells cover the row background) */
+.table > tbody > tr.selected-row > * {
+    --bs-table-bg-state: var(--rmd-table-active-bg);
+    --bs-table-color-state: var(--rmd-selected);
+}
+
+/* Buttons */
+.btn-success {
+    --bs-btn-color: var(--rmd-on-success);
+    --bs-btn-hover-color: var(--rmd-on-success);
+    --bs-btn-active-color: var(--rmd-on-success);
+    --bs-btn-disabled-color: var(--rmd-on-success);
+}
+
+.btn-danger {
+    --bs-btn-color: var(--rmd-on-danger);
+    --bs-btn-hover-color: var(--rmd-on-danger);
+    --bs-btn-active-color: var(--rmd-on-danger);
+    --bs-btn-disabled-color: var(--rmd-on-danger);
+}
+
+/* Validation */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid var(--rmd-valid);
+}
+
+.invalid {
+    outline: 1px solid var(--rmd-invalid);
+}
