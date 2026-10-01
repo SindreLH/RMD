@@ -1,109 +1,139 @@
-.page {
-    position: relative;
+/* App shell: drawer navigation below lg (992px), sticky sidebar from lg up */
+
+.app-shell {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--rmd-z-topbar);
+    height: var(--rmd-topbar-h);
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--rmd-gutter);
+    background-color: var(--rmd-sidebar-top-bg);
 }
 
-main {
-    flex: 1;
-    /*background: #10172A;*/
-    background-image: var(--rmd-bg-image);
-    /*  background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
-    background-blend-mode: multiply;*/
-}
-
-.user_pic {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-top: 7px;
-}
-
-.auth_state_container {
-    margin-top: auto;
-    margin-left: 25px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
-    color: var(--rmd-text);
-}
-
-p {
-    color: var(--rmd-text);
-    margin:0;
-}
-
-.admin_title_container{
-    display: flex;
-    flex-direction: row;
-}
-
-.auth_text{
-    display: flex;
-    flex-direction: column;
-    margin-top: 9px;
-    margin-left: 10px
-}
-
-.sidebar {
-    background-image: var(--rmd-sidebar-bg-image);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-.top-row {
-    background-image: var(--rmd-sidebar-bg-image);
-    justify-content: flex-end;
-    height: 5.5rem;
+.topbar__brand {
     display: flex;
     align-items: center;
 }
 
-    .top-row ::deep a, .top-row .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
+.topbar__toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--rmd-radius-sm);
+    background-color: var(--rmd-sidebar-hover-bg);
+    color: var(--rmd-sidebar-text-active);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: var(--rmd-z-drawer);
+    width: min(85vw, var(--rmd-sidebar-w));
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background-image: var(--rmd-sidebar-bg-image);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-out;
+}
+
+.nav-open .sidebar {
+    transform: none;
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.5);
+}
+
+.scrim {
+    display: none;
+}
+
+.nav-open .scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: var(--rmd-z-scrim);
+    background: var(--rmd-backdrop);
+}
+
+.app-main {
+    min-width: 0;
+    background-image: var(--rmd-bg-image);
+}
+
+.content {
+    padding: var(--rmd-gutter);
+}
+
+.user-badge {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--rmd-space-3);
+    padding: var(--rmd-space-4) var(--rmd-space-5) var(--rmd-space-5);
+    color: var(--rmd-sidebar-text-active);
+}
+
+.user-badge__pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.user-badge__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-badge__name {
+    font-size: 0.9rem;
+}
+
+.user-badge__role {
+    font-size: 0.7rem;
+    color: var(--rmd-sidebar-text);
+}
+
+@media (min-width: 992px) {
+    .app-shell {
+        grid-template-columns: var(--rmd-sidebar-w) minmax(0, 1fr);
+        grid-template-rows: 1fr;
     }
 
-    .top-row a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-@media (max-width: 640.98px) {
-    .top-row:not(.auth) {
+    .topbar,
+    .scrim,
+    .nav-open .scrim {
         display: none;
     }
 
-    .top-row.auth {
-        justify-content: space-between;
-    }
-
-    .top-row a, .top-row .btn-link {
-        margin-left: 0;
-    }
-}
-
-@media (min-width: 641px) {
-    .page {
-        flex-direction: row;
-    }
-
     .sidebar {
-        width: 250px;
-        height: 100vh;
         position: sticky;
         top: 0;
+        height: 100dvh;
+        width: auto;
+        transform: none;
+        transition: none;
+        box-shadow: none;
     }
 
-    .top-row {
-        position: sticky;
-        top: 0;
-        z-index: 1;
+    .nav-open .sidebar {
+        box-shadow: none;
     }
 
-    .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
+    .content {
+        padding: 1.1rem 1.5rem var(--rmd-gutter) 2rem;
     }
 }

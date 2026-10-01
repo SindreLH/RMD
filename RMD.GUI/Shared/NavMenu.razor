@@ -1,56 +1,32 @@
-﻿@using RMD.Business.Services;
-@inject NavigationManager Nav
+﻿<div class="nav-brand">
+    <a href="/dashboard">
+        <img src="images/rmd_logo.png" width="130" height="50" class="rmd-logo" alt="RMD" />
+    </a>
+</div>
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
+<nav class="nav-list" aria-label="Hovedmeny">
+    <NavLink class="nav-link" href="dashboard" Match="NavLinkMatch.All">
+        <i class="bi bi-pie-chart-fill" aria-hidden="true"></i> Dashboard
+    </NavLink>
 
-        <a class="navbar-brand" href="/dashboard">
-            <img src="images/rmd_logo.png" width="130" height="50" class="rmd-logo" alt="RMD" />
-        </a>
+    <NavLink class="nav-link" href="Register">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Legg til
+    </NavLink>
 
-        <button title="Navigation menu" class="navbar-toggler">
-            <span class="navbar-toggler-icon"></span>
+    <NavLink class="nav-link" href="Archive">
+        <i class="bi bi-archive-fill" aria-hidden="true"></i> Arkiv
+    </NavLink>
+
+    <NavLink class="nav-link" href="Mixtapes">
+        <i class="bi bi-headphones" aria-hidden="true"></i> Mixtapes
+    </NavLink>
+
+    @* "Innstillinger" pointed at /Mixtapes; it returns with the Settings page *@
+
+    <form method="post" action="/auth/logout">
+        <AntiforgeryInput />
+        <button type="submit" class="nav-link logout-button">
+            <i class="bi bi-key-fill" aria-hidden="true"></i> Logg ut
         </button>
-    </div>
-</div>
-
-<div>
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Dashboard" Match="NavLinkMatch.All">
-                <span class="oi oi-pie-chart" aria-hidden="true"></span> Dashboard
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Register">
-                <span class="oi oi-plus" aria-hidden="true"></span> Legg til
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Archive">
-                <span class="oi oi-box" aria-hidden="true"></span> Arkiv
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Mixtapes">
-                <span class="oi oi-headphones" aria-hidden="true"></span> Mixtapes
-            </NavLink>
-        </div>
-
-        @* "Innstillinger" pointed at /Mixtapes; it returns with the Settings page *@
-
-        <form method="post" action="/auth/logout" class="nav-item px-3">
-            <AntiforgeryInput />
-            <button type="submit" class="logout-button">
-                <span class="oi oi-key"></span>
-                <span class="logout_text">Logg ut</span>
-            </button>
-        </form>
-    </nav>
-</div>
-
-@code {
-}
+    </form>
+</nav>
