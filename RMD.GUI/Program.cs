@@ -22,6 +22,8 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ToastService>();
 builder.Services.AddApexCharts();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<IDataTransferService, DataTransferService>();
+builder.Services.AddSingleton<BackupStore>();
 
 //DbContext (connection string from appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");

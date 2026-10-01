@@ -1,0 +1,342 @@
+@page "/Settings"
+@attribute [Authorize]
+@using System.Text.Json
+@using Microsoft.AspNetCore.Identity
+@using RMD.Business.Services
+@using RMD.Data.Models.Transfer
+@using RMD.GUI.Infrastructure
+@using RMD.GUI.Pages.Components.Toasts
+
+@inject IDataTransferService DataTransfer
+@inject BackupStore Backups
+@inject IServiceScopeFactory ScopeFactory
+@inject ToastService ToastService
+@inject ILogger<SettingsPage> Logger
+
+<PageTitle>RMD | Innstillinger</PageTitle>
+
+<div class="rmd-page settings">
+	<header class="rmd-page-header">
+		<h1>Innstillinger</h1>
+	</header>
+
+	@* ---------- Theme ---------- *@
+	<section class="rmd-panel" aria-labelledby="theme-heading">
+		<h2 id="theme-heading" class="h4">Tema</h2>
+		<p class="rmd-muted">Velg utseende. Valget lagres i denne nettleseren.</p>
+
+		<form method="post" action="/settings/theme">
+			<AntiforgeryInput />
+			<div class="rmd-card-grid theme-grid" role="radiogroup" aria-label="Tema">
+				@foreach (var theme in ThemeCatalog.All)
+				{
+					var active = theme.Id == CurrentTheme.Id;
+					<button type="submit" name="theme" value="@theme.Id"
+							class="theme-card @(active ? "is-active" : "")"
+							role="radio" aria-checked="@(active ? "true" : "false")">
+						<span class="theme-card__swatches" aria-hidden="true">
+							@foreach (var color in theme.Swatches)
+							{
+								<span style="background: @color"></span>
+							}
+						</span>
+						<span class="theme-card__name">
+							@theme.Name
+							@if (active)
+							{
+								<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+							}
+						</span>
+						<span class="theme-card__desc">@theme.Description</span>
+					</button>
+				}
+			</div>
+		</form>
+	</section>
+
+	@* ---------- Export ---------- *@
+	<section class="rmd-panel" aria-labelledby="export-heading">
+		<h2 id="export-heading" class="h4">Eksport</h2>
+		<p class="rmd-muted">Last ned alle artister og låter som en JSON-fil. Filen kan importeres igjen senere.</p>
+		@* download: the browser fetches the file itself instead of Blazor treating it as a page link *@
+		<a href="/api/data/export" download class="btn btn-success">
+			<i class="bi bi-download" aria-hidden="true"></i> Last ned JSON
+		</a>
+	</section>
+
+	@* ---------- Import ---------- *@
+	<section class="rmd-panel" aria-labelledby="import-heading">
+		<h2 id="import-heading" class="h4">Import</h2>
+		<p class="rmd-muted">
+			Velg en RMD-eksportfil. Innholdet legges til det som finnes fra før: artister med samme navn
+			gjenbrukes, og låter som allerede finnes hoppes over. Du ser en forhåndsvisning før noe lagres.
+		</p>
+
+		<div class="rmd-cluster">
+			<InputFile OnChange="OnImportFileSelected" accept=".json,application/json" class="form-control import-file" @key="importInputKey" disabled="@isImporting" />
+		</div>
+
+		@if (importError != null)
+		{
+			<div class="alert alert-danger mt-3 mb-0">@importError</div>
+		}
+
+		@if (importPreview != null)
+		{
+			<div class="import-summary mt-3">
+				<h3 class="h6">@(importPreview.Applied ? "Importert" : "Forhåndsvisning") – @importFileName</h3>
+				<dl>
+					<dt>Nye artister</dt><dd>@importPreview.ArtistsCreated</dd>
+					<dt>Artister som finnes fra før</dt><dd>@importPreview.ArtistsMatched</dd>
+					<dt>Nye låter</dt><dd>@importPreview.SongsCreated</dd>
+					<dt>Duplikater som hoppes over</dt><dd>@importPreview.SongsSkippedDuplicate</dd>
+					<dt>Rader med feil</dt><dd>@importPreview.Problems.Count</dd>
+				</dl>
+
+				@if (importPreview.Problems.Count > 0)
+				{
+					<details>
+						<summary>Vis feil</summary>
+						<ul class="mb-0">
+							@foreach (var problem in importPreview.Problems)
+							{
+								<li>@problem</li>
+							}
+						</ul>
+					</details>
+				}
+
+				@if (!importPreview.Applied)
+				{
+					<div class="rmd-cluster mt-3">
+						<button type="button" class="btn btn-success" @onclick="ApplyImport"
+								disabled="@(isImporting || (importPreview.ArtistsCreated == 0 && importPreview.SongsCreated == 0))">
+							@(isImporting ? "Importerer..." : "Importer")
+						</button>
+						<button type="button" class="btn btn-secondary" @onclick="ResetImport" disabled="@isImporting">Avbryt</button>
+					</div>
+				}
+			</div>
+		}
+	</section>
+
+	@* ---------- Clear database ---------- *@
+	<section class="rmd-panel danger-zone" aria-labelledby="clear-heading">
+		<h2 id="clear-heading" class="h4"><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> Tøm database</h2>
+		<p>
+			Sletter <strong>alle artister og låter</strong>. Innloggingen din påvirkes ikke.
+			En sikkerhetskopi lagres automatisk på serveren før noe slettes, og kan lastes ned og importeres igjen.
+		</p>
+
+		<form class="clear-form" @onsubmit="ClearDatabase" @onsubmit:preventDefault="true">
+			<div class="rmd-field">
+				<label for="clear-password">Bekreft med passordet ditt</label>
+				<input id="clear-password" type="password" class="form-control" autocomplete="current-password"
+					   @bind="clearPassword" @bind:event="oninput" disabled="@isClearing" />
+			</div>
+
+			<div class="form-check">
+				<input id="clear-confirm" type="checkbox" class="form-check-input" @bind="clearConfirmed" disabled="@isClearing" />
+				<label for="clear-confirm" class="form-check-label">Jeg forstår at alle artister og låter slettes.</label>
+			</div>
+
+			@if (clearError != null)
+			{
+				<div class="alert alert-danger mb-0">@clearError</div>
+			}
+
+			<div>
+				<button type="submit" class="btn btn-danger" disabled="@(isClearing || !clearConfirmed || string.IsNullOrEmpty(clearPassword))">
+					@(isClearing ? "Tømmer..." : "Tøm databasen")
+				</button>
+			</div>
+		</form>
+
+		@if (backups.Count > 0)
+		{
+			<div class="mt-4">
+				<h3 class="h6">Sikkerhetskopier på serveren</h3>
+				<ul class="backup-list">
+					@foreach (var backup in backups.Take(10))
+					{
+						<li>
+							<a href="/api/data/backups/@backup.Name" download>@backup.Name</a>
+							<span class="rmd-muted">@backup.CreatedUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm") · @FormatSize(backup.Size)</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</section>
+</div>
+
+@code {
+	private const long MaxImportBytes = 20 * 1024 * 1024;
+
+	[CascadingParameter] private ThemeInfo CurrentTheme { get; set; } = ThemeCatalog.Get(null);
+	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+	[SupplyParameterFromQuery(Name = "saved")] public string? Saved { get; set; }
+
+	private ExportFile? importFile;
+	private ImportSummary? importPreview;
+	private string? importFileName;
+	private string? importError;
+	private bool isImporting;
+	private Guid importInputKey = Guid.NewGuid();
+
+	private string clearPassword = "";
+	private bool clearConfirmed;
+	private bool isClearing;
+	private string? clearError;
+
+	private IReadOnlyList<BackupInfo> backups = Array.Empty<BackupInfo>();
+
+	protected override void OnInitialized()
+	{
+		backups = Backups.List();
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender && Saved == "theme")
+			ToastService.ShowToast($"SUKSESS! Tema endret til {CurrentTheme.Name}.", ToastType.Success);
+	}
+
+	// ---------- Import ----------
+
+	private async Task OnImportFileSelected(InputFileChangeEventArgs e)
+	{
+		ResetImportState();
+		importFileName = e.File.Name;
+
+		if (e.File.Size > MaxImportBytes)
+		{
+			importError = $"Filen er for stor (maks {MaxImportBytes / 1024 / 1024} MB).";
+			return;
+		}
+
+		isImporting = true;
+		try
+		{
+			await using var stream = e.File.OpenReadStream(MaxImportBytes);
+			importFile = await JsonSerializer.DeserializeAsync<ExportFile>(stream, ExportFile.JsonOptions);
+
+			if (importFile == null)
+			{
+				importError = "Filen er tom.";
+				return;
+			}
+
+			importPreview = await DataTransfer.ImportAsync(importFile, apply: false);
+		}
+		catch (JsonException ex)
+		{
+			importError = "Filen er ikke gyldig JSON: " + ex.Message;
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Import preview failed");
+			importError = "Kunne ikke lese filen.";
+		}
+		finally
+		{
+			isImporting = false;
+		}
+	}
+
+	private async Task ApplyImport()
+	{
+		if (importFile == null || isImporting)
+			return;
+
+		isImporting = true;
+		try
+		{
+			importPreview = await DataTransfer.ImportAsync(importFile, apply: true);
+
+			if (importPreview.Applied)
+				ToastService.ShowToast($"SUKSESS! Importerte {importPreview.ArtistsCreated} artister og {importPreview.SongsCreated} låter.", ToastType.Success);
+			else
+				ToastService.ShowToast("FEIL: Importen feilet. Ingenting ble lagret.", ToastType.Error);
+		}
+		finally
+		{
+			isImporting = false;
+			importFile = null;
+		}
+	}
+
+	private void ResetImport()
+	{
+		ResetImportState();
+		importFileName = null;
+	}
+
+	private void ResetImportState()
+	{
+		importFile = null;
+		importPreview = null;
+		importError = null;
+		importInputKey = Guid.NewGuid(); // lets the same file be chosen again
+	}
+
+	// ---------- Clear database ----------
+
+	private async Task ClearDatabase()
+	{
+		if (isClearing || !clearConfirmed || string.IsNullOrEmpty(clearPassword))
+			return;
+
+		isClearing = true;
+		clearError = null;
+		try
+		{
+			// Re-check the login password; failed attempts count towards the normal account lockout
+			await using (var scope = ScopeFactory.CreateAsyncScope())
+			{
+				var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+				var signInManager = scope.ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
+
+				var user = await userManager.GetUserAsync((await AuthState).User);
+				if (user == null)
+				{
+					clearError = "Fant ikke brukeren. Logg inn på nytt.";
+					return;
+				}
+
+				var check = await signInManager.CheckPasswordSignInAsync(user, clearPassword, lockoutOnFailure: true);
+				if (check.IsLockedOut)
+				{
+					clearError = "For mange mislykkede forsøk. Kontoen er låst i 15 minutter.";
+					return;
+				}
+				if (!check.Succeeded)
+				{
+					clearError = "Feil passord.";
+					return;
+				}
+			}
+
+			// Always keep a backup before deleting anything
+			var backupName = await Backups.SaveAsync(await DataTransfer.ExportAsync());
+			var result = await DataTransfer.ClearAsync();
+
+			backups = Backups.List();
+			clearConfirmed = false;
+			ToastService.ShowToast($"Databasen er tømt ({result.Artists} artister, {result.Songs} låter). Sikkerhetskopi: {backupName}", ToastType.Success);
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Clearing the database failed");
+			clearError = "Noe gikk galt. Ingenting ble slettet hvis sikkerhetskopien ikke kunne lagres.";
+		}
+		finally
+		{
+			clearPassword = "";
+			isClearing = false;
+		}
+	}
+
+	private static string FormatSize(long bytes) =>
+		bytes < 1024 * 1024 ? $"{bytes / 1024.0:0.#} kB" : $"{bytes / 1024.0 / 1024.0:0.#} MB";
+}
