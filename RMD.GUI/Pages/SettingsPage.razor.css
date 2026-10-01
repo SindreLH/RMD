@@ -77,8 +77,8 @@
     color: var(--rmd-text-muted);
 }
 
-/* Import */
-.import-file {
+/* Import (InputFile is a child component, so it needs ::deep) */
+.settings ::deep .import-file {
     max-width: 32rem;
 }
 
