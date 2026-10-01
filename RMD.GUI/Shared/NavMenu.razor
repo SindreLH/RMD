@@ -43,6 +43,7 @@
         @* "Innstillinger" pointed at /Mixtapes; it returns with the Settings page *@
 
         <form method="post" action="/auth/logout" class="nav-item px-3">
+            <AntiforgeryInput />
             <button 
                 style="background:#1b1c1d; 
                        color:#d7d7d7;

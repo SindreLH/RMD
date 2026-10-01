@@ -19,6 +19,7 @@
 		<h1> Logg inn</h1>
 
 		<form method="post" action="/auth/login">
+			<AntiforgeryInput />
 			<input type="hidden" name="returnUrl" value="@safeReturnUrl" />
 
 			<div class="fields_container">

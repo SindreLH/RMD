@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.WebUtilities;
 using RMD.Business.Services;
 using RMD.Data.Models;
+using RMD.GUI.Infrastructure;
 using RMD.GUI.Pages;
 using System.Text;
 using static RMD.GUI.Pages.ResetPassword;
@@ -11,62 +13,101 @@ using static RMD.GUI.Pages.ResetPassword;
 namespace RMD.GUI.Controllers
 {
 	[Route("auth")]
+	[ApiExplorerSettings(IgnoreApi = true)]
 	public class AuthController : Controller
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly IEmailService _emailService;
+		private readonly IConfiguration _config;
+		private readonly IWebHostEnvironment _env;
+		private readonly ILogger<AuthController> _logger;
 
 		public AuthController(
 			SignInManager<ApplicationUser> signInManager,
 			UserManager<ApplicationUser> userManager,
-			IEmailService emailService)
+			IEmailService emailService,
+			IConfiguration config,
+			IWebHostEnvironment env,
+			ILogger<AuthController> logger)
 		{
 			_signInManager = signInManager;
 			_userManager = userManager;
 			_emailService = emailService;
+			_config = config;
+			_env = env;
+			_logger = logger;
 		}
 
 		[AllowAnonymous]
 		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromForm] LoginModel model, string? returnUrl = null)
+		[ValidateAntiForgeryToken]
+		[EnableRateLimiting(RateLimitPolicies.Login)]
+		public async Task<IActionResult> Login([FromForm] LoginModel model, [FromForm] string? returnUrl = null)
 		{
+			var target = LocalUrl.OrDefault(returnUrl);
+
+			if (!ModelState.IsValid)
+				return Redirect(LoginUrl("invalid", target));
+
 			var result = await _signInManager.PasswordSignInAsync(
 				model.Email,
 				model.Password,
-				model.RememberMe, 
-				lockoutOnFailure: false
+				model.RememberMe,
+				lockoutOnFailure: true
 			);
 
+			if (result.IsLockedOut)
+			{
+				_logger.LogWarning("Login locked out for {Email}", model.Email);
+				return Redirect(LoginUrl("locked", target));
+			}
+
 			if (!result.Succeeded)
-				return Redirect("/login?reason=invalid");
+			{
+				_logger.LogWarning("Failed login for {Email}", model.Email);
+				return Redirect(LoginUrl("invalid", target));
+			}
 
-			if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-				return LocalRedirect(returnUrl);
-
-			return Redirect("/dashboard");
+			return LocalRedirect(target);
 		}
 
 		[Authorize]
 		[HttpPost("logout")]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Logout()
 		{
+			// Rotating the security stamp signs out every other open tab and device as well
+			var user = await _userManager.GetUserAsync(User);
+			if (user != null)
+				await _userManager.UpdateSecurityStampAsync(user);
+
 			await _signInManager.SignOutAsync();
 			return Redirect("/login");
 		}
 
 		[AllowAnonymous]
 		[HttpPost("ForgotPassword")]
+		[ValidateAntiForgeryToken]
+		[EnableRateLimiting(RateLimitPolicies.PasswordReset)]
 		public async Task<IActionResult> SendPasswordResetLinkAsync([FromForm] ForgotPassword.ForgotPasswordModel model)
 		{
-			if (!ModelState.IsValid)
-				return Redirect("/ForgotPassword?sent=true");
+			// Always answer the same way so the form does not reveal which e-mails exist
+			const string done = "/ForgotPassword?sent=true";
 
-			
+			if (!ModelState.IsValid)
+				return Redirect(done);
 
 			var user = await _userManager.FindByEmailAsync(model.Email);
 			if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
-				return Redirect("/ForgotPassword?sent=true");
+				return Redirect(done);
+
+			var baseUrl = PublicBaseUrl();
+			if (baseUrl == null)
+			{
+				_logger.LogError("App:PublicBaseUrl is not configured; password reset e-mail not sent");
+				return Redirect(done);
+			}
 
 			var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -74,9 +115,9 @@ namespace RMD.GUI.Controllers
 			var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
 			var resetUrl =
-				$"{Request.Scheme}://{Request.Host}/ResetPassword" +
+				$"{baseUrl}/ResetPassword" +
 				$"?token={encodedToken}" +
-				$"&email={Uri.EscapeDataString(user.Email)}";
+				$"&email={Uri.EscapeDataString(user.Email!)}";
 
 			var htmlMessage =
 				$@"
@@ -89,22 +130,23 @@ namespace RMD.GUI.Controllers
 			try
 			{
 				await _emailService.SendEmailAsync(
-				user.Email!,
-				"RMD Passordendring",
-				htmlMessage
-			);}
-
+					user.Email!,
+					"RMD Passordendring",
+					htmlMessage
+				);
+			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("SMTP ERROR:");
-				Console.WriteLine(ex.ToString());
+				_logger.LogError(ex, "Failed to send password reset e-mail");
 			}
 
-			return Redirect("/ForgotPassword?sent=true");
+			return Redirect(done);
 		}
 
-
+		[AllowAnonymous]
 		[HttpPost("ResetPassword")]
+		[ValidateAntiForgeryToken]
+		[EnableRateLimiting(RateLimitPolicies.PasswordReset)]
 		public async Task<IActionResult> ResetPasswordAsync([FromForm] ResetPasswordModel model)
 		{
 			if (!ModelState.IsValid)
@@ -113,36 +155,50 @@ namespace RMD.GUI.Controllers
 					.SelectMany(v => v.Errors)
 					.Select(e => e.ErrorMessage);
 
-				var errorMessage = string.Join(" | ", modelErrors);
-
-				return Redirect("/ResetPassword?error=" +
-					Uri.EscapeDataString(errorMessage));
+				return Redirect(ResetUrl(model, string.Join("|", modelErrors)));
 			}
 
 			var user = await _userManager.FindByEmailAsync(model.Email);
-
 			if (user == null)
+				return Redirect(ResetUrl(model, "Ugyldig eller utløpt reset-lenke."));
+
+			string decodedToken;
+			try
 			{
-				return Redirect("/ResetPassword?reset=true");
+				decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
 			}
-				
-			var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
+			catch (FormatException)
+			{
+				return Redirect(ResetUrl(model, "Ugyldig eller utløpt reset-lenke."));
+			}
 
 			var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
 
 			if (!result.Succeeded)
-			{
-				var errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
-
-				return Redirect(
-					"/ResetPassword?token=" + Uri.EscapeDataString(model.Token) +
-					"&email=" + Uri.EscapeDataString(model.Email) +
-					"&error=" + Uri.EscapeDataString(errorMessage)
-);
-			}
+				return Redirect(ResetUrl(model, string.Join("|", result.Errors.Select(e => e.Description))));
 
 			return Redirect("/login?reset=success");
 		}
 
+		private static string LoginUrl(string reason, string returnUrl) =>
+			$"/login?reason={reason}&returnUrl={Uri.EscapeDataString(returnUrl)}";
+
+		private static string ResetUrl(ResetPasswordModel model, string error) =>
+			"/ResetPassword?token=" + Uri.EscapeDataString(model.Token ?? "") +
+			"&email=" + Uri.EscapeDataString(model.Email ?? "") +
+			"&error=" + Uri.EscapeDataString(error);
+
+		/// <summary>
+		/// Reset links must never be built from the request Host header (it can be forged).
+		/// Production uses App:PublicBaseUrl; Development falls back to the current host.
+		/// </summary>
+		private string? PublicBaseUrl()
+		{
+			var configured = _config["App:PublicBaseUrl"];
+			if (!string.IsNullOrWhiteSpace(configured))
+				return configured.TrimEnd('/');
+
+			return _env.IsDevelopment() ? $"{Request.Scheme}://{Request.Host}" : null;
+		}
 	}
 }

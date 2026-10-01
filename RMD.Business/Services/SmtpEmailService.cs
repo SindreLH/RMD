@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 
@@ -15,6 +10,10 @@ namespace RMD.Business.Services
 	}
 
 
+	/// <summary>
+	/// Sends e-mail through SMTP. Settings: Email:Username, Email:Password (user-secrets in Development,
+	/// app settings / environment variables in production), optional Email:Host (default smtp.gmail.com) and Email:Port (587).
+	/// </summary>
 	public class SmtpEmailService : IEmailService
 	{
 		private readonly IConfiguration _config;
@@ -27,26 +26,22 @@ namespace RMD.Business.Services
 
 		public async Task SendEmailAsync(string to, string subject, string htmlMessage)
 		{
-			Console.WriteLine("SMTP Username: " + _config["Email:Username"]);
-			Console.WriteLine("SMTP Password exists: " +
-				(!string.IsNullOrEmpty(_config["Email:Password"])));
+			var username = _config["Email:Username"];
+			var password = _config["Email:Password"];
 
+			if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+				throw new InvalidOperationException("SMTP is not configured: set Email:Username and Email:Password.");
 
-
-			var smtpClient = new SmtpClient("smtp.gmail.com")
+			using var smtpClient = new SmtpClient(_config["Email:Host"] ?? "smtp.gmail.com")
 			{
-				Port = 587,
-				Credentials = new NetworkCredential
-				(
-					_config["Email:Username"],
-					_config["Email:Password"]
-				),
+				Port = int.TryParse(_config["Email:Port"], out var port) ? port : 587,
+				Credentials = new NetworkCredential(username, password),
 				EnableSsl = true,
 			};
 
-			var mail = new MailMessage
+			using var mail = new MailMessage
 			{
-				From = new MailAddress(_config["Email:Username"]),
+				From = new MailAddress(username),
 				Subject = subject,
 				Body = htmlMessage,
 				IsBodyHtml = true
@@ -56,7 +51,5 @@ namespace RMD.Business.Services
 
 			await smtpClient.SendMailAsync(mail);
 		}
-
-
 	}
 }

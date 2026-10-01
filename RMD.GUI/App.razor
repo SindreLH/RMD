@@ -1,4 +1,5 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿<CascadingValue Name="AntiforgeryToken" Value="AntiforgeryToken">
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData"
                             DefaultLayout="@typeof(MainLayout)">
@@ -22,3 +23,9 @@
         </LayoutView>
     </NotFound>
 </Router>
+</CascadingValue>
+
+@code {
+    /// <summary>Request token generated in _Host.cshtml, consumed by AntiforgeryInput.</summary>
+    [Parameter] public string? AntiforgeryToken { get; set; }
+}

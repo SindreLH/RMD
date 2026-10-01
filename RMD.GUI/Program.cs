@@ -44,9 +44,18 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<AuthDbContext>(options =>
 	options.UseSqlServer(
 		builder.Configuration.GetConnectionString("RmdDatabase")));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+	{
+		options.Lockout.MaxFailedAccessAttempts = 5;
+		options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+		options.Lockout.AllowedForNewUsers = true;
+
+		options.Password.RequiredLength = 8;
+		options.User.RequireUniqueEmail = true;
+	})
 	.AddEntityFrameworkStores<AuthDbContext>()
 	.AddDefaultTokenProviders();
+builder.Services.AddAuthRateLimiting();
 builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/login";
@@ -111,6 +120,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapBlazorHub();
 app.MapControllers();
