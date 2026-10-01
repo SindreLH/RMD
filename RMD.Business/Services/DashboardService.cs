@@ -1,14 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
 using RMD.Data.Context;
 using RMD.Data.Models;
 using RMD.Data.Models.Dashboard;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 
 
@@ -46,17 +39,20 @@ namespace RMD.Business.Services
 
 	public class DashboardService : IDashboardService
 	{
-		private readonly RMDContext _context;
-		public DashboardService(RMDContext context)
+		// Every method opens its own short-lived context (see ArtistService for why).
+		private readonly IDbContextFactory<RMDContext> _contextFactory;
+		public DashboardService(IDbContextFactory<RMDContext> contextFactory)
 		{
-			_context = context;
+			_contextFactory = contextFactory;
 		}
 
 		public async Task<Result<Song>> GetLatestSongAsync()
 		{
 			try
 			{
-				var songs = await _context.Songs
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				var songs = await db.Songs
+					.AsNoTracking()
 					.OrderByDescending(s => s.SongCreatedAt)
 					.FirstOrDefaultAsync();
 
@@ -78,13 +74,15 @@ namespace RMD.Business.Services
 		{
 			try
 			{
-				var artists = await _context.Artists
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				var artists = await db.Artists
+					.AsNoTracking()
 					.OrderByDescending(a => a.ArtistCreatedAt)
 					.FirstOrDefaultAsync();
 
 				if (artists == null)
 				{
-					return Result<Artist>.Failure("No songs were found in the database.");
+					return Result<Artist>.Failure("No artists were found in the database.");
 				}
 
 				return Result<Artist>.Success(artists);
@@ -100,7 +98,8 @@ namespace RMD.Business.Services
 		{
 			try
 			{
-				int count = await _context.Artists.CountAsync();
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				int count = await db.Artists.CountAsync();
 
 				if (count == 0)
 				{
@@ -121,7 +120,8 @@ namespace RMD.Business.Services
 		{
 			try
 			{
-				int count = await _context.Songs.CountAsync();
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				int count = await db.Songs.CountAsync();
 
 				if (count == 0)
 				{
@@ -135,14 +135,15 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+				return Result<int>.Failure("An unknown error occured while FETCHING SONG COUNT from the database." + ex.Message);
 			}
 		}
 		public async Task<Result<int>> GetPlayedSongCountAsync()
 		{
 			try
 			{
-				int count = await _context.Songs
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				int count = await db.Songs
 						.Where(s => s.Played)
 						.CountAsync();
 
@@ -158,14 +159,15 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+				return Result<int>.Failure("An unknown error occured while FETCHING PLAYED SONG COUNT from the database." + ex.Message);
 			}
 		}
 		public async Task<Result<int>> GetArtistNationCountAsync()
 		{
 			try
 			{
-				int count = await _context.Artists
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				int count = await db.Artists
 					.Where(a => !string.IsNullOrEmpty(a.Nationality))
 					.Select(a => a.Nationality)
 					.Distinct()
@@ -173,7 +175,7 @@ namespace RMD.Business.Services
 
 				if (count == 0)
 				{
-					return Result<int>.Failure("No PLAYED songs were found in the database.");
+					return Result<int>.Failure("No artist nationalities were found in the database.");
 				}
 
 				return Result<int>.Success(count);
@@ -183,18 +185,20 @@ namespace RMD.Business.Services
 
 			catch (Exception ex)
 			{
-				return Result<int>.Failure("An unknown error occured while FETCHING ARTIST COUNT from the database." + ex.Message);
+				return Result<int>.Failure("An unknown error occured while FETCHING NATIONALITY COUNT from the database." + ex.Message);
 			}
 		}
 		public async Task<Result<IEnumerable<Song>>> GetWantedSongsAsync()
 		{
 			try
 			{
-				var songs = await _context.Songs
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				var songs = await db.Songs
+					.AsNoTracking()
 					.Where(s => s.Wanted)
 					.ToListAsync();
 
-				if (songs == null || !songs.Any())
+				if (!songs.Any())
 				{
 					return Result<IEnumerable<Song>>.Failure("No WANTED songs were found in the database.");
 				}
@@ -212,7 +216,8 @@ namespace RMD.Business.Services
 
 			try
 			{
-				var genreCount = await _context.Songs
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				var genreCount = await db.Songs
 					.GroupBy(s => s.Genre)
 					.Select(g => new
 					{
@@ -234,25 +239,30 @@ namespace RMD.Business.Services
 
 			try
 			{
-				int year = DateTime.Now.Year;
-				var data = new List<BarChartData>();
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				int year = DateTime.UtcNow.Year;
 
-				foreach (Months month in Enum.GetValues(typeof(Months)))
-				{
-					int newSongs = await _context.Songs
-						.CountAsync(s => s.SongCreatedAt.Year == year && s.SongCreatedAt.Month == (int)month);
-					
+				// Two grouped queries instead of 24 round trips
+				var songsPerMonth = await db.Songs
+					.Where(s => s.SongCreatedAt.Year == year)
+					.GroupBy(s => s.SongCreatedAt.Month)
+					.Select(g => new { Month = g.Key, Count = g.Count() })
+					.ToDictionaryAsync(x => x.Month, x => x.Count);
 
-					int newArtists = await _context.Artists
-						.CountAsync(a => a.ArtistCreatedAt.Year == year && a.ArtistCreatedAt.Month == (int)month);
+				var artistsPerMonth = await db.Artists
+					.Where(a => a.ArtistCreatedAt.Year == year)
+					.GroupBy(a => a.ArtistCreatedAt.Month)
+					.Select(g => new { Month = g.Key, Count = g.Count() })
+					.ToDictionaryAsync(x => x.Month, x => x.Count);
 
-					data.Add(new BarChartData
+				var data = Enum.GetValues<Months>()
+					.Select(month => new BarChartData
 					{
 						Month = month.ToString(),
-						NewSongs = newSongs,
-						NewArtists = newArtists
-					});
-				}
+						NewSongs = songsPerMonth.GetValueOrDefault((int)month),
+						NewArtists = artistsPerMonth.GetValueOrDefault((int)month)
+					})
+					.ToList();
 
 				return Result<List<BarChartData>>.Success(data);
 			}
@@ -261,7 +271,7 @@ namespace RMD.Business.Services
 			{
 				return Result<List<BarChartData>>.Failure("Error loading monthly data: " + ex.Message);
 			}
-			
+
 		}
 	}
 }

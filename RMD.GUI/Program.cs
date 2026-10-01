@@ -1,4 +1,4 @@
-using ApexCharts;
+﻿using ApexCharts;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +8,7 @@ using RMD.Business.Services;
 using RMD.Data.Context;
 using RMD.GUI.Data;
 using RMD.GUI.Infrastructure;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,14 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 //DbContext (connection string from appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("RmdDatabase");
-builder.Services.AddDbContext<RMDContext>(options =>
+// Factory: services open a short-lived context per operation (a scoped context would live for the whole Blazor circuit)
+builder.Services.AddDbContextFactory<RMDContext>(options =>
 	options.UseSqlServer(connectionString));
 
 //Swagger Config
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+	// Song <-> SongArtist <-> Artist navigations point both ways
+	.AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
