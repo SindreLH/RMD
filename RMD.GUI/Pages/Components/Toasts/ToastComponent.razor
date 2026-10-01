@@ -1,4 +1,5 @@
 ﻿@using RMD.Business.Services
+@implements IDisposable
 @inject ToastService ToastService;
 
 @* <summary>
@@ -44,14 +45,24 @@
     private string toastCss = "";
     private bool visible = true;
     private string iconCss = "";
+    private CancellationTokenSource? hideTimer;
 
     protected override void OnInitialized()
     {
         ToastService.OnShow += ShowToast;
     }
 
-    private async void ShowToast(string msg, ToastType type)
+    private void ShowToast(string msg, ToastType type)
     {
+        _ = ShowToastAsync(msg, type);
+    }
+
+    private async Task ShowToastAsync(string msg, ToastType type)
+    {
+        // A newer toast restarts the timer so an older one can't hide it early
+        hideTimer?.Cancel();
+        var timer = hideTimer = new CancellationTokenSource();
+
         message = msg;
 
         (toastCss, iconCss) = type switch
@@ -65,10 +76,18 @@
 
         visible = true;
         await InvokeAsync(StateHasChanged);
-        await Task.Delay(4000);
+
+        try
+        {
+            await Task.Delay(4000, timer.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
         visible = false;
         await InvokeAsync(StateHasChanged);
-
     }
 
     private void CloseToast()
@@ -80,6 +99,7 @@
     public void Dispose()
     {
         ToastService.OnShow -= ShowToast;
+        hideTimer?.Cancel();
     }
 
 }
