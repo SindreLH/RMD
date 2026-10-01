@@ -1,4 +1,4 @@
-﻿@page "/Songs"
+@page "/Songs"
 @attribute [Authorize]
 @using RMD.GUI.Pages.Components.Modals;
 @using RMD.Data.Models;
@@ -20,7 +20,7 @@
 
 @if (deleteModalVisible)
 {
-	<WarningModalSongDeletion IsVisible="deleteModalVisible" 
+	<WarningModalSongDeletion IsVisible="deleteModalVisible"
 		OnClose="ToggleDeleteModal"
 		Song="selectedSong"
 		OnDelete="OnSongDeleted" />
@@ -44,28 +44,28 @@
 
 	<div class="checkboxes">
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Played, ((ChangeEventArgs)e).Value is true)" />
+			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="e => SetTableFilters(SongFilterType.Played, e.Value is true)" />
 			<label class="form-check-label" for="playedFilter">Avspilt</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="playedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Stored, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label" for="playedFilter">Lagret</label>
+			<input class="form-check-input" type="checkbox" id="storedFilter" @onchange="e => SetTableFilters(SongFilterType.Stored, e.Value is true)" />
+			<label class="form-check-label" for="storedFilter">Lagret</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="async e => await SetTableFilters(SongFilterType.Wanted, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label">Ønsket</label>
+			<input class="form-check-input" type="checkbox" id="wantedFilter" @onchange="e => SetTableFilters(SongFilterType.Wanted, e.Value is true)" />
+			<label class="form-check-label" for="wantedFilter">Ønsket</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="async e => await SetTableFilters(SongFilterType.ExtendedMix, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label">Extended Mix</label>
+			<input class="form-check-input" type="checkbox" id="extendedMixFilter" @onchange="e => SetTableFilters(SongFilterType.ExtendedMix, e.Value is true)" />
+			<label class="form-check-label" for="extendedMixFilter">Extended Mix</label>
 		</div>
 
 		<div class="form-check form-check-inline">
-			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="async e => await SetTableFilters(SongFilterType.Favorite, ((ChangeEventArgs)e).Value is true)" />
-			<label class="form-check-label">Favoritt</label>
+			<input class="form-check-input" type="checkbox" id="favoriteFilter" @onchange="e => SetTableFilters(SongFilterType.Favorite, e.Value is true)" />
+			<label class="form-check-label" for="favoriteFilter">Favoritt</label>
 		</div>
 	</div>
 
@@ -83,16 +83,16 @@
 					<i class="bi bi-trash3"></i> Fjern låt
 				</button>
 
-				
+
 			</div>
 		</div>
 	}
 
 </div>
 
-@if (!string.IsNullOrWhiteSpace(songs?.Error))
+@if (loadError != null)
 {
-	<p class="text-danger">@songs.Error</p>
+	<p class="text-danger">@loadError</p>
 }
 
 <div class="table-container">
@@ -114,62 +114,47 @@
 		</thead>
 
 		<tbody>
-			@foreach (var song in (isFiltering ? filteredSongs : songs?.Value ?? Enumerable.Empty<Song>()))
+			@foreach (var song in VisibleSongs)
 			{
 				// Strings containing tooltip data
-				var remixNames = string.Join(", ",
-					song.SongArtists
-					.Where(sa => sa.Role == ArtistRole.Remix && sa.Artist != null)
-					.Select(sa => sa.Artist!.Name));
-				var artistNames = string.Join(", ",
-					song.SongArtists
-					.Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null)
-					.Select(sa => sa.Artist!.Name));
-					
+				var remixNames = ArtistNames(song, ArtistRole.Remix);
+				var artistNames = ArtistNames(song, ArtistRole.Primary);
+				var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
+
 				// Table data inserted + tooltip data
-				<tr @onclick="() => SelectSong(song)" 
+				<tr @onclick="() => SelectSong(song)"
 					class="@(selectedSong?.SongId == song.SongId ? "selected-row" : "")">
 					<td>@song.SongId</td>
-					<td class="text-truncate" 
-						style="max-width: 350px" 
+					<td class="text-truncate"
+						style="max-width: 350px"
 						title="@song.Title">@song.Title</td>
-					<td class="text-truncate" 
-						style="max-width: 200px" 
+					<td class="text-truncate"
+						style="max-width: 200px"
 						title="@artistNames">
-							@if (song.SongArtists != null && song.SongArtists.Any())
+							@if (artistNames.Length > 0)
 							{
-								@string.Join(", ", song.SongArtists
-								.Where(sa => sa.Role == ArtistRole.Primary)
-								.Select(sa => sa.Artist.Name))
+								@artistNames
 							}
 							else
 							{
 								<em>Ingen artister</em>
 							}
 					</td>
-					<td class="text-truncate" 
-						style="max-width: 200px" 
-						title="@remixNames">
-
-						
-							@if (song.SongArtists != null && song.SongArtists.Any(sa => sa.Role == ArtistRole.Remix))
-							{
-								@string.Join(", ", song.SongArtists
-								.Where(sa => sa.Role == ArtistRole.Remix)
-								.Select(sa => sa.Artist.Name))
-							}
-					</td>
+					<td class="text-truncate"
+						style="max-width: 200px"
+						title="@remixNames">@remixNames</td>
 					<td>@song.Length</td>
 					<td>@song.Genre</td>
 					<td>@song.PlayedInEp</td>
 					<td class="text-truncate">
-						@if (song.WantedSongUrl != null)
+						@if (songUrl != null)
 						{
-							<a href="@song.WantedSongUrl"
+							<a href="@songUrl"
 							   target="_blank"
 							   rel="noopener noreferrer"
-							   title="@song.WantedSongUrl"
-							   style="text-decoration: none;">
+							   title="@songUrl"
+							   style="text-decoration: none;"
+							   @onclick:stopPropagation="true">
 								🔗
 							</a>
 
@@ -182,8 +167,13 @@
 			}
 		</tbody>
 	</table>
-	
-	@if (songs == null)
+
+	@if (isLoaded && allSongs.Count > 0 && !VisibleSongs.Any())
+	{
+		<p class="text-center mt-3">Ingen låter matcher søket eller filtrene.</p>
+	}
+
+	@if (!isLoaded)
 	{
 		<div class="load_container">
 			<div class="load_contents">
@@ -197,8 +187,9 @@
 
 
 @code {
-	private Result<IEnumerable<Song>>? songs;
-	private IEnumerable<Song> filteredSongs = new List<Song>();
+	private List<Song> allSongs = new();
+	private bool isLoaded;
+	private string? loadError;
 
 	private bool isSelected = false;
 	private bool editModalVisible = false;
@@ -207,12 +198,72 @@
 
 	private Song? selectedSong;
 	private string searchString = string.Empty;
-	private bool isFiltering = false;
 	private bool? favoriteFilter = null;
 	private bool? extendedMixFilter = null;
 	private bool? playedFilter = null;
 	private bool? storedFilter = null;
 	private bool? wantedFilter = null;
+
+	public enum SongFilterType
+	{
+		Played,
+		Stored,
+		Wanted,
+		ExtendedMix,
+		Favorite
+	}
+
+	/// <summary>The loaded songs with the search text and checkbox filters applied (in memory, no database call).</summary>
+	private IEnumerable<Song> VisibleSongs => allSongs
+		.Where(x => !extendedMixFilter.HasValue || x.ExtendedMix == extendedMixFilter.Value)
+		.Where(x => !favoriteFilter.HasValue || x.Favorite == favoriteFilter.Value)
+		.Where(x => !playedFilter.HasValue || x.Played == playedFilter.Value)
+		.Where(x => !storedFilter.HasValue || x.Stored == storedFilter.Value)
+		.Where(x => !wantedFilter.HasValue || x.Wanted == wantedFilter.Value)
+		.Where(MatchesSearch);
+
+	private bool MatchesSearch(Song song)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+
+		var term = searchString.Trim();
+		return song.Title.Contains(term, StringComparison.CurrentCultureIgnoreCase)
+			|| (song.RemixArtist?.Contains(term, StringComparison.CurrentCultureIgnoreCase) ?? false)
+			|| song.SongArtists.Any(sa => sa.Artist?.Name.Contains(term, StringComparison.CurrentCultureIgnoreCase) ?? false);
+	}
+
+	private static string ArtistNames(Song song, ArtistRole role) => string.Join(", ",
+		song.SongArtists
+			.Where(sa => sa.Role == role && sa.Artist != null)
+			.Select(sa => sa.Artist.Name));
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadSongsAsync();
+
+		if (allSongs.Count == 0 && loadError == null)
+		{
+			emptyDbModalVisible = true;
+		}
+	}
+
+	private async Task LoadSongsAsync()
+	{
+		var result = await SongService.GetAllSongsAsync();
+
+		// "No songs" is reported as a failure by the service; only show real errors
+		allSongs = result.IsSuccess ? result.Value.ToList() : new();
+		loadError = result.IsSuccess || result.Error.StartsWith("No songs") ? null : "FEIL: Kunne ikke hente låter.";
+		isLoaded = true;
+
+		// Keep the selection pointing at fresh data
+		if (selectedSong != null)
+		{
+			selectedSong = allSongs.FirstOrDefault(s => s.SongId == selectedSong.SongId);
+			isSelected = selectedSong != null;
+		}
+	}
 
 	async Task HandleSaveAsync(SongUpdateDto dto)
 	{
@@ -223,6 +274,7 @@
 			Length = dto.Length,
 			Genre = dto.Genre,
 			ExtendedMix = dto.ExtendedMix,
+			RadioMix = dto.RadioMix,
 			Favorite = dto.Favorite,
 			Played = dto.Played,
 			PlayedInEp = dto.PlayedInEp,
@@ -233,17 +285,17 @@
 			RemixArtistIds = dto.RemixArtistIds
 		};
 
-		await SongService.UpdateSongByIdAsync(dto.SongId, songDto);
-	}
+		var result = await SongService.UpdateSongByIdAsync(dto.SongId, songDto);
 
+		if (!result.IsSuccess)
+		{
+			ToastService.ShowToast("FEIL: Kunne ikke oppdatere låten. " + result.Error, ToastType.Error);
+			return;
+		}
 
-	public enum SongFilterType
-	{
-		Played,
-		Stored,
-		Wanted, 
-		ExtendedMix,
-		Favorite
+		ToastService.ShowToast($"SUKSESS! {Shorten(songDto.Title)} ble endret.", ToastType.Success);
+		editModalVisible = false;
+		await LoadSongsAsync();
 	}
 
 	private void SelectSong(Song song)
@@ -269,10 +321,13 @@
 		{
 			// Hent sangen på nytt med alle relasjoner før modalen åpnes
 			var result = await SongService.GetSongByIdWithArtistsAsync(selectedSong.SongId);
-			if (result.IsSuccess)
+			if (!result.IsSuccess)
 			{
-				selectedSong = result.Value;
+				ToastService.ShowToast("FEIL: Kunne ikke hente låten.", ToastType.Error);
+				return;
 			}
+
+			selectedSong = result.Value;
 		}
 		editModalVisible = !editModalVisible;
 	}
@@ -307,57 +362,12 @@
 		deleteModalVisible = !deleteModalVisible;
 	}
 
-	private async Task OnSearchInputChanged(ChangeEventArgs e)
+	private void OnSearchInputChanged(ChangeEventArgs e)
 	{
 		searchString = e.Value?.ToString() ?? "";
-		await LoadFilteredSongsAsync();
 	}
 
-	protected override async Task OnInitializedAsync()
-	{
-
-		await Task.Delay(300);
-
-		songs = await SongService.GetAllSongsAsync();
-
-		if (songs?.Value == null || !songs.Value.Any())
-		{
-			emptyDbModalVisible = true;
-		}
-	}
-
-	private async Task LoadFilteredSongsAsync()
-	{
-		var result = await SongService.GetAllSongsWithFiltersAsync(
-			ExtendedMix: extendedMixFilter,
-			RadioMix: null,
-			Favorite: favoriteFilter,
-			Played: playedFilter,
-			Stored: storedFilter,
-			Wanted: wantedFilter
-		);
-
-		isFiltering = true;
-
-		IEnumerable<Song> filtered = result.IsSuccess ? result.Value : Enumerable.Empty<Song>();
-
-		if (!string.IsNullOrWhiteSpace(searchString))
-		{
-			string lowerSearch = searchString.ToLower();
-
-			filtered = filtered.Where(song =>
-				(song.Title?.ToLower().Contains(lowerSearch) ?? false) ||
-				(song.RemixArtist?.ToLower().Contains(lowerSearch) ?? false) ||
-				(song.SongArtists != null && song.SongArtists.Any(a => a.Artist.Name.ToLower().Contains(lowerSearch)))
-			);
-		}
-
-		filteredSongs = filtered.ToList();
-
-		emptyDbModalVisible = !filteredSongs.Any();
-	}
-
-	private async Task SetTableFilters(SongFilterType filterType, bool isChecked)
+	private void SetTableFilters(SongFilterType filterType, bool isChecked)
 	{
 		switch (filterType)
 		{
@@ -382,10 +392,10 @@
 				break;
 		}
 
-		
+
 		if (isChecked)
 		{
-			
+
 			ToastService.ShowToast(filterType switch
 			{
 				SongFilterType.Played => "INFO: Viser avspilte låter.",
@@ -398,7 +408,7 @@
 		}
 		else
 		{
-			
+
 			if (playedFilter is null &&
 				storedFilter is null &&
 				wantedFilter is null &&
@@ -408,78 +418,25 @@
 				ToastService.ShowToast("INFO: Filtrering er deaktivert.", ToastType.Info);
 			}
 		}
-
-		await LoadFilteredSongsAsync();
 	}
 
-	private async Task OnSongEdited(Song updatedSong)
+	private async Task OnSongDeleted(Song songToDelete)
 	{
-
-		var dto = new RMD.Data.Models.DTO.SongDto
-			{
-			Title = updatedSong.Title,
-
-			ArtistIds = updatedSong.SongArtists?
-							.Where(sa => sa.Role == ArtistRole.Primary)
-							.Select(sa => sa.ArtistId)
-							.ToList() ?? new(),
-
-
-			RemixArtistIds = updatedSong.SongArtists?
-							.Where(sa => sa.Role == ArtistRole.Remix)
-							.Select(sa => sa.ArtistId)
-							.ToList() ?? new(),
-
-				RemixArtist = updatedSong.RemixArtist,
-				Length = updatedSong.Length,
-				Genre = updatedSong.Genre,
-				ExtendedMix = updatedSong.ExtendedMix,
-				RadioMix = updatedSong.RadioMix,
-				Favorite = updatedSong.Favorite,
-				Played = updatedSong.Played,
-				PlayedInEp = updatedSong.PlayedInEp,
-				Stored = updatedSong.Stored,
-				Wanted = updatedSong.Wanted,
-				WantedSongUrl = updatedSong.WantedSongUrl
-			};
-
-		var result = await SongService.UpdateSongByIdAsync(updatedSong.SongId, dto);
+		var result = await SongService.DeleteSongByIdAsync(songToDelete.SongId);
 
 		if (result.IsSuccess)
 		{
-			// Reload songs, setting relevant flags to false
-			songs = await SongService.GetAllSongsAsync();
-			isSelected = false;
-			editModalVisible = false;
-		}
-		else
-		{
-			if (!result.IsSuccess)
-			{
-				ToastService.ShowToast("FEIL: Kunne ikke oppdatere låten: " + result.Error, ToastType.Error);
-			}
-		}
-	}
-
-	private async Task OnSongDeleted(Song selectedSong)
-	{
-		var result = await SongService.DeleteSongByIdAsync(selectedSong.SongId);
-
-		if (result.IsSuccess)
-		{
-			songs = await SongService.GetAllSongsAsync();
-
-			if (isFiltering)
-			{
-				await LoadFilteredSongsAsync();
-			}
-
+			ToastService.ShowToast($"SUKSESS! {Shorten(songToDelete.Title)} ble fjernet.", ToastType.Success);
+			selectedSong = null;
 			isSelected = false;
 			deleteModalVisible = false;
+			await LoadSongsAsync();
 		}
 		else
 		{
 			ToastService.ShowToast("FEIL : En ukjent feil har oppstått. Prøv igjen senere.", ToastType.Error);
 		}
 	}
+
+	private static string Shorten(string title) => title.Length > 20 ? title[..20] + "..." : title;
 }

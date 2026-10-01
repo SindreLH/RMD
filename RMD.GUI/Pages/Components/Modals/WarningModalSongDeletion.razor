@@ -1,9 +1,6 @@
-﻿
+
 @using RMD.Data.Models
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Toasts
-
-@inject ToastService ToastService
 
 @if (IsVisible)
 {
@@ -20,7 +17,7 @@
 				Ønsker du virkelig å slette
 				<strong>
 				@string.Join(", ", Song?.SongArtists? .Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null).Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>()) - <strong>"@Song?.Title" ?</strong>
-				</strong> 
+				</strong>
 			</p>
 
 				<div class="button_container">
@@ -31,8 +28,8 @@
 					</div>
 
 					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteSong">
-							Slett låt
+						<button type="button" class="btn btn-danger" @onclick="DeleteSong" disabled="@isDeleting">
+							@(isDeleting ? "Sletter..." : "Slett låt")
 						</button>
 					</div>
 				</div>
@@ -46,25 +43,31 @@
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
+	/// <summary>The parent deletes, shows the result toast and closes the modal.</summary>
 	[Parameter] public EventCallback<Song> OnDelete { get; set; }
 	[Parameter] public Song? Song { get; set; }
+
+	private bool isDeleting;
 
 	private void CloseDeleteModal()
 	{
 		OnClose.InvokeAsync(false);
 	}
 
-	private void DeleteSong()
+	private async Task DeleteSong()
 	{
-		OnDelete.InvokeAsync(Song);
+		if (Song == null || isDeleting)
+			return;
 
-		// Truncating long song titles
-		var title = Song?.Title.Length > 20
-			? Song?.Title[..20] + "..."
-			: Song?.Title;
-		
-		ToastService.ShowToast($"SUKSESS! {title} ble fjernet.", ToastType.Success);
+		isDeleting = true;
+		try
+		{
+			await OnDelete.InvokeAsync(Song);
+		}
+		finally
+		{
+			isDeleting = false;
+		}
 	}
  }
-
 

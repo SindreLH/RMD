@@ -1,5 +1,4 @@
-﻿@using RMD.GUI.Pages.Components
-@using RMD.Data.Context
+@using RMD.GUI.Pages.Components
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
@@ -7,7 +6,7 @@
 @using RMD.GUI.Pages.Components.Toasts
 
 @inject ToastService ToastService
-@inject ISongService SongService 
+@inject ISongService SongService
 @inject IArtistService ArtistService
 @page "/AddSong"
 @attribute [Authorize]
@@ -16,31 +15,31 @@
 
 
 <div class="container_parent">
-    <div class="main_form_container">        
+    <div class="main_form_container">
         <EditForm Model="newSongDto" OnValidSubmit="SaveSong" novalidate>
             <DataAnnotationsValidator/>
             <div id="a_b_container">
                 <div id="reg_song_part_a">
                     <div id="form-group">
-                        <label>Tittel</label>
-                        <InputText @bind-Value="newSongDto.Title" class="form-control"/>
+                        <label for="song-title">Tittel</label>
+                        <InputText id="song-title" @bind-Value="newSongDto.Title" class="form-control"/>
                     </div>
 
                     <div id="form-group">
-                        <label>Lengde</label>
-                        <InputText 
-                            @bind-Value="newSongDto.Length" 
-                            class="form-control" 
+                        <label for="song-length">Lengde</label>
+                        <InputText
+                            id="song-length"
+                            @bind-Value="newSongDto.Length"
+                            class="form-control"
                             placeholder="MM:SS"
                             pattern="^[0-5]?\d:[0-5]\d$"
-                            inputmode="numeric"
                             />
 
                     </div>
 
                     <div id="form-group">
-                        <label>Sjanger</label>
-                        <InputSelect @bind-Value="newSongDto.Genre" class="form-control">
+                        <label for="song-genre">Sjanger</label>
+                        <InputSelect id="song-genre" @bind-Value="newSongDto.Genre" class="form-control">
                             <option value="" style="color: gray;">Velg en sjanger</option>
                             <option value="Hands Up">Hands Up</option>
                             <option value="Hardstyle">Hardstyle</option>
@@ -76,24 +75,20 @@
                                     }
 
 
-                                    @if (artistRows.Count <= 5)
+                                    @if (row == artistRows[^1] && artistRows.Count < MaxRows)
                                     {
-                                        <button type="button" 
+                                        <button type="button"
                                                 class="btn btn-sm btn-light ms-2"
+                                                title="Legg til artist"
                                                 @onclick="AddArtistRows">
                                             +
                                         </button>
-                                    }
-
-                                    @if(artistRows.Count >= 5)
-                                    {
-                                        ToastService.ShowToast("ADVARSEL: Mer enn 5 artister per låt er ikke tillatt.", ToastType.Warning);
                                     }
                                 </div>
                             }
                         </div>
                     </div>
-                    
+
                     @if(remixIsToggled == true)
                     {
                         <div class="artist_rows_windows" style="margin-top: 1rem;">
@@ -123,14 +118,9 @@
                                         }
 
 
-                                        @if (remixerRows.Count <= 5)
+                                        @if (row == remixerRows[^1] && remixerRows.Count < MaxRows)
                                         {
-                                            <button type="button" class="btn btn-sm btn-light ms-2" @onclick="AddRemixRows">+</button>
-                                        }
-
-                                        @if (remixerRows.Count >= 5)
-                                        {
-                                            ToastService.ShowToast("ADVARSEL: Maks 5 artister per remix tillatt.", ToastType.Warning);
+                                            <button type="button" class="btn btn-sm btn-light ms-2" title="Legg til remixartist" @onclick="AddRemixRows">+</button>
                                         }
                                     </div>
                                 }
@@ -138,28 +128,28 @@
                         </div>
                     }
 
-                    
+
 
                 </div>
                 <div id="reg_song_part_b">
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="remixIsToggled">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Remix</label>
+                        <input class="form-check-input" type="checkbox" id="remixSwitch" @bind="remixIsToggled">
+                        <label class="form-check-label" for="remixSwitch">Remix</label>
                         <label class="col-form-label-sm">Aktiver artistvalg for remixartist.</label>
                     </div>
 
 
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="extendedMixSwitch" @bind="newSongDto.ExtendedMix">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Extended Mix</label>
+                        <label class="form-check-label" for="extendedMixSwitch">Extended Mix</label>
                         <label class="col-form-label-sm">Mix med intro og outro.</label>
                     </div>
 
-               
+
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="favoriteSwitch" @bind="newSongDto.Favorite">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Favoritt</label>
+                        <label class="form-check-label" for="favoriteSwitch">Favoritt</label>
                         <label class="col-form-label-sm">Låten har favorittstatus.</label>
                     </div>
 
@@ -174,7 +164,7 @@
 
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="storedSwitch" @bind="newSongDto.Stored">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Lagret</label>
+                        <label class="form-check-label" for="storedSwitch">Lagret</label>
                         <label class="col-form-label-sm">Låten er lagret i samlingen.</label>
                     </div>
 
@@ -192,8 +182,8 @@
                     {
                         <div class="toggledInput">
                             <div id="form-group">
-                                <label>Mixtape vol.</label>
-                                <InputNumber class="form-control number_ticker" @bind-Value="newSongDto.PlayedInEp" />
+                                <label for="song-ep">Mixtape vol.</label>
+                                <InputNumber id="song-ep" min="0" class="form-control number_ticker" @bind-Value="newSongDto.PlayedInEp" />
                                 <label class="col-form-label-sm">Låten er spilt i ep</label>
                             </div>
                         </div>
@@ -203,8 +193,8 @@
                     {
                         <div class="toggledInput">
                             <div id="form-group">
-                                <label>Låtkilde</label>
-                                <InputText class="form-control" @bind-Value="newSongDto.WantedSongUrl" />
+                                <label for="song-url">Låtkilde</label>
+                                <InputText id="song-url" type="url" class="form-control" @bind-Value="newSongDto.WantedSongUrl" />
                                 <label class="col-form-label-sm">URL til låten</label>
                             </div>
                         </div>
@@ -214,8 +204,8 @@
             </div>
 
             <div class="save_button">
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-floppy-fill"></i> Lagre låt
+                <button type="submit" class="btn btn-success" disabled="@isSaving">
+                    <i class="bi bi-floppy-fill"></i> @(isSaving ? "Lagrer..." : "Lagre låt")
                 </button>
             </div>
 
@@ -230,21 +220,14 @@
 </div>
 
 @code {
+    private const int MaxRows = 5;
+
     private bool playedIsToggled = false;
     private bool wantedIsToggled = false;
     private bool remixIsToggled = false;
-    private string? attemptedTitle;
-    private string? attemptedArtistName;
+    private bool isSaving = false;
     private List<Artist> allArtists = new();
-    private SongDto newSongDto = new SongDto
-    {
-        //Init required members
-        Title = String.Empty,
-        RemixArtist = String.Empty,
-        ArtistIds = new List<int>(),
-        Length = String.Empty,
-        Genre = String.Empty,
-    };
+    private SongDto newSongDto = EmptySong();
     // Row set up for both artists and remixers
 
     private class ArtistRow
@@ -256,12 +239,19 @@
     private List<ArtistRow> artistRows = new() { new ArtistRow() };
     private List<ArtistRow> remixerRows = new() { new ArtistRow() };
 
+    private static SongDto EmptySong() => new SongDto
+    {
+        //Init required members
+        Title = String.Empty,
+        ArtistIds = new List<int>(),
+        Length = String.Empty,
+        Genre = String.Empty,
+    };
+
     void AddArtistRows()
     {
-        if (artistRows.Count < 5)
-        {
-            artistRows.Add(new ArtistRow());
-        }
+        if (artistRows.Count < MaxRows) artistRows.Add(new ArtistRow());
+        else WarnRowLimit();
     }
     void RemoveArtistRow(Guid key)
     {
@@ -273,7 +263,8 @@
 
     void AddRemixRows()
     {
-        if (remixerRows.Count < 5) remixerRows.Add(new ArtistRow());
+        if (remixerRows.Count < MaxRows) remixerRows.Add(new ArtistRow());
+        else WarnRowLimit();
     }
     void RemoveRemixRow(Guid key)
     {
@@ -281,7 +272,7 @@
         remixerRows.RemoveAll(r => r.Key == key);
     }
 
-
+    void WarnRowLimit() => ToastService.ShowToast($"ADVARSEL: Maks {MaxRows} artister per låt.", ToastType.Warning);
 
 
     protected override async Task OnInitializedAsync()
@@ -298,96 +289,77 @@
 
     private async Task SaveSong()
     {
+        if (isSaving)
+            return;
 
         // Sync toggles to DTO before saving
         newSongDto.Played = playedIsToggled;
         newSongDto.Wanted = wantedIsToggled;
 
         // New 22.09.25: On Save - Filter Non-Null Selections
-        var finalArtistIds = artistRows
-            .Select(r => r.SelectedId)
-            .Where(id => id.HasValue)
-            .Select(id => id!.Value)
+        newSongDto.ArtistIds = artistRows
+            .Where(r => r.SelectedId.HasValue)
+            .Select(r => r.SelectedId!.Value)
             .Distinct()
             .ToList();
 
-
-        newSongDto.ArtistIds = finalArtistIds;
-        
-
-        var remixArtistIds = remixerRows
+        // Turning the Remix switch off drops any remix artists chosen earlier
+        newSongDto.RemixArtistIds = remixIsToggled
+            ? remixerRows
                 .Where(r => r.SelectedId.HasValue)
                 .Select(r => r.SelectedId!.Value)
                 .Distinct()
-                .ToList();
-        
-        newSongDto.RemixArtistIds = remixArtistIds;
+                .ToList()
+            : new();
 
-        
+        if (newSongDto.ArtistIds.Count == 0)
+        {
+            ToastService.ShowToast("ADVARSEL: Velg minst én artist.", ToastType.Warning);
+            return;
+        }
+
         // Calling service after DTOs are ready
-        var result = await SongService.CreateNewSongAsync(newSongDto);
+        isSaving = true;
+        Result<Song> result;
+        try
+        {
+            result = await SongService.CreateNewSongAsync(newSongDto);
+        }
+        finally
+        {
+            isSaving = false;
+        }
 
         if (result.IsSuccess)
         {
-            //Resets stacks after successful save
+            ToastService.ShowToast($"SUKSESS! {Shorten(result.Value.Title)} ble opprettet! ", ToastType.Success);
+
+            // Resetting the form
             artistRows = new() {new ArtistRow()};
             remixerRows = new() {new ArtistRow()};
-
-            // Truncating long song titles
-            var title = result.Value.Title.Length > 30
-            ? result.Value.Title[..30] + "..." : attemptedTitle;
-
-            //Calling the toast service, outputting a success message
-            ToastService.ShowToast($"SUKSESS! {newSongDto.Title} ble opprettet! ", ToastType.Success);
-
-            // Resetting the form 
             playedIsToggled = false;
             wantedIsToggled = false;
-            newSongDto = new SongDto
-                {
-                    Title = String.Empty,
-                    RemixArtist = String.Empty,
-                    ArtistIds = new List<int>(),
-                    Length = String.Empty,
-                    Genre = String.Empty,
-                    ExtendedMix = false,
-                    Favorite = false,
-                    Played = false,
-                    Stored = false,
-                    Wanted = false,
-                    PlayedInEp = null,
-                    WantedSongUrl = String.Empty
-                };
+            remixIsToggled = false;
+            newSongDto = EmptySong();
+        }
+        else if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+        {
+            //Displaying the first artist in instances where there are multiple, defaults to "Ukjent artist" when there are none
+            var artistName = allArtists
+                .FirstOrDefault(a => newSongDto.ArtistIds.Contains(a.ArtistId))?.Name ?? "(Ukjent artist)";
+
+            ToastService.ShowToast($"ADVARSEL: {Shorten(newSongDto.Title)} av {artistName} finnes allerede.", ToastType.Warning);
+        }
+        else if (result.Error.Contains("no longer exist", StringComparison.OrdinalIgnoreCase))
+        {
+            ToastService.ShowToast("ADVARSEL: En av de valgte artistene finnes ikke lenger. Last siden på nytt.", ToastType.Warning);
         }
         else
         {
             ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
-
-            if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
-            {
-                attemptedTitle = newSongDto.Title;
-
-                //Displaying the first artist in instances where there are multiple, defaults to "Ukjent artist" when there are none
-                attemptedArtistName = allArtists
-                    .FirstOrDefault(a => newSongDto.ArtistIds.Contains(a.ArtistId))?.Name ?? "(Ukjent artist)";
-
-                // Truncating long song titles
-                var title = attemptedTitle.Length > 30
-                ? attemptedTitle[..30] + "..." : attemptedTitle;
-
-                ToastService.ShowToast($"ADVARSEL: {title} av " + attemptedArtistName + " finnes allerede.", ToastType.Warning);
-            }
         }
     }
 
-    //Event Handlers for toggles
-    private void OnPlayedChanged(ChangeEventArgs e)
-    {
-        playedIsToggled = newSongDto.Played;
-    }
-    private void OnWantedChange(ChangeEventArgs e)
-    {
-        wantedIsToggled = newSongDto.Wanted;
-    }
+    private static string Shorten(string title) => title.Length > 30 ? title[..30] + "..." : title;
 }
 
