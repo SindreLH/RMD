@@ -8,7 +8,7 @@ RMD runs as one ASP.NET Core (Blazor Server) web app plus one SQL database. On A
 | Resource | Suggested setting |
 |---|---|
 | App Service plan | B1 or higher (Free/F1 has no *Always On* and limited WebSockets) |
-| Web App | Runtime stack .NET 8 (switch to .NET 10 after the upgrade) |
+| Web App | Runtime stack .NET 10 (LTS) |
 | Azure SQL Database | Serverless General Purpose is cheap for a single user; allow Azure services through the firewall |
 
 ## 2. Web App → Configuration → General settings

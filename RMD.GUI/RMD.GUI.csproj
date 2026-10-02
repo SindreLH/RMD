@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>7392d91d-074f-4e51-8f02-7291108cf1aa</UserSecretsId>
   </PropertyGroup>
-
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
@@ -19,7 +15,7 @@
 	<!--EFC Versions were set to 6.0.12 here-->
 
 	<ItemGroup>
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
 		    <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 	     <PackageReference Include="Blazor-ApexCharts" Version="6.0.0" />
