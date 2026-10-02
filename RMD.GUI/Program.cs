@@ -136,6 +136,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UsePrerenderRedirects();
 app.UseRateLimiter();
 
 app.MapHealthChecks("/healthz");
