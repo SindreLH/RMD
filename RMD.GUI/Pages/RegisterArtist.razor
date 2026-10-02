@@ -17,19 +17,21 @@
 	<EditForm Model="newArtistDto" OnValidSubmit="SaveArtist">
 		<DataAnnotationsValidator />
 
-		<div class="rmd-form-grid">
-			<div class="rmd-field">
-				<label for="artistName">Navn</label>
-				<InputText id="artistName" @bind-Value="newArtistDto.Name" class="form-control" />
-				<ValidationMessage For="@(() => newArtistDto.Name)" />
-			</div>
+		<div class="rmd-artist-form">
+			<div class="rmd-artist-form__row">
+				<div class="rmd-field">
+					<label for="artistName">Navn</label>
+					<InputText id="artistName" @bind-Value="newArtistDto.Name" class="form-control" />
+					<ValidationMessage For="@(() => newArtistDto.Name)" />
+				</div>
 
-			<div class="rmd-field">
-				<label for="artistNationality">Land</label>
-				<InputSelect id="artistNationality" @bind-Value="newArtistDto.Nationality" class="form-control">
-					@NationalityOptions.Options
-				</InputSelect>
-				<ValidationMessage For="@(() => newArtistDto.Nationality)" />
+				<div class="rmd-field">
+					<label for="artistNationality">Land</label>
+					<InputSelect id="artistNationality" @bind-Value="newArtistDto.Nationality" class="form-control">
+						@NationalityOptions.Options
+					</InputSelect>
+					<ValidationMessage For="@(() => newArtistDto.Nationality)" />
+				</div>
 			</div>
 
 			<div class="rmd-field">

@@ -1,4 +1,4 @@
-@using RMD.Data.Models
+﻿@using RMD.Data.Models
 
 @* A list of artist dropdowns with add/remove buttons. Used for artists and remixers in the song forms. *@
 
@@ -33,10 +33,10 @@
                 </button>
             }
 
-            @if (row == Rows[^1] && Rows.Count < Max)
+            @if (Rows.Count < Max)
             {
                 <button type="button" class="btn btn-sm btn-light rmd-icon-btn" title="Legg til" aria-label="Legg til rad"
-                        @onclick="Add">
+                        @onclick="() => Add(row)">
                     <i class="bi bi-plus-lg"></i>
                 </button>
             }
@@ -53,10 +53,11 @@
     [Parameter, EditorRequired] public List<ArtistPickerRow> Rows { get; set; } = new();
     [Parameter] public int Max { get; set; } = 5;
 
-    private void Add()
+    // Every row has a "+": the new row is inserted right below the one that was clicked
+    private void Add(ArtistPickerRow after)
     {
         if (Rows.Count < Max)
-            Rows.Add(new ArtistPickerRow());
+            Rows.Insert(Rows.IndexOf(after) + 1, new ArtistPickerRow());
     }
 
     private void Remove(ArtistPickerRow row)

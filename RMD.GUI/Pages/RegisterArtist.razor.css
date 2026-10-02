@@ -1,20 +1,12 @@
 .register-card {
-    width: min(100%, 56rem);
+    width: min(100%, 42rem);
     margin-inline: auto;
 }
 
 .register-card__actions {
-    display: flex;
-    justify-content: flex-end;
     margin-top: var(--rmd-space-5);
 }
 
     .register-card__actions .btn {
-        min-width: min(100%, 14rem);
-    }
-
-@media (max-width: 575.98px) {
-    .register-card__actions .btn {
         width: 100%;
     }
-}

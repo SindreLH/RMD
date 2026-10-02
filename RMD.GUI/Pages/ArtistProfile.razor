@@ -42,38 +42,26 @@
 
 		<div class="artist-layout">
 			<section class="rmd-panel artist-info" aria-label="Artistinformasjon">
-				<h2 class="h4">Artistinformasjon</h2>
+				<div class="artist-info__text">
+					<h2 class="h4">Artistinformasjon</h2>
 
-				<dl class="artist-info__facts">
-					<dt>Nasjonalitet</dt>
-					<dd>@artist?.Nationality</dd>
+					<p><b>@artist?.Nationality</b></p>
 
 					@if (genres.Length > 0)
 					{
-						<dt>Sjanger</dt>
-						<dd>🎵 @genres</dd>
+						<p><b>🎵 @genres</b></p>
 					}
 
-					<dt>Låter</dt>
-					<dd>@songs.Count</dd>
-				</dl>
+					@foreach (var (label, icon, url) in SocialLinks)
+					{
+						<a href="@url" target="_blank" rel="noopener noreferrer">
+							<img src="@icon" alt="" class="socials_icons" />
+							@label
+						</a>
+					}
+				</div>
 
-				@if (SocialLinks.Any())
-				{
-					<ul class="artist-info__links">
-						@foreach (var (label, icon, url) in SocialLinks)
-						{
-							<li>
-								<a href="@url" target="_blank" rel="noopener noreferrer">
-									<img src="@icon" alt="" class="socials_icons" />
-									@label
-								</a>
-							</li>
-						}
-					</ul>
-				}
-
-				<div class="rmd-cluster">
+				<div class="artist-info__buttons">
 					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning">
 						<i class="bi bi-pencil"></i> Rediger artist
 					</button>

@@ -45,7 +45,7 @@
 	}
 	else if (allArtists.Count > 0)
 	{
-		<div class="rmd-card-grid artist-grid">
+		<div class="artist-grid">
 			@foreach (var artist in VisibleArtists)
 			{
 				var picture = SafeUrl.ForHref(artist.ProfilePicUrl) ?? "images/no_artist_image.png";

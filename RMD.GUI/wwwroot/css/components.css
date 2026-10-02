@@ -69,10 +69,9 @@
 /* ---------- Data table ---------- */
 
 .rmd-table-wrap {
-    border-radius: var(--rmd-radius-md);
+    border-radius: var(--rmd-radius-lg);
     overflow: auto;
     max-height: var(--rmd-table-max-h, none);
-    opacity: var(--rmd-table-opacity);
 }
 
 .rmd-table {
@@ -98,6 +97,35 @@
     .rmd-table a {
         text-decoration: none;
     }
+
+/* The original RMD table look: borderless, semi-transparent, rounded, roomy rows */
+@media (min-width: 768px) {
+    .rmd-table {
+        opacity: var(--rmd-table-opacity);
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .rmd-table > :not(caption) > * > * {
+            border: none;
+        }
+
+        .rmd-table td:first-child,
+        .rmd-table th:first-child {
+            padding-left: 45px;
+        }
+
+        .rmd-table th {
+            padding: 10px;
+            line-height: 2.5;
+            font-weight: 600;
+            font-size: large;
+        }
+
+        .rmd-table tbody tr {
+            line-height: 3.5;
+        }
+}
 
 /* Columns that disappear on smaller screens (in table mode) */
 @media (max-width: 1199.98px) {
@@ -301,13 +329,13 @@
 .rmd-modal__footer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: var(--rmd-space-3);
+    justify-content: center;
+    gap: var(--rmd-space-3) 4rem;
     padding: var(--rmd-space-4) var(--rmd-space-5) var(--rmd-space-5);
 }
 
     .rmd-modal__footer .btn {
-        min-width: 8rem;
+        width: min(11rem, 100%);
     }
 
 /* Phones: full-screen sheet with the buttons always visible */
@@ -416,3 +444,18 @@
         flex: 1 1 auto;
         min-width: 0;
     }
+
+/* ---------- Artist form (register page and edit modal) ---------- */
+
+/* Navn and Land side by side, every link on its own full-width row below */
+.rmd-artist-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-5);
+}
+
+.rmd-artist-form__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--rmd-space-5);
+}

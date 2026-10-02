@@ -1,8 +1,9 @@
-@* Shared modal frame: backdrop, header with icon, scrollable body and an always-visible footer.
+﻿@* Shared modal frame: backdrop, header with icon, scrollable body and an always-visible footer.
    On phones it becomes a full-screen sheet. Esc or a click on the backdrop closes it. *@
 
 <div class="rmd-modal-backdrop" @onclick="OnBackdropClick">
     <div class="rmd-modal @(Large ? "rmd-modal--lg" : "")"
+         style="@(Width != null ? $"--rmd-modal-w: {Width}" : null)"
          role="dialog"
          aria-modal="true"
          aria-labelledby="@titleId"
@@ -43,6 +44,8 @@
     [Parameter] public string? Icon { get; set; }
     /// <summary>Wide variant for forms.</summary>
     [Parameter] public bool Large { get; set; }
+    /// <summary>Explicit CSS width, e.g. "42rem" (overrides Large).</summary>
+    [Parameter] public string? Width { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public RenderFragment? Footer { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }

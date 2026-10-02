@@ -1,10 +1,14 @@
-.form-check-label {
+﻿.form-check-label {
     color: var(--rmd-text);
 }
 
+/* The original card size (16rem x 11rem), at most five per row */
 .artist-grid {
-    --rmd-card-min: 9rem;
-    padding: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+    display: grid;
+    gap: 2.3rem;
+    grid-template-columns: repeat(auto-fill, minmax(max(250px, (100% - 4 * 2.3rem) / 5), 1fr));
+    justify-items: center;
+    padding: 2rem;
     background-color: var(--rmd-surface-inset);
     border-radius: var(--rmd-radius-lg);
 }
@@ -14,23 +18,25 @@
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
+    width: min(100%, 16rem);
+    min-height: 11rem;
     padding: 1rem 0.75rem;
     border-radius: var(--rmd-radius-lg);
     background-color: var(--rmd-surface-2);
     color: var(--rmd-text);
     text-decoration: none;
-    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    transition: transform 0.5s ease-in-out, background-color 0.3s;
 }
 
     .artist-card:hover,
     .artist-card:focus-visible {
         background-color: var(--rmd-surface-hover);
         color: var(--rmd-highlight-text);
-        transform: scale(1.05);
+        transform: scale(1.1);
     }
 
 .artist-card__pic {
-    width: clamp(80px, 60px + 4vw, 115px);
+    width: 115px;
     aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;

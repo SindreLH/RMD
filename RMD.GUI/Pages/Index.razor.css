@@ -1,4 +1,4 @@
-/*
+﻿/*
     Dashboard grid
       phones:   stats, charts, wanted songs, resources (one column)
       md+:      stats and charts two per row
@@ -6,6 +6,8 @@
 */
 
 .dashboard {
+    /* Twice the original space above the cards */
+    padding-top: 1.1rem;
     display: grid;
     gap: var(--rmd-space-5);
     grid-template-columns: minmax(0, 1fr);
@@ -39,7 +41,7 @@
 .dashboard__stats,
 .dashboard__charts {
     display: grid;
-    gap: var(--rmd-space-5);
+    gap: 4rem;
     grid-template-columns: minmax(0, 1fr);
 }
 
@@ -60,9 +62,9 @@
         align-items: start;
     }
 
+    /* Resources fill the full height of the column */
     .dashboard__resources {
-        position: sticky;
-        top: 1rem;
+        align-self: stretch;
     }
 }
 
@@ -73,7 +75,8 @@
     align-items: center;
     justify-content: center;
     gap: var(--rmd-space-1);
-    min-height: 10rem;
+    min-height: 8.5rem;
+    padding-block: 1.25rem;
     text-align: center;
 }
 
@@ -127,7 +130,7 @@
     display: flex;
     align-items: center;
     gap: var(--rmd-space-2);
-    margin-top: var(--rmd-space-4);
+    margin-top: 2.5rem;
 }
 
     .icon_heading h5 {
@@ -157,3 +160,11 @@
     .dashboard__wanted a:hover {
         color: var(--rmd-link-hover);
     }
+
+/* The dashboard table keeps its original, more compact rows */
+@media (min-width: 768px) {
+    .dashboard__wanted .rmd-table th,
+    .dashboard__wanted .rmd-table tbody tr {
+        line-height: 2;
+    }
+}

@@ -1,4 +1,4 @@
-/* Header banner with the artist picture and name */
+﻿/* Header banner with the artist picture and name */
 .artist-hero {
     display: flex;
     flex-wrap: wrap;
@@ -29,66 +29,57 @@
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
-/* Info panel above the songs on narrow screens, beside them from xl */
+/* Info box above the songs on narrow screens, beside them from xl (35rem wide, as before, from xxl) */
 .artist-layout {
     display: grid;
-    gap: var(--rmd-space-5);
+    gap: 3rem;
     grid-template-columns: minmax(0, 1fr);
 }
 
 @media (min-width: 1200px) {
     .artist-layout {
-        grid-template-columns: minmax(0, 1fr) 22rem;
+        grid-template-columns: minmax(0, 1fr) 28rem;
     }
 
     .artist-info {
         order: 2;
         align-self: start;
-        position: sticky;
-        top: 1rem;
     }
 }
 
+@media (min-width: 1400px) {
+    .artist-layout {
+        grid-template-columns: minmax(0, 1fr) 35rem;
+    }
+}
+
+/* Text stacked on the left, Edit/Delete stacked on the right */
 .artist-info {
     display: flex;
-    flex-direction: column;
-    gap: var(--rmd-space-4);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--rmd-space-5);
+    padding: 1.5rem 2rem 3rem 3rem;
     backdrop-filter: blur(5px);
 }
 
-    .artist-info h2 {
-        margin: 0;
-        font-weight: 700;
-    }
-
-.artist-info__facts {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--rmd-space-2) var(--rmd-space-4);
-    margin: 0;
-}
-
-    .artist-info__facts dt {
-        font-weight: 500;
-        color: var(--rmd-text-muted);
-    }
-
-    .artist-info__facts dd {
-        margin: 0;
-        font-weight: 700;
-        color: var(--rmd-text);
-    }
-
-.artist-info__links {
+.artist-info__text {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--rmd-space-2) var(--rmd-space-5);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
 }
 
-    .artist-info__links a {
+    .artist-info__text h2 {
+        margin: 0 0 0.5rem;
+        font-weight: 700;
+    }
+
+    .artist-info__text p {
+        margin: 0;
+    }
+
+    .artist-info__text a {
         display: inline-flex;
         align-items: center;
         gap: var(--rmd-space-2);
@@ -96,8 +87,24 @@
         text-decoration: none;
     }
 
-        .artist-info__links a:hover {
+        .artist-info__text a:hover {
             color: var(--rmd-link-hover);
+        }
+
+.artist-info__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+    .artist-info__buttons .btn {
+        width: 150px;
+        transition: transform 0.5s ease-in-out;
+    }
+
+        .artist-info__buttons .btn:hover {
+            transform: scale(1.1);
         }
 
 .socials_icons {

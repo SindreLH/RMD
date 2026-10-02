@@ -1,4 +1,4 @@
-@using RMD.Data.Models
+﻿@using RMD.Data.Models
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Toasts
 
@@ -6,24 +6,26 @@
 
 @if (IsVisible && editableArtist != null)
 {
-    <ModalShell Title="Rediger artist" Icon="bi-pencil-square" Large="true" CloseOnBackdrop="false" OnClose="CloseEditModal">
+    <ModalShell Title="Rediger artist" Icon="bi-pencil-square" Width="42rem" CloseOnBackdrop="false" OnClose="CloseEditModal">
         <ChildContent>
             @* EditForm is required: InputSelect throws without a cascading EditContext *@
             <EditForm id="@formId" Model="editableArtist" OnValidSubmit="SaveChangesAsync">
                 <DataAnnotationsValidator />
 
-                <div class="rmd-form-grid">
-                    <div class="rmd-field">
-                        <label for="artistName">Navn</label>
-                        <InputText id="artistName" class="form-control" @bind-Value="editableArtist.Name" />
-                        <ValidationMessage For="@(() => editableArtist.Name)" />
-                    </div>
+                <div class="rmd-artist-form">
+                    <div class="rmd-artist-form__row">
+                        <div class="rmd-field">
+                            <label for="artistName">Navn</label>
+                            <InputText id="artistName" class="form-control" @bind-Value="editableArtist.Name" />
+                            <ValidationMessage For="@(() => editableArtist.Name)" />
+                        </div>
 
-                    <div class="rmd-field">
-                        <label for="artistNationality">Land</label>
-                        <InputSelect id="artistNationality" @bind-Value="editableArtist.Nationality" class="form-control">
-                            @NationalityOptions.Options
-                        </InputSelect>
+                        <div class="rmd-field">
+                            <label for="artistNationality">Land</label>
+                            <InputSelect id="artistNationality" @bind-Value="editableArtist.Nationality" class="form-control">
+                                @NationalityOptions.Options
+                            </InputSelect>
+                        </div>
                     </div>
 
                     <div class="rmd-field">

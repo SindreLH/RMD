@@ -6,7 +6,7 @@
 @inject ToastService ToastService
 @inject IArtistService ArtistService
 
-<ModalShell Title="Rediger låt" Icon="bi-pencil-square" Large="true" CloseOnBackdrop="false" OnClose="CloseEditModal">
+<ModalShell Title="Rediger låt" Icon="bi-pencil-square" Width="44rem" CloseOnBackdrop="false" OnClose="CloseEditModal">
 	<ChildContent>
 		<EditForm id="@formId" Model="editable" OnValidSubmit="SaveChangesAsync">
 			<DataAnnotationsValidator />
