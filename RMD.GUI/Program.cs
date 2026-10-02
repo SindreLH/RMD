@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using RMD.Business.Services;
 using RMD.Data.Context;
-using RMD.GUI.Data;
 using RMD.GUI.Infrastructure;
 using System.Text.Json.Serialization;
 
@@ -15,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ISongService, SongService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
