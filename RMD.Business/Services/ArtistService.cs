@@ -17,10 +17,14 @@ namespace RMD.Business.Services
 		Task<Result<Artist>> CreateNewArtistAsync(ArtistDto newArtist);
 		Task<Result<Artist>> GetArtistById(int artistId);
 		Task<Result<int>> CountSongsLeftWithoutArtistAsync(int artistId);
+		Task<Result<List<Artist>>> GetAliasesAsync(int artistId);
+		Task<Result<List<Artist>>> SetAliasesAsync(int artistId, IEnumerable<int> aliasIds);
 	}
 
 	public class ArtistService : IArtistService
 	{
+		/// <summary>An artist can have at most this many aliases (other artists in the same alias group).</summary>
+		public const int MaxAliases = 5;
 
 		// Every method opens its own short-lived context. In Blazor Server a scoped DbContext would live
 		// for the whole browser tab, so overlapping UI events would share it and failed saves would linger.
@@ -127,6 +131,100 @@ namespace RMD.Business.Services
 			}
 		}
 
+		public async Task<Result<List<Artist>>> GetAliasesAsync(int artistId)
+		{
+			try
+			{
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				var group = await db.Artists.Where(a => a.ArtistId == artistId).Select(a => a.AliasGroupId).FirstOrDefaultAsync();
+
+				var aliases = group == null
+					? new List<Artist>()
+					: await db.Artists.AsNoTracking()
+						.Where(a => a.AliasGroupId == group && a.ArtistId != artistId)
+						.OrderBy(a => a.Name)
+						.ToListAsync();
+
+				return Result<List<Artist>>.Success(aliases);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Failed to fetch aliases for artist {ArtistId}", artistId);
+				return Result<List<Artist>>.Failure("An unknown error occured while fetching the artist's aliases.");
+			}
+		}
+
+		/// <summary>
+		/// Makes exactly <paramref name="aliasIds"/> the aliases of the artist. Aliases are mutual: the artist and its
+		/// aliases share one alias group. An artist picked from another group moves into this one; artists that are no
+		/// longer chosen leave it. Groups left with a single artist are dissolved.
+		/// </summary>
+		public async Task<Result<List<Artist>>> SetAliasesAsync(int artistId, IEnumerable<int> aliasIds)
+		{
+			var ids = aliasIds.Where(id => id != artistId).Distinct().ToList();
+			if (ids.Count > MaxAliases)
+				return Result<List<Artist>>.Failure($"An artist can have at most {MaxAliases} aliases.");
+
+			try
+			{
+				await using var db = await _contextFactory.CreateDbContextAsync();
+				await using var transaction = await db.Database.BeginTransactionAsync();
+
+				var artist = await db.Artists.FindAsync(artistId);
+				if (artist == null)
+					return Result<List<Artist>>.Failure($"No artist with ID: {artistId} exists in the database.");
+
+				var chosen = await db.Artists.Where(a => ids.Contains(a.ArtistId)).ToListAsync();
+				if (chosen.Count != ids.Count)
+					return Result<List<Artist>>.Failure("One or more selected aliases no longer exist.");
+
+				var currentGroup = artist.AliasGroupId;
+				var touchedGroups = chosen.Select(a => a.AliasGroupId).Append(currentGroup)
+					.Where(g => g != null).Select(g => g!.Value).Distinct().ToList();
+
+				// Members of the current group that were not chosen leave it
+				if (currentGroup != null)
+				{
+					var leaving = await db.Artists
+						.Where(a => a.AliasGroupId == currentGroup && a.ArtistId != artistId && !ids.Contains(a.ArtistId))
+						.ToListAsync();
+					foreach (var a in leaving)
+						a.AliasGroupId = null;
+				}
+
+				var group = chosen.Count == 0 ? (Guid?)null : currentGroup ?? Guid.NewGuid();
+				artist.AliasGroupId = group;
+				foreach (var a in chosen)
+					a.AliasGroupId = group;
+
+				await db.SaveChangesAsync();
+				await DissolveSingleMemberGroupsAsync(db, touchedGroups);
+				await transaction.CommitAsync();
+
+				var aliases = chosen.OrderBy(a => a.Name).ToList();
+				return Result<List<Artist>>.Success(aliases);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Failed to set aliases for artist {ArtistId}", artistId);
+				return Result<List<Artist>>.Failure("An unknown error occured while saving the artist's aliases.");
+			}
+		}
+
+		/// <summary>An alias group of one is not an alias any more.</summary>
+		private static async Task DissolveSingleMemberGroupsAsync(RMDContext db, IEnumerable<Guid> groups)
+		{
+			foreach (var group in groups.Distinct())
+			{
+				var members = await db.Artists.Where(a => a.AliasGroupId == group).ToListAsync();
+				if (members.Count == 1)
+				{
+					members[0].AliasGroupId = null;
+					await db.SaveChangesAsync();
+				}
+			}
+		}
+
 		public async Task<Result<bool>> DeleteArtistByIdAsync(int artistId)
 		{
 			try
@@ -139,8 +237,12 @@ namespace RMD.Business.Services
 					return Result<bool>.Failure($"Deletion failed. No artist with the ID {artistId} exists in the database.");
 				}
 
+				var aliasGroup = artist.AliasGroupId;
 				db.Artists.Remove(artist);
 				await db.SaveChangesAsync();
+
+				if (aliasGroup != null)
+					await DissolveSingleMemberGroupsAsync(db, new[] { aliasGroup.Value });
 
 				return Result<bool>.Success(true);
 			}

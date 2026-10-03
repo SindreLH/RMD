@@ -39,6 +39,8 @@ namespace RMD.Data.Models.Transfer
 		public string? ProfilePicUrl { get; set; }
 		public string? DiscogsUrl { get; set; }
 		public DateTime? CreatedAt { get; set; }
+		/// <summary>Artists with the same value are aliases of each other. Optional (older files don't have it).</summary>
+		public Guid? AliasGroup { get; set; }
 	}
 
 	public sealed class ExportSong

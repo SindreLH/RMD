@@ -31,6 +31,9 @@ namespace RMD.Data.Context
 				.HasForeignKey(sa => sa.SongId)
 				.OnDelete(DeleteBehavior.Cascade);
 
+			modelBuilder.Entity<Artist>()
+				.HasIndex(a => a.AliasGroupId);
+
 			modelBuilder.Entity<SongArtist>()
 				.HasOne(sa => sa.Artist)
 				.WithMany(a => a.SongArtists)
