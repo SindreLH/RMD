@@ -1,12 +1,15 @@
-﻿@page "/"
+@page "/"
 @attribute [AllowAnonymous]
 @inject NavigationManager Nav
 
-@* The site root forwards to the dashboard; the dashboard itself handles the login redirect. *@
+@* The site root forwards to the dashboard. Full page loads are redirected on the server
+   (PrerenderRedirects); this only handles in-app navigation to "/". NavigateTo is called after
+   rendering, because during prerendering it would throw NavigationException. *@
 
 @code {
-	protected override void OnInitialized()
+	protected override void OnAfterRender(bool firstRender)
 	{
-		Nav.NavigateTo("/dashboard", replace: true);
+		if (firstRender)
+			Nav.NavigateTo("/dashboard", replace: true);
 	}
 }

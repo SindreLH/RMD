@@ -51,20 +51,27 @@
 	[SupplyParameterFromQuery(Name = "reset")] public string? Reset { get; set; }
 
 	private string safeReturnUrl = "/dashboard";
+	private bool alreadySignedIn;
 
 	protected override async Task OnInitializedAsync()
 	{
 		safeReturnUrl = LocalUrl.OrDefault(ReturnUrl);
 
 		// Already signed in: skip the login form
+		// (NavigateTo happens after rendering: during prerendering it would throw NavigationException)
 		var state = await AuthState;
-		if (state.User.Identity?.IsAuthenticated == true)
-			Nav.NavigateTo(safeReturnUrl, replace: true);
+		alreadySignedIn = state.User.Identity?.IsAuthenticated == true;
 	}
 
 	protected override void OnAfterRender(bool firstRender)
 	{
 		if (!firstRender) return;
+
+		if (alreadySignedIn)
+		{
+			Nav.NavigateTo(safeReturnUrl, replace: true);
+			return;
+		}
 
 		var message = Reason switch
 		{

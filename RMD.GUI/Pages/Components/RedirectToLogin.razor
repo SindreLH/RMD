@@ -1,7 +1,8 @@
-﻿@inject NavigationManager Nav
+@inject NavigationManager Nav
 
 @* Rendered by AuthorizeRouteView when the user may not see a page.
-   During prerendering NavigateTo becomes a server-side 302, so anonymous visitors never see the app shell. *@
+   Full page loads are redirected on the server (PrerenderRedirects); this handles a session that
+   expires while the app is open. NavigateTo runs after rendering, so it never throws during prerendering. *@
 
 @if (IsAuthenticated)
 {
@@ -11,9 +12,9 @@
 @code {
     [Parameter] public bool IsAuthenticated { get; set; }
 
-    protected override void OnInitialized()
+    protected override void OnAfterRender(bool firstRender)
     {
-        if (IsAuthenticated)
+        if (!firstRender || IsAuthenticated)
             return;
 
         var returnUrl = "/" + Nav.ToBaseRelativePath(Nav.Uri);

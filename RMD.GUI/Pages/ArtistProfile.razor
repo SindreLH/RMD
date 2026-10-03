@@ -195,8 +195,8 @@
 
 		if (!result.IsSuccess || result.Value == null)
 		{
+			// Redirected after rendering (see OnAfterRender): during prerendering NavigateTo would throw
 			notFound = true;
-			Navigation.NavigateTo("/notfound", replace: true);
 			return;
 		}
 
@@ -204,6 +204,12 @@
 		await LoadAliasesAsync();
 		await LoadSongsAsync();
 		isLoading = false;
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (notFound)
+			Navigation.NavigateTo("/notfound", replace: true);
 	}
 
 	private async Task LoadAliasesAsync()
