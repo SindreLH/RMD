@@ -9,7 +9,7 @@ RMD is a personal tool under development designed to help me keep track of all t
 # Features
 
 - **Dashboard:** totals, latest additions, additions per month, genre distribution, wanted tracks and a list of music resources
-- **Archive:** searchable, filterable artist and song lists; artist profiles with their tracks and links
+- **Archive:** searchable, filterable artist and song lists; artist profiles with their tracks, links and up to five aliases
 - **Register:** artists, and songs with multiple artists and remixers; duplicate detection (same title, artists, remixers and mix type)
 - **Settings:** five colour themes, JSON export, JSON import with preview (appends, skips duplicates), and a password-protected "clear database" that saves a backup first
 - **Responsive:** sidebar on desktop, drawer menu and card lists on phones
@@ -25,14 +25,15 @@ RMD is a personal tool under development designed to help me keep track of all t
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - SQL Server (Developer/Express or LocalDB) on `localhost` with Windows authentication, or change `ConnectionStrings:RmdDatabase` in `RMD.GUI/appsettings.json`
-- The EF Core tool: `dotnet tool install -g dotnet-ef` (or `dotnet tool update -g dotnet-ef`)
+- The EF Core tool is pinned in `dotnet-tools.json`: run `dotnet tool restore` once
 
 ## First run
 
 ```bash
 # Create the database (both schemas: music data and login)
-dotnet ef database update --project RMD.Data --startup-project RMD.GUI --context RMDContext
-dotnet ef database update --project RMD.Data --startup-project RMD.GUI --context AuthDbContext
+dotnet tool restore
+dotnet tool run dotnet-ef database update --project RMD.Data --startup-project RMD.GUI --context RMDContext
+dotnet tool run dotnet-ef database update --project RMD.Data --startup-project RMD.GUI --context AuthDbContext
 
 # The login user is created on first start from these secrets (never commit them)
 dotnet user-secrets set "SeedAdmin:Email" "you@example.com" --project RMD.GUI
