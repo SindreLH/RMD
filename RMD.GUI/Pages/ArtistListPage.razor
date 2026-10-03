@@ -30,7 +30,13 @@
 		</div>
 	</div>
 
-	@if (!isLoaded)
+	@if (loadError != null)
+	{
+		<div class="rmd-empty">
+			<p>@loadError</p>
+		</div>
+	}
+	else if (!isLoaded)
 	{
 		<div class="rmd-loader">
 			<img src="/images/Loader.gif" alt="" />
@@ -61,6 +67,7 @@
 @code {
 	private List<Artist> allArtists = new();
 	private bool isLoaded;
+	private string? loadError;
 
 	private bool emptyDbModalVisible = false;
 	private bool sortAlphabetically
@@ -104,7 +111,9 @@
 		allArtists = result.IsSuccess ? result.Value.ToList() : new();
 		isLoaded = true;
 
-		emptyDbModalVisible = !allArtists.Any();
+		// "No artists" is reported as a failure by the service; anything else is a real error
+		loadError = result.IsSuccess || result.Error.StartsWith("No artists") ? null : "FEIL: Kunne ikke hente artister.";
+		emptyDbModalVisible = loadError == null && !allArtists.Any();
 	}
 
 	private void OnSearchInputChanged(ChangeEventArgs e)
