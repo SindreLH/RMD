@@ -1,0 +1,70 @@
+@using RMD.Data.Models
+@using RMD.Business.Services
+
+@* Choose up to MaxAliases other artists as aliases: chosen ones are removable tags, a dropdown adds more. *@
+
+<fieldset class="rmd-fieldset alias-picker">
+    <legend>Aliaser <span class="rmd-muted">(@Selected.Count/@ArtistService.MaxAliases)</span></legend>
+    <small class="rmd-muted">Andre artistnavn for samme artist, f.eks. et pseudonym eller sideprosjekt. Aliaser vises på hverandres profiler.</small>
+
+    @if (Selected.Count > 0)
+    {
+        <ul class="alias-picker__tags">
+            @foreach (var id in Selected)
+            {
+                var artist = Artists.FirstOrDefault(a => a.ArtistId == id);
+                <li class="alias-picker__tag">
+                    <span>@(artist?.Name ?? "Ukjent artist")</span>
+                    <button type="button" aria-label="Fjern @artist?.Name som alias" title="Fjern" @onclick="() => Remove(id)">
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (Selected.Count < ArtistService.MaxAliases)
+    {
+        <select class="form-control" aria-label="Legg til alias" value="" @onchange="OnPick">
+            <option value="" style="color: var(--rmd-option-placeholder);">Legg til alias...</option>
+            @foreach (var artist in Candidates)
+            {
+                <option value="@artist.ArtistId">@artist.Name@(InOtherGroup(artist) ? " (har allerede aliaser)" : "")</option>
+            }
+        </select>
+
+        @if (Selected.Any(id => InOtherGroup(Artists.FirstOrDefault(a => a.ArtistId == id))))
+        {
+            <small class="rmd-muted">Artister som allerede har aliaser flyttes over til denne artisten når du lagrer.</small>
+        }
+    }
+    else
+    {
+        <small class="rmd-muted">Maks @ArtistService.MaxAliases aliaser per artist.</small>
+    }
+</fieldset>
+
+@code {
+    /// <summary>All artists (the one being edited is skipped).</summary>
+    [Parameter, EditorRequired] public IReadOnlyList<Artist> Artists { get; set; } = Array.Empty<Artist>();
+    [Parameter, EditorRequired] public int ArtistId { get; set; }
+    /// <summary>The artist's current alias group, so its own aliases aren't marked as "already has aliases".</summary>
+    [Parameter] public Guid? AliasGroupId { get; set; }
+    /// <summary>Chosen alias ids; owned by the parent, changed in place.</summary>
+    [Parameter, EditorRequired] public List<int> Selected { get; set; } = new();
+
+    private IEnumerable<Artist> Candidates => Artists
+        .Where(a => a.ArtistId != ArtistId && !Selected.Contains(a.ArtistId))
+        .OrderBy(a => a.Name, StringComparer.CurrentCultureIgnoreCase);
+
+    private bool InOtherGroup(Artist? artist) =>
+        artist?.AliasGroupId != null && artist.AliasGroupId != AliasGroupId;
+
+    private void OnPick(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var id) && Selected.Count < ArtistService.MaxAliases && !Selected.Contains(id))
+            Selected.Add(id);
+    }
+
+    private void Remove(int id) => Selected.Remove(id);
+}

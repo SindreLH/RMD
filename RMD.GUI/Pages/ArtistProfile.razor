@@ -18,7 +18,8 @@
 	<EditArtistModal IsVisible="editModalVisible"
 	OnClose="ToggleEditModal"
 	OnSave="OnArtistEdited"
-	Artist="artist"/>
+	Artist="artist"
+	Aliases="aliases"/>
 }
 
 @if(deleteModalVisible){
@@ -50,6 +51,17 @@
 					@if (genres.Length > 0)
 					{
 						<p><b>🎵 @genres</b></p>
+					}
+
+					@if (aliases.Count > 0)
+					{
+						<p class="artist-info__aliases">
+							<b>🎭 Også kjent som</b>
+							@foreach (var alias in aliases)
+							{
+								<a href="/Artist/@alias.ArtistId">@alias.Name</a>
+							}
+						</p>
 					}
 
 					@foreach (var (label, icon, url) in SocialLinks)
@@ -134,6 +146,7 @@
 	private List<Song> songs = new();
 	private string genres = "";
 	private Artist? artist;
+	private List<Artist> aliases = new();
 	private int? loadedArtistId;
 	[Parameter] public int ArtistId { get; set; }
 
@@ -174,6 +187,7 @@
 		isLoading = true;
 		notFound = false;
 		artist = null;
+		aliases = new();
 		songs = new();
 		genres = "";
 
@@ -187,8 +201,15 @@
 		}
 
 		artist = result.Value;
+		await LoadAliasesAsync();
 		await LoadSongsAsync();
 		isLoading = false;
+	}
+
+	private async Task LoadAliasesAsync()
+	{
+		var result = await ArtistService.GetAliasesAsync(ArtistId);
+		aliases = result.IsSuccess ? result.Value : new();
 	}
 
 	private async Task LoadSongsAsync()
@@ -221,8 +242,9 @@
 
 	}
 
-	private async Task OnArtistEdited(Artist updatedArtist)
+	private async Task OnArtistEdited(EditArtistModal.ArtistEdit edit)
 	{
+		var updatedArtist = edit.Artist;
 		var dto = new RMD.Data.Models.DTO.ArtistDto
 			{
 				Name = updatedArtist.Name,
@@ -235,16 +257,31 @@
 
 		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
 
-		if (result.IsSuccess)
-		{
-			artist = result.Value;
-			editModalVisible = false;
-			ToastService.ShowToast($"SUKSESS! {Shorten(artist.Name)} ble endret!", ToastType.Success);
-		}
-		else
+		if (!result.IsSuccess)
 		{
 			ToastService.ShowToast("FEIL: Kunne ikke lagre endringene. " + result.Error, ToastType.Error);
+			return;
 		}
+
+		// Aliases are only written when they changed
+		var current = aliases.Select(a => a.ArtistId).ToHashSet();
+		if (!current.SetEquals(edit.AliasIds))
+		{
+			var aliasResult = await ArtistService.SetAliasesAsync(updatedArtist.ArtistId, edit.AliasIds);
+			if (!aliasResult.IsSuccess)
+			{
+				ToastService.ShowToast("FEIL: Artisten ble lagret, men aliasene ikke. " + aliasResult.Error, ToastType.Error);
+				return;
+			}
+		}
+
+		// Reload so the alias group and the alias list are current
+		var reloaded = await ArtistService.GetArtistById(updatedArtist.ArtistId);
+		artist = reloaded.IsSuccess ? reloaded.Value : result.Value;
+		await LoadAliasesAsync();
+
+		editModalVisible = false;
+		ToastService.ShowToast($"SUKSESS! {Shorten(artist.Name)} ble endret!", ToastType.Success);
 	}
 
 	private static string Shorten(string name) => name.Length > 18 ? name[..18] + "..." : name;

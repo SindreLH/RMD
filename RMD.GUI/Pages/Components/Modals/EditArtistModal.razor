@@ -3,6 +3,7 @@
 @using RMD.GUI.Pages.Components.Toasts
 
 @inject ToastService ToastService
+@inject IArtistService ArtistService
 
 @if (IsVisible && editableArtist != null)
 {
@@ -47,6 +48,11 @@
                         <label for="artistDiscogs">Discogs</label>
                         <input id="artistDiscogs" type="url" class="form-control" @bind="editableArtist.DiscogsUrl" />
                     </div>
+
+                    @if (allArtists != null)
+                    {
+                        <AliasPicker Artists="allArtists" ArtistId="editableArtist.ArtistId" AliasGroupId="Artist?.AliasGroupId" Selected="aliasIds" />
+                    }
                 </div>
             </EditForm>
         </ChildContent>
@@ -65,9 +71,17 @@
 @code {
     [Parameter] public bool IsVisible { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
-    /// <summary>The parent saves, shows the result toast and closes the modal on success.</summary>
-    [Parameter] public EventCallback<Artist> OnSave { get; set; }
+    /// <summary>The parent saves (artist and aliases), shows the result toast and closes the modal on success.</summary>
+    [Parameter] public EventCallback<ArtistEdit> OnSave { get; set; }
     [Parameter] public Artist? Artist { get; set; }
+    /// <summary>The artist's current aliases.</summary>
+    [Parameter] public IReadOnlyList<Artist> Aliases { get; set; } = Array.Empty<Artist>();
+
+    /// <summary>What the modal hands back on save.</summary>
+    public sealed record ArtistEdit(Artist Artist, List<int> AliasIds);
+
+    private List<Artist>? allArtists;
+    private List<int> aliasIds = new();
 
     private const string formId = "edit-artist-form";
     private Artist? editableArtist;
@@ -94,12 +108,18 @@
         isSaving = true;
         try
         {
-            await OnSave.InvokeAsync(editableArtist);
+            await OnSave.InvokeAsync(new ArtistEdit(editableArtist, aliasIds.ToList()));
         }
         finally
         {
             isSaving = false;
         }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ArtistService.GetAllArtistsAsync();
+        allArtists = result.IsSuccess ? result.Value.ToList() : new();
     }
 
     protected override void OnParametersSet()
@@ -108,6 +128,7 @@
         if (Artist != null && Artist.ArtistId != editingArtistId)
         {
             editingArtistId = Artist.ArtistId;
+            aliasIds = Aliases.Select(a => a.ArtistId).ToList();
             editableArtist = new Artist
                 {
                     ArtistId = Artist.ArtistId,

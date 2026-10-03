@@ -91,6 +91,17 @@
             color: var(--rmd-link-hover);
         }
 
+/* "Også kjent som" followed by the alias names, one per line like the rest of the box */
+.artist-info__aliases {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+    .artist-info__aliases a {
+        padding-left: 1.6rem;
+    }
+
 .artist-info__buttons {
     display: flex;
     flex-direction: column;
