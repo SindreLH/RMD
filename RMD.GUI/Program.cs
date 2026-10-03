@@ -131,7 +131,19 @@ else
 
 app.UseRmdSecurityHeaders();
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    // Large, rarely changing assets: let the browser keep them for a week (saves bandwidth on the free tier)
+    OnPrepareResponse = ctx =>
+    {
+        var path = ctx.Context.Request.Path;
+        if (path.StartsWithSegments("/video") || path.StartsWithSegments("/images") ||
+            path.StartsWithSegments("/bootstrap-icons/font/fonts"))
+        {
+            ctx.Context.Response.Headers.CacheControl = "public, max-age=604800";
+        }
+    }
+});
 app.UseRouting();
 
 app.UseAuthentication();
