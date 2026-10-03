@@ -47,8 +47,14 @@ GitHub Actions ──OIDC (no stored secret)──▶ deploys to App Service
 | **Small attack surface** | Swagger is Development-only; the API requires login; login has lockout and rate limiting; security headers and a CSP are set by the app |
 | **Recoverable** | Azure SQL point-in-time restore, plus RMD's own JSON export and pre-clear backups |
 
-**Rough monthly cost** (Norway East, 2026 list prices, check the pricing calculator): App Service B1 ≈ USD 13,
-Azure SQL Basic ≈ USD 5 (or the free serverless offer), Key Vault and logs a few cents.
+**Rough monthly cost** (Norway East, 2026 list prices, check the pricing calculator): App Service F1 is free
+(B1 ≈ USD 13 if you outgrow it), Azure SQL free serverless offer (or Basic ≈ USD 5), Key Vault and logs a few cents.
+
+**Free tier (F1) is enough for ad-hoc personal use.** Its limits: 60 CPU-minutes and about 165 MB outbound
+traffic per day, and the app sleeps after about 20 minutes idle (the first visit then takes a few seconds; with
+the free SQL offer paused too, up to about a minute). The login background is 2.5 MB and only loaded on larger
+screens, and static files are cached for a week. Upgrading later is one command:
+`az appservice plan update --resource-group $RG --name $PLAN --sku B1`, then turn on Always On.
 
 ## 2. Variables and resource group
 
@@ -110,7 +116,8 @@ az sql server firewall-rule create --resource-group $RG --server $SQL \
 ## 4. App Service
 
 ```bash
-az appservice plan create --resource-group $RG --name $PLAN --is-linux --sku B1
+# F1 = free (sleeps when idle); B1 = paid, can stay always on
+az appservice plan create --resource-group $RG --name $PLAN --is-linux --sku F1
 
 az webapp create --resource-group $RG --plan $PLAN --name $APP --runtime "DOTNETCORE:10.0"
 
@@ -133,6 +140,7 @@ az webapp config set --resource-group $RG --name $APP \
 ```
 
 - **Web sockets** carry Blazor's live connection; without them the app shows "reconnecting" loops.
+- **Always On** isn't available on F1. On B1 or higher add `--always-on true` to avoid the wake-up delay.
 - **ARR affinity** (client affinity) keeps a browser on the same instance, which Blazor Server requires.
 - **Health check** restarts an instance that stops answering `/healthz` (which also checks the database).
 
