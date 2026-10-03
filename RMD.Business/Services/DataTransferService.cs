@@ -53,6 +53,7 @@ namespace RMD.Business.Services
 					ProfilePicUrl = a.ProfilePicUrl,
 					DiscogsUrl = a.DiscogsUrl,
 					CreatedAt = a.ArtistCreatedAt,
+					AliasGroup = a.AliasGroupId,
 				})
 				.ToListAsync();
 
@@ -105,6 +106,8 @@ namespace RMD.Business.Services
 			var artistRefs = new Dictionary<int, ArtistRef>();
 			var newArtistsByName = new Dictionary<string, ArtistRef>();
 			var nextTempId = -1;
+			// file alias group -> the artists it maps to in this database
+			var aliasGroups = new Dictionary<Guid, HashSet<ArtistRef>>();
 
 			foreach (var fa in file.Artists)
 			{
@@ -147,6 +150,13 @@ namespace RMD.Business.Services
 					artistRefs[fa.Id] = reference;
 					newArtistsByName[key] = reference;
 					summary.ArtistsCreated++;
+				}
+
+				if (fa.AliasGroup is Guid fileGroup)
+				{
+					if (!aliasGroups.TryGetValue(fileGroup, out var members))
+						aliasGroups[fileGroup] = members = new HashSet<ArtistRef>();
+					members.Add(artistRefs[fa.Id]);
 				}
 			}
 
@@ -226,6 +236,24 @@ namespace RMD.Business.Services
 			await using var transaction = await db.Database.BeginTransactionAsync();
 			try
 			{
+				// Alias groups from the file get a fresh id here. Existing artists that already have
+				// aliases keep them; a group needs at least two artists and holds at most 1 + MaxAliases.
+				foreach (var members in aliasGroups.Values.Where(m => m.Count >= 2))
+				{
+					var existingIds = members.Where(m => m.NewArtist == null).Select(m => m.Id).ToList();
+					var existingFree = await db.Artists
+						.Where(a => existingIds.Contains(a.ArtistId) && a.AliasGroupId == null)
+						.ToListAsync();
+
+					var newMembers = members.Where(m => m.NewArtist != null).Select(m => m.NewArtist!).ToList();
+					if (newMembers.Count + existingFree.Count < 2)
+						continue;
+
+					var group = Guid.NewGuid();
+					foreach (var a in newMembers.Concat(existingFree).Take(ArtistService.MaxAliases + 1))
+						a.AliasGroupId = group;
+				}
+
 				db.Artists.AddRange(newArtistsByName.Values.Select(r => r.NewArtist!));
 				db.Songs.AddRange(newSongs);
 				await db.SaveChangesAsync();
