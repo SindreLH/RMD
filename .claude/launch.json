@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rmd-gui",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "RMD.GUI", "--launch-profile", "RMD.GUI"],
+      "port": 7023,
+      "url": "https://localhost:7023"
+    },
+    {
+      "name": "rmd-gui-testdb",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:/Users/sindr/AppData/Local/Temp/claude/C--Users-sindr-source-repos-RMD/d135623d-580a-40c0-a06c-9857efc6d624/scratchpad/run-test.ps1"],
+      "port": 7023,
+      "url": "https://localhost:7023"
+    }
+  ]
+}
