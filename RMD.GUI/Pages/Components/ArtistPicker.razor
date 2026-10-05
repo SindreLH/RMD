@@ -1,0 +1,79 @@
+﻿@using RMD.Data.Models
+
+@* A list of artist dropdowns with add/remove buttons. Used for artists and remixers in the song forms. *@
+
+<fieldset class="rmd-fieldset rmd-picker">
+    <legend>@Label</legend>
+
+    @foreach (var row in Rows)
+    {
+        <div class="rmd-picker__row" @key="row.Key">
+            @if (Artists == null)
+            {
+                <select class="form-control" disabled aria-label="@Label">
+                    <option>Laster artister...</option>
+                </select>
+            }
+            else
+            {
+                <select class="form-control" aria-label="@Label" @bind="row.SelectedId">
+                    <option value="" style="color: var(--rmd-option-placeholder);">@Placeholder</option>
+                    @foreach (var artist in Artists)
+                    {
+                        <option value="@artist.ArtistId">@artist.Name</option>
+                    }
+                </select>
+            }
+
+            @if (Rows.Count > 1)
+            {
+                <button type="button" class="btn btn-sm btn-danger rmd-icon-btn" title="Fjern" aria-label="Fjern rad"
+                        @onclick="() => Remove(row)">
+                    <i class="bi bi-dash-lg"></i>
+                </button>
+            }
+
+            @if (Rows.Count < Max)
+            {
+                <button type="button" class="btn btn-sm btn-light rmd-icon-btn" title="Legg til" aria-label="Legg til rad"
+                        @onclick="() => Add(row)">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            }
+        </div>
+    }
+</fieldset>
+
+@code {
+    [Parameter, EditorRequired] public string Label { get; set; } = "";
+    [Parameter] public string Placeholder { get; set; } = "Velg en artist";
+    /// <summary>Null while the artists are still loading.</summary>
+    [Parameter] public IReadOnlyList<Artist>? Artists { get; set; }
+    /// <summary>The rows are owned by the parent form; the picker adds and removes in place.</summary>
+    [Parameter, EditorRequired] public List<ArtistPickerRow> Rows { get; set; } = new();
+    [Parameter] public int Max { get; set; } = 5;
+
+    // Every row has a "+": the new row is inserted right below the one that was clicked
+    private void Add(ArtistPickerRow after)
+    {
+        if (Rows.Count < Max)
+            Rows.Insert(Rows.IndexOf(after) + 1, new ArtistPickerRow());
+    }
+
+    private void Remove(ArtistPickerRow row)
+    {
+        if (Rows.Count > 1)
+            Rows.Remove(row);
+    }
+
+    /// <summary>Selected artist ids, without blanks or duplicates.</summary>
+    public static List<int> SelectedIds(IEnumerable<ArtistPickerRow> rows) =>
+        rows.Where(r => r.SelectedId.HasValue).Select(r => r.SelectedId!.Value).Distinct().ToList();
+
+    /// <summary>Rows for existing ids, or a single empty row.</summary>
+    public static List<ArtistPickerRow> RowsFor(IEnumerable<int> ids)
+    {
+        var rows = ids.Select(id => new ArtistPickerRow { SelectedId = id }).ToList();
+        return rows.Count > 0 ? rows : new() { new ArtistPickerRow() };
+    }
+}

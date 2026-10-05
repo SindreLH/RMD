@@ -1,70 +1,54 @@
-﻿@page "/Modal1"
 @using RMD.Data.Models
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Toasts
-
-@inject ToastService ToastService
 
 @if (IsVisible)
 {
-	<div class="modal-backdrop">
-		<div class="parent_container">
-			<div class="main_container">
-
-				<i class="bi bi-exclamation-triangle"></i>
-
-				<h3>Advarsel</h3>
-				<h4>Sletting</h4>
-
-				<p class="text_container">
+	<ModalShell Title="Advarsel" Subtitle="Sletting" Icon="bi-exclamation-triangle" OnClose="CloseDeleteModal">
+		<ChildContent>
+			<p class="text-center">
 				Ønsker du virkelig å slette
-				<strong>
-				@string.Join(", ", Song?.SongArtists? .Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null).Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>()) - <strong>"@Song?.Title" ?</strong>
-				</strong> 
+				<strong>@ArtistNames - "@Song?.Title"</strong>?
 			</p>
-
-				<div class="button_container">
-					<div class="cancel_button">
-						<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
-							Avbryt
-						</button>
-					</div>
-
-					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteSong">
-							Slett låt
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+		</ChildContent>
+		<Footer>
+			<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+				Avbryt
+			</button>
+			<button type="button" class="btn btn-danger" @onclick="DeleteSong" disabled="@isDeleting">
+				@(isDeleting ? "Sletter..." : "Slett låt")
+			</button>
+		</Footer>
+	</ModalShell>
 }
-
-
 
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
+	/// <summary>The parent deletes, shows the result toast and closes the modal.</summary>
 	[Parameter] public EventCallback<Song> OnDelete { get; set; }
 	[Parameter] public Song? Song { get; set; }
 
-	private void CloseDeleteModal()
+	private bool isDeleting;
+
+	private string ArtistNames => string.Join(", ", Song?.SongArtists
+		.Where(sa => sa.Role == ArtistRole.Primary && sa.Artist != null)
+		.Select(sa => sa.Artist!.Name) ?? Enumerable.Empty<string>());
+
+	private Task CloseDeleteModal() => OnClose.InvokeAsync(false);
+
+	private async Task DeleteSong()
 	{
-		OnClose.InvokeAsync(false);
+		if (Song == null || isDeleting)
+			return;
+
+		isDeleting = true;
+		try
+		{
+			await OnDelete.InvokeAsync(Song);
+		}
+		finally
+		{
+			isDeleting = false;
+		}
 	}
-
-	private void DeleteSong()
-	{
-		OnDelete.InvokeAsync(Song);
-
-		// Truncating long song titles
-		var title = Song?.Title.Length > 20
-			? Song?.Title[..20] + "..."
-			: Song?.Title;
-		
-		ToastService.ShowToast($"SUKSESS! {title} ble fjernet.", ToastType.Success);
-	}
- }
-
-
+}

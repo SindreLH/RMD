@@ -19,6 +19,12 @@ namespace RMD.Data.Models
         public string? ProfilePicUrl { get; set; }
         public string? DiscogsUrl { get; set; }
 
+        /// <summary>
+        /// Artists with the same group id are aliases of each other (other names for the same act).
+        /// Null when the artist has no aliases. A group holds at most 6 artists (one + 5 aliases).
+        /// </summary>
+        public Guid? AliasGroupId { get; set; }
+
         public ICollection<Song> Songs { get; set; } = new List<Song>();
 
         public Artist()

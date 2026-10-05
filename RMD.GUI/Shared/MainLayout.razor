@@ -1,43 +1,99 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
 @using RMD.GUI.Pages.Components.Toasts
+@inject NavigationManager Nav
 
-<PageTitle>RMD.GUI</PageTitle>
+<PageTitle>RMD</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
+<div class="app-shell @(navOpen ? "nav-open" : "")" @onkeydown="OnKeyDown">
+
+    @* Top bar: only below the lg breakpoint, where the sidebar becomes a drawer *@
+    <header class="topbar">
+        <a href="/dashboard" class="topbar__brand">
+            <img src="images/rmd_logo.png" width="104" height="40" class="rmd-logo" alt="RMD" />
+        </a>
+        <button type="button" class="topbar__toggle" aria-controls="app-sidebar" aria-expanded="@(navOpen ? "true" : "false")"
+                aria-label="@(navOpen ? "Lukk meny" : "Åpne meny")" @onclick="ToggleNav">
+            <i class="bi @(navOpen ? "bi-x-lg" : "bi-list")"></i>
+        </button>
+    </header>
+
+    <aside id="app-sidebar" class="sidebar">
         <AuthorizeView>
             <Authorized>
-
                 <NavMenu />
 
-                <div class="auth_state_container">
-
-                    <img src="images/creator.png" class="user_pic" />
-
-                    <div class="auth_text">
-                        <div class="admin_title_container">
-                            <p style="font-size: 0.9rem;"> Sindre</p>
-                        </div>
-                        <p style="font-size: 0.7rem;">Admin</p>
-                    </div> 
-
+                <div class="user-badge">
+                    <img src="images/creator.png" class="user-badge__pic" alt="" />
+                    <div class="user-badge__text">
+                        <span class="user-badge__name">Sindre</span>
+                        <span class="user-badge__role">Admin</span>
+                    </div>
                 </div>
-
-
             </Authorized>
         </AuthorizeView>
-    </div>
+    </aside>
 
-    <main>
-        <article class="content px-4">
-            @Body
-          
+    <div class="scrim" @onclick="CloseNav"></div>
+
+    <main class="app-main">
+        <article class="content">
+            @* An exception in a page shows this message instead of killing the whole session *@
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div class="alert alert-danger mt-4" role="alert">
+                        <h4>Noe gikk galt</h4>
+                        <p>Siden kunne ikke vises. Prøv igjen, eller gå til en annen side.</p>
+                        <button type="button" class="btn btn-outline-dark" @onclick="() => errorBoundary?.Recover()">Prøv igjen</button>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </article>
     </main>
 
-     <ToastComponent />
+    <ToastComponent />
 </div>
 
 @code{
+    private ErrorBoundary? errorBoundary;
+    private bool navOpen;
 
+    protected override void OnInitialized()
+    {
+        // Close the drawer after following a link
+        Nav.LocationChanged += OnLocationChanged;
+    }
+
+    // Navigating to another page clears a previous error
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
+
+    private void ToggleNav() => navOpen = !navOpen;
+
+    private void CloseNav() => navOpen = false;
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+            navOpen = false;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        if (!navOpen)
+            return;
+
+        navOpen = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Nav.LocationChanged -= OnLocationChanged;
+    }
 }

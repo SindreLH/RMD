@@ -1,43 +1,24 @@
-﻿@page "/Modal3"
-
-
-@* working *@
 @if (IsVisible)
 {
-	<div class="modal-backdrop">
-		<div class="parent_container">
-			<div class="main_container">
-
-				<i class="bi bi-exclamation-triangle"></i>
-
-				<h3>Advarsel</h3>
-				<h4>Ingen data</h4>
-
-				<div class="text_container">
-					<p>Fant ingen data. Prøv å nullstille alle filtre.</p>
-					<p>Legg til en artist eller låt og prøv å laste siden på nytt.</p>
-				</div>
-
-
-				<div class="close_button">
-					<button type="button" class="btn btn-secondary" @onclick="CloseEmptyDbModal">
-						Lukk
-					</button>
-				</div>
+	<ModalShell Title="Advarsel" Subtitle="Ingen data" Icon="bi-exclamation-triangle" OnClose="CloseEmptyDbModal">
+		<ChildContent>
+			<div class="text-center">
+				<p>Databasen er tom.</p>
+				<p>Legg til en artist eller låt for å komme i gang.</p>
 			</div>
-
-		</div>
-	</div>
-	
+		</ChildContent>
+		<Footer>
+			<a href="/Register" class="btn btn-success">Legg til</a>
+			<button type="button" class="btn btn-secondary" @onclick="CloseEmptyDbModal">
+				Lukk
+			</button>
+		</Footer>
+	</ModalShell>
 }
-
 
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
 
-	private void CloseEmptyDbModal()
-	{
-		OnClose.InvokeAsync(false);
-	}
+	private Task CloseEmptyDbModal() => OnClose.InvokeAsync(false);
 }

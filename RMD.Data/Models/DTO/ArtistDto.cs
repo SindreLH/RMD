@@ -4,11 +4,11 @@ namespace RMD.Data.Models.DTO
 {
 	public class ArtistDto
 	{
-		[Required(ErrorMessage = "An artist name is required.")]
-		[StringLength(100, ErrorMessage = "An artist name cannot exceed 100 characters.")]
+		[Required(ErrorMessage = "Navn må fylles ut.")]
+		[StringLength(100, ErrorMessage = "Navnet kan ikke være lengre enn 100 tegn.")]
 		public required string Name { get; set; }
 
-		[Required(ErrorMessage = "Artist nationality is required.")]
+		[Required(ErrorMessage = "Velg en nasjonalitet.")]
 		public required string Nationality { get; set; }
 
 		public string? FacebookUrl { get; set; }

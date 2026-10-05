@@ -1,0 +1,58 @@
+﻿@* The nationality <option> list shared by the artist forms (values are stored as-is). *@
+@* Rendered inline (not as a child component) so a bound <select> keeps its value: Blazor sets
+   the select's value together with its options only when they are part of the same element. *@
+
+@code {
+    public static readonly RenderFragment Options =
+    @<text>
+        <option value="" disabled selected>Nasjonalitet</option>
+        <option value="Ukjent Opphav" class="fw-bold">Ukjent nasjonalitet</option>
+        <option value="🇳🇴 Norge" class="fw-bold">🇳🇴 Norge</option>
+        <option value="🇸🇪 Sverige" class="fw-bold">🇸🇪 Sverige</option>
+        <option value="🇩🇰 Danmark" class="fw-bold">🇩🇰 Danmark</option>
+        <option value="🇫🇮 Finland" class="fw-bold">🇫🇮 Finland</option>
+        <option value="🇩🇪 Tyskland" class="fw-bold">🇩🇪 Tyskland</option>
+        <option value="🇮🇸 Island" class="fw-bold">🇮🇸 Island</option>
+        <option value="🇦🇺 Australia" class="fw-bold">🇦🇺 Australia</option>
+        <option value="🇺🇸 USA" class="fw-bold">🇺🇸 USA</option>
+        <option value="🇳🇱 Nederland" class="fw-bold">🇳🇱 Nederland</option>
+        <option value="🇬🇧 Storbritannia" class="fw-bold">🇬🇧 Storbritannia</option>
+        <option value="🇹🇷 Tyrkia">🇹🇷 Tyrkia</option>
+        <option value="🇹🇭 Thailand">🇹🇭 Thailand</option>
+        <option value="🇹🇼 Taiwan">🇹🇼 Taiwan</option>
+        <option value="🇨🇭 Sveits">🇨🇭 Sveits</option>
+        <option value="🇪🇸 Spania">🇪🇸 Spania</option>
+        <option value="🇿🇦 Sør-Afrika">🇿🇦 Sør-Afrika</option>
+        <option value="🇸🇮 Slovenia">🇸🇮 Slovenia</option>
+        <option value="🇸🇰 Slovakia">🇸🇰 Slovakia</option>
+        <option value="🇷🇺 Russland">🇷🇺 Russland</option>
+        <option value="🇷🇴 Romania">🇷🇴 Romania</option>
+        <option value="🇵🇹 Portugal">🇵🇹 Portugal</option>
+        <option value="🇵🇱 Polen">🇵🇱 Polen</option>
+        <option value="🇵🇪 Peru">🇵🇪 Peru</option>
+        <option value="🇳🇿 New Zealand">🇳🇿 New Zealand</option>
+        <option value="🇲🇽 Mexico">🇲🇽 Mexico</option>
+        <option value="🇱🇹 Litauen">🇱🇹 Litauen</option>
+        <option value="🇱🇮 Liechtenstein">🇱🇮 Liechtenstein</option>
+        <option value="🇱🇻 Latvia">🇱🇻 Latvia</option>
+        <option value="🇰🇷 Sør-Korea">🇰🇷 Sør-Korea</option>
+        <option value="🇯🇵 Japan">🇯🇵 Japan</option>
+        <option value="🇮🇹 Italia">🇮🇹 Italia</option>
+        <option value="🇮🇱 Israel">🇮🇱 Israel</option>
+        <option value="🇮🇪 Irland">🇮🇪 Irland</option>
+        <option value="🇭🇺 Ungarn">🇭🇺 Ungarn</option>
+        <option value="🇬🇱 Grønland">🇬🇱 Grønland</option>
+        <option value="🇬🇷 Hellas">🇬🇷 Hellas</option>
+        <option value="🇬🇪 Georgia">🇬🇪 Georgia</option>
+        <option value="🇫🇷 Frankrike">🇫🇷 Frankrike</option>
+        <option value="🇪🇪 Estland">🇪🇪 Estland</option>
+        <option value="🇨🇿 Tsjekkia">🇨🇿 Tsjekkia</option>
+        <option value="🇭🇷 Kroatia">🇭🇷 Kroatia</option>
+        <option value="🇨🇦 Canada">🇨🇦 Canada</option>
+        <option value="🇧🇪 Belgia">🇧🇪 Belgia</option>
+        <option value="🇧🇾 Hviterussland">🇧🇾 Hviterussland</option>
+        <option value="🇦🇹 Østerrike">🇦🇹 Østerrike</option>
+        <option value="🇦🇷 Argentina">🇦🇷 Argentina</option>
+        <option value="🇺🇦 Ukraina">🇺🇦 Ukraina</option>
+    </text>;
+}

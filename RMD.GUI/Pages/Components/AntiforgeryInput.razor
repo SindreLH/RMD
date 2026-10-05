@@ -1,0 +1,6 @@
+﻿@* Hidden antiforgery field for plain <form method="post"> elements that post to AuthController *@
+<input type="hidden" name="__RequestVerificationToken" value="@Token" />
+
+@code {
+    [CascadingParameter(Name = "AntiforgeryToken")] public string? Token { get; set; }
+}

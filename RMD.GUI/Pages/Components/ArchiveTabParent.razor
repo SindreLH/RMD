@@ -1,39 +1,28 @@
 ﻿@page "/Archive"
 @attribute [Authorize]
 
-<div class="center_tabs">
-	<ul class="nav nav-tabs">
-		<li class="nav-item">
-			<a class="nav-link @(selectedTab == 0 ? "active-tab" : "" )" @onclick="() => SelectTab(0)">
-				Artister
-			</a>
-		</li>
+@* The selected tab is in the URL (?tab=songs) so it survives reloads and can be bookmarked *@
 
-		<li class="nav-item">
-			<a class="nav-link @(selectedTab== 1 ? "active-tab" : "" )" @onclick="() => SelectTab(1)">
-				Låter
-			</a>
-		</li>
-	</ul>
-</div>
+<div class="rmd-page">
+	<nav aria-label="Arkiv">
+		<ul class="rmd-tabs">
+			<li><a href="/Archive" class="@(ShowSongs ? "" : "active")">Artister</a></li>
+			<li><a href="/Archive?tab=songs" class="@(ShowSongs ? "active" : "")">Låter</a></li>
+		</ul>
+	</nav>
 
-
-<div class="tab-content">
-	@if (selectedTab == 0)
+	@if (ShowSongs)
 	{
-		<ArtistListPage/>
+		<SongListPage />
 	}
-	else if (selectedTab == 1)
+	else
 	{
-		<SongListPage/>
+		<ArtistListPage />
 	}
 </div>
 
 @code {
-	private int selectedTab = 0;
+	[SupplyParameterFromQuery(Name = "tab")] public string? Tab { get; set; }
 
-	void SelectTab(int index)
-	{
-		selectedTab = index;
-	}
+	private bool ShowSongs => string.Equals(Tab, "songs", StringComparison.OrdinalIgnoreCase);
 }

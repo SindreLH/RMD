@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RMD.Business.Services;
 using RMD.Data.Models;
 using RMD.Data.Models.DTO;
@@ -6,6 +7,7 @@ using RMD.Data.Models.DTO;
 namespace RMD.GUI.Controllers
 {
 	[ApiController]
+	[Authorize]
 	[Route("api/[controller]")]
 	public class ArtistController : ControllerBase
 	{

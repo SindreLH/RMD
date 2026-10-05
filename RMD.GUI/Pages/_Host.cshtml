@@ -1,10 +1,19 @@
 ﻿@page "/"
 @namespace RMD.GUI.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@using RMD.GUI.Infrastructure
 @{
     Layout = "_Layout";
+
+    // Blazor has no HttpContext once the circuit is live, so the token for the plain
+    // HTML forms that post to AuthController is generated here and handed to App.
+    var antiforgeryToken = Antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+
+    // Same cookie as _Layout.cshtml; components use it for colours that CSS can't reach (charts)
+    var theme = ThemeCatalog.Normalize(HttpContext.Request.Cookies[ThemeCatalog.CookieName]);
 }
 
 <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
 
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+<component type="typeof(App)" render-mode="ServerPrerendered" param-AntiforgeryToken="antiforgeryToken" param-Theme="theme" />

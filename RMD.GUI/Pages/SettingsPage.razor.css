@@ -1,0 +1,141 @@
+.settings {
+    max-width: 64rem;
+}
+
+    .settings section {
+        display: flex;
+        flex-direction: column;
+        gap: var(--rmd-space-3);
+    }
+
+    .settings h2 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .settings p {
+        margin: 0;
+    }
+
+/* Theme picker */
+.theme-grid {
+    --rmd-card-min: 12rem;
+    gap: var(--rmd-space-4);
+}
+
+.theme-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--rmd-space-2);
+    padding: var(--rmd-space-4);
+    border: 2px solid transparent;
+    border-radius: var(--rmd-radius-md);
+    background-color: var(--rmd-surface-2);
+    color: var(--rmd-text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+    .theme-card:hover,
+    .theme-card:focus-visible {
+        border-color: var(--rmd-text-muted);
+        transform: translateY(-2px);
+    }
+
+    .theme-card.is-active {
+        border-color: var(--rmd-accent-2);
+    }
+
+.theme-card__swatches {
+    display: flex;
+    width: 100%;
+    height: 2.25rem;
+    border-radius: var(--rmd-radius-sm);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(127, 127, 127, 0.35);
+}
+
+    .theme-card__swatches span {
+        flex: 1;
+    }
+
+.theme-card__name {
+    display: flex;
+    align-items: center;
+    gap: var(--rmd-space-2);
+    font-weight: 700;
+}
+
+    .theme-card__name .bi {
+        color: var(--rmd-accent-2);
+    }
+
+.theme-card__desc {
+    font-size: var(--rmd-fs-sm);
+    color: var(--rmd-text-muted);
+}
+
+/* Import (InputFile is a child component, so it needs ::deep) */
+.settings ::deep .import-file {
+    max-width: 32rem;
+}
+
+.import-summary dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: var(--rmd-space-1) var(--rmd-space-5);
+    margin: 0;
+}
+
+.import-summary dt {
+    font-weight: 500;
+    color: var(--rmd-text-muted);
+}
+
+.import-summary dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.import-summary details {
+    margin-top: var(--rmd-space-3);
+}
+
+/* Danger zone */
+.danger-zone {
+    border: 1px solid var(--rmd-danger);
+}
+
+    .danger-zone h2 .bi {
+        color: var(--rmd-danger);
+    }
+
+.clear-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-3);
+    max-width: 26rem;
+}
+
+    .clear-form .form-check-label {
+        color: var(--rmd-text);
+    }
+
+.backup-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-1);
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+    .backup-list a {
+        color: var(--rmd-text);
+        margin-right: var(--rmd-space-3);
+    }
+
+.settings section > .btn {
+    align-self: flex-start;
+}

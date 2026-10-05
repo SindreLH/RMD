@@ -1,0 +1,15 @@
+@page "/"
+@attribute [AllowAnonymous]
+@inject NavigationManager Nav
+
+@* The site root forwards to the dashboard. Full page loads are redirected on the server
+   (PrerenderRedirects); this only handles in-app navigation to "/". NavigateTo is called after
+   rendering, because during prerendering it would throw NavigationException. *@
+
+@code {
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+			Nav.NavigateTo("/dashboard", replace: true);
+	}
+}

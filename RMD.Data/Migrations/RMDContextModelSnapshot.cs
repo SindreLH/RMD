@@ -17,7 +17,7 @@ namespace RMD.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,6 +45,9 @@ namespace RMD.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArtistId"));
 
+                    b.Property<Guid?>("AliasGroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("ArtistCreatedAt")
                         .HasColumnType("datetime2");
 
@@ -69,6 +72,8 @@ namespace RMD.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ArtistId");
+
+                    b.HasIndex("AliasGroupId");
 
                     b.ToTable("Artists");
                 });

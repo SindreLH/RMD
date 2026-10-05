@@ -1,67 +1,56 @@
-﻿@page "/Modal2"
 @using RMD.Data.Models
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Toasts
-
-@inject ToastService ToastService
 
 @if (IsVisible)
 {
-	<div class="modal-backdrop">
-		<div class="parent_container">
-			<div class="main_container">
-
-				<i class="bi bi-exclamation-triangle"></i>
-
-				<h3>Advarsel</h3>
-				<h4>Sletting</h4>
-
-				<div class="text_container">
-					<p>Ønsker du virkelig å slette <strong>"@Artist?.Name"</strong> fra databasen?</p>
-					<p>Handlingen kan ikke angres.</p>
-				</div>
-
-				<div class="button_container">
-					<div class="cancel_button">
-						<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
-							Avbryt
-						</button>
-					</div>
-
-					<div class="delete_button">
-						<button type="button" class="btn btn-danger" @onclick="DeleteArtist">
-							Slett artist
-						</button>
-					</div>
-				</div>
+	<ModalShell Title="Advarsel" Subtitle="Sletting" Icon="bi-exclamation-triangle" OnClose="CloseDeleteModal">
+		<ChildContent>
+			<div class="text-center">
+				<p>Ønsker du virkelig å slette <strong>"@Artist?.Name"</strong> fra databasen?</p>
+				@if (SongsLeftWithoutArtist > 0)
+				{
+					<p><strong>@SongsLeftWithoutArtist @(SongsLeftWithoutArtist == 1 ? "låt" : "låter")</strong> vil stå uten artist etter slettingen.</p>
+				}
+				<p>Handlingen kan ikke angres.</p>
 			</div>
-		</div>
-	</div>
+		</ChildContent>
+		<Footer>
+			<button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">
+				Avbryt
+			</button>
+			<button type="button" class="btn btn-danger" @onclick="DeleteArtist" disabled="@isDeleting">
+				@(isDeleting ? "Sletter..." : "Slett artist")
+			</button>
+		</Footer>
+	</ModalShell>
 }
-
-
 
 @code {
 	[Parameter] public bool IsVisible { get; set; }
 	[Parameter] public EventCallback<bool> OnClose { get; set; }
+	/// <summary>The parent deletes, shows the result toast and closes the modal.</summary>
 	[Parameter] public EventCallback<Artist> OnDelete { get; set; }
 	[Parameter] public Artist? Artist { get; set; }
+	/// <summary>Songs whose only primary artist is this one (they keep existing, but without an artist).</summary>
+	[Parameter] public int SongsLeftWithoutArtist { get; set; }
 
-	private void CloseDeleteModal()
+	private bool isDeleting;
+
+	private Task CloseDeleteModal() => OnClose.InvokeAsync(false);
+
+	private async Task DeleteArtist()
 	{
-		OnClose.InvokeAsync(false);		
-	}
+		if (Artist == null || isDeleting)
+			return;
 
-	private void DeleteArtist()
-	{
-		OnDelete.InvokeAsync(Artist);
-
-		// Truncating long song titles
-		var name = Artist?.Name.Length > 15
-			? Artist?.Name[..15] + "..."
-			: Artist?.Name;
-		ToastService.ShowToast($"SUKSESS! {name} ble fjernet.", ToastType.Success);
+		isDeleting = true;
+		try
+		{
+			await OnDelete.InvokeAsync(Artist);
+		}
+		finally
+		{
+			isDeleting = false;
+		}
 	}
 }
-
-

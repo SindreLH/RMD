@@ -7,6 +7,7 @@
 @using RMD.GUI.Pages;
 @inject IArtistService ArtistService;
 @inject ISongService SongService;
+@inject ToastService ToastService;
 @inject NavigationManager Navigation;
 
 <PageTitle>RMD | @artist?.Name</PageTitle>
@@ -14,251 +15,242 @@
 
 @if (editModalVisible)
 {
-	<EditArtistModal IsVisible="editModalVisible" 
+	<EditArtistModal IsVisible="editModalVisible"
 	OnClose="ToggleEditModal"
 	OnSave="OnArtistEdited"
-	Artist="artist"/>
+	Artist="artist"
+	Aliases="aliases"/>
 }
 
 @if(deleteModalVisible){
-	<WarningModalArtistDeletion IsVisible="deleteModalVisible" 
+	<WarningModalArtistDeletion IsVisible="deleteModalVisible"
 	OnClose="ToggleDeleteModal"
 	Artist="artist"
+	SongsLeftWithoutArtist="songsLeftWithoutArtist"
 	OnDelete="OnArtistDeleted"/>
 }
 
 
 @if (!notFound)
 {
-	<div class="header_wrapper">
+	<div class="rmd-page">
+		<section class="artist-hero">
+			<img src="@(SafeUrl.ForHref(artist?.ProfilePicUrl) ?? "images/no_artist_image.png")"
+				 alt=""
+				 class="artist-hero__pic" />
+			<h1 class="artist-hero__name">@artist?.Name</h1>
+		</section>
 
-		<div class="header_contents">
+		<div class="artist-layout">
+			<section class="rmd-panel artist-info" aria-label="Artistinformasjon">
+				<div class="artist-info__text">
+					<h2 class="h4">Artistinformasjon</h2>
 
-			<img src="@(artist?.ProfilePicUrl ?? "images/no_artist_image.png")"
-				 alt="Artist Press Picture"
-				 class="artist_profile_pic" />
-
-
-			<h3>@artist?.Name</h3>
-		</div>
-	</div>
-
-	<div class="table_and_box">
-		<div class="table-container">
-			<table class="table table-bordered table-dark table-striped table-hover">
-				<thead class="thead-light">
-					<tr>
-						<th>Tittel</th>
-						<th>Lengde</th>
-						<th>Spilt i EP</th>
-						<th>Kilde URL</th>
-						<th>Lagret</th>
-						<th>Favoritt</th>
-					</tr>
-				</thead>
-
-				<tbody>
-				@foreach (var song in songs?.Value ?? Enumerable.Empty<Song>()){
-					<tr>
-						<td class="text-truncate" style="max-width: 400px">@song.Title</td>
-						<td>@song.Length</td>
-						<td>@song.PlayedInEp</td>
-						<td>
-							@if (song.WantedSongUrl != null)
-							{
-								<a href="@song.WantedSongUrl"
-									target="_blank"
-									rel="noopener noreferrer"
-									title="@song.WantedSongUrl"
-									style="text-decoration: none;">
-									🔗
-								</a>
-							}
-						</td>
-						<td>@(song.Stored ? "✅" : "❌")</td>
-						<td>@(song.Favorite ? "⭐" : "❌")</td>
-					</tr>}
-				</tbody>
-			</table>
-
-			@if (artistHasNoSongs)
-			{
-				<div class="load_container">
-					<div class="load_contents">
-						<p class="load_text">Artisten er ikke tilknyttet noen låter ennå...</p>
-					</div>
-				</div>
-			}
-
-			@if (isLoading)
-			{
-				<div class="load_container">
-					<div class="load_contents">
-						<img src="/images/Loader.gif" alt="Loading..." class="load_spinner" />
-						<p class="load_text">Laster inn låter...</p>
-					</div>
-				</div>
-			}
-		</div>
-
-		<div class="info_box">
-
-
-			<div class="info_box_text">
-
-				<h4><b>Artistinformasjon</b></h4>
-
-				<div class="text_control">
 					<p><b>@artist?.Nationality</b></p>
-				</div>
-				<div class="text_control">
-					<p>
-						<b>
-							🎵 @artist?.SongArtists?.Where(sa => sa.Song != null).Select(sa => sa.Song).FirstOrDefault()?.Genre
-						</b>
-					</p>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.FacebookUrl">
-						<img src="images/fb_icon.png" class="socials_icons" />
-						Facebook
-					</a>
-					<br>
-					<br>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.SoundcloudUrl">
-						<img src="images/sc_icon.png" class="socials_icons" />
-						Soundcloud
-					</a>
-					<br>
-					<br>
-				</div>
-				<div class="text_control">
-					<a href="@artist?.DiscogsUrl">
-						<img src="images/discogs_icon.png" class="socials_icons" />
-						Discogs
-					</a>
-				</div>
-			</div>
 
-			<div class="info_box_buttons">
+					@if (genres.Length > 0)
+					{
+						<p><b>🎵 @genres</b></p>
+					}
 
-				<div class="button_wrapper">
-					<div class="edit_button">
-						<button type="button" @onclick="ToggleEditModal" class="btn btn-warning fixed-width">
-							<i class="bi bi-pencil"></i> Rediger artist
-						</button>
+					@if (aliases.Count > 0)
+					{
+						<p class="artist-info__aliases">
+							<b>🎭 Også kjent som</b>
+							@foreach (var alias in aliases)
+							{
+								<a href="/Artist/@alias.ArtistId">@alias.Name</a>
+							}
+						</p>
+					}
+
+					@foreach (var (label, icon, url) in SocialLinks)
+					{
+						<a href="@url" target="_blank" rel="noopener noreferrer">
+							<img src="@icon" alt="" class="socials_icons" />
+							@label
+						</a>
+					}
+				</div>
+
+				<div class="artist-info__buttons">
+					<button type="button" @onclick="ToggleEditModal" class="btn btn-warning">
+						<i class="bi bi-pencil"></i> Rediger artist
+					</button>
+					<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger">
+						<i class="bi bi-trash3"></i> Fjern artist
+					</button>
+				</div>
+			</section>
+
+			<section class="artist-songs" aria-label="Låter">
+				@if (isLoading)
+				{
+					<div class="rmd-loader">
+						<img src="/images/Loader.gif" alt="" />
+						<p>Laster inn låter...</p>
 					</div>
-
-					<div class="delete_button">
-						<button type="button" @onclick="ToggleDeleteModal" class="btn btn-danger fixed-width">
-							<i class="bi bi-trash3"></i> Fjern artist
-						</button>
+				}
+				else if (songs.Count == 0)
+				{
+					<div class="rmd-empty">
+						<p>Artisten er ikke tilknyttet noen låter ennå...</p>
 					</div>
-				</div>
-			</div>
+				}
+				else
+				{
+					<div class="rmd-table-wrap">
+						<table class="table table-bordered table-dark table-striped table-hover rmd-table rmd-table--stack">
+							<thead>
+								<tr>
+									<th>Tittel</th>
+									<th>Lengde</th>
+									<th>Spilt i EP</th>
+									<th>Kilde URL</th>
+									<th>Lagret</th>
+									<th>Favoritt</th>
+								</tr>
+							</thead>
 
+							<tbody>
+								@foreach (var song in songs)
+								{
+									var songUrl = SafeUrl.ForHref(song.WantedSongUrl);
+									<tr>
+										<td class="rmd-cell-title rmd-truncate" style="--rmd-truncate-max: 26rem" title="@song.Title">@song.Title</td>
+										<td data-label="Lengde">@song.Length</td>
+										<td data-label="Spilt i EP">@song.PlayedInEp</td>
+										<td data-label="Kilde">@if (songUrl != null)
+											{
+												<a href="@songUrl" target="_blank" rel="noopener noreferrer" title="@songUrl">🔗</a>
+											}</td>
+										<td data-label="Lagret">@(song.Stored ? "✅" : "❌")</td>
+										<td data-label="Favoritt">@(song.Favorite ? "⭐" : "❌")</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				}
+			</section>
 		</div>
 	</div>
 }
 
 @code {
-	private bool isLoading = false;
+	private bool isLoading = true;
 	private bool notFound = false;
-	private bool artistHasNoSongs = false;
-	private bool isSelected = false;
 	private bool editModalVisible = false;
 	private bool deleteModalVisible = false;
-	private Result<IEnumerable<Artist>>? artists;
-	private Result<IEnumerable<Song>>? songs;
+	private int songsLeftWithoutArtist;
+	private List<Song> songs = new();
+	private string genres = "";
 	private Artist? artist;
+	private List<Artist> aliases = new();
+	private int? loadedArtistId;
 	[Parameter] public int ArtistId { get; set; }
+
+	/// <summary>Only links that are real http(s) urls are shown.</summary>
+	private IEnumerable<(string Label, string Icon, string Url)> SocialLinks =>
+		new (string Label, string Icon, string? Url)[]
+		{
+			("Facebook", "images/fb_icon.png", SafeUrl.ForHref(artist?.FacebookUrl)),
+			("Soundcloud", "images/sc_icon.png", SafeUrl.ForHref(artist?.SoundcloudUrl)),
+			("Discogs", "images/discogs_icon.png", SafeUrl.ForHref(artist?.DiscogsUrl)),
+		}
+		.Where(l => l.Url != null)
+		.Select(l => (l.Label, l.Icon, l.Url!));
 
 	private void ToggleEditModal()
 	{
 		editModalVisible = !editModalVisible;
 	}
 
-	private void ToggleDeleteModal()
+	private async Task ToggleDeleteModal()
 	{
+		if (!deleteModalVisible && artist != null)
+		{
+			var count = await ArtistService.CountSongsLeftWithoutArtistAsync(artist.ArtistId);
+			songsLeftWithoutArtist = count.IsSuccess ? count.Value : 0;
+		}
+
 		deleteModalVisible = !deleteModalVisible;
 	}
 
+	// Runs on first load and whenever the route moves to another artist (Blazor reuses the component)
 	protected override async Task OnParametersSetAsync()
 	{
+		if (loadedArtistId == ArtistId)
+			return;
+
+		loadedArtistId = ArtistId;
 		isLoading = true;
 		notFound = false;
 		artist = null;
+		aliases = new();
+		songs = new();
+		genres = "";
 
 		var result = await ArtistService.GetArtistById(ArtistId);
 
-		if (result.IsSuccess && result.Value != null)
+		if (!result.IsSuccess || result.Value == null)
 		{
-			artist = result.Value;
-		}
-
-		else
-		{
+			// Redirected after rendering (see OnAfterRender): during prerendering NavigateTo would throw
 			notFound = true;
+			return;
 		}
 
+		artist = result.Value;
+		await LoadAliasesAsync();
+		await LoadSongsAsync();
 		isLoading = false;
+	}
 
-
+	protected override void OnAfterRender(bool firstRender)
+	{
 		if (notFound)
-		{
 			Navigation.NavigateTo("/notfound", replace: true);
-			return;
-		}
 	}
 
-	protected override async Task OnInitializedAsync()
+	private async Task LoadAliasesAsync()
 	{
-		isLoading = true;
-		await Task.Delay(300);
+		var result = await ArtistService.GetAliasesAsync(ArtistId);
+		aliases = result.IsSuccess ? result.Value : new();
+	}
 
+	private async Task LoadSongsAsync()
+	{
 		var songsByArtist = await SongService.GetSongsByArtistIdAsync(ArtistId);
-		artistHasNoSongs = false;
+		songs = songsByArtist.IsSuccess ? songsByArtist.Value.ToList() : new();
 
-		if (!songsByArtist.IsSuccess)
-		{
-			artistHasNoSongs = true;
-			return;
-		}
-
-		songs = Result<IEnumerable<Song>>.Success(songsByArtist.Value);
-
-		if(songs.Value == null)
-		{
-			artistHasNoSongs = true;
-			Console.WriteLine(songs.Error);
-			return;
-		}
+		genres = string.Join(", ", songs
+			.Select(s => s.Genre)
+			.Where(g => !string.IsNullOrWhiteSpace(g))
+			.GroupBy(g => g)
+			.OrderByDescending(g => g.Count())
+			.Select(g => g.Key));
 	}
 
-	private async Task OnArtistDeleted(Artist artist)
+	private async Task OnArtistDeleted(Artist artistToDelete)
 	{
-		var result = await ArtistService.DeleteArtistByIdAsync(artist.ArtistId);
+		var result = await ArtistService.DeleteArtistByIdAsync(artistToDelete.ArtistId);
 
 		if (result.IsSuccess)
 		{
-			artists = await ArtistService.GetAllArtistsAsync();
-
+			ToastService.ShowToast($"SUKSESS! {Shorten(artistToDelete.Name)} ble fjernet.", ToastType.Success);
 			deleteModalVisible = false;
-			isLoading = false;
-
 			Navigation.NavigateTo("/Archive");
 		}
 		else
 		{
-			Console.WriteLine(result.Error);
+			ToastService.ShowToast("FEIL: Kunne ikke slette artisten. " + result.Error, ToastType.Error);
 		}
 
 	}
 
-	private async Task OnArtistEdited(Artist updatedArtist)
+	private async Task OnArtistEdited(EditArtistModal.ArtistEdit edit)
 	{
+		var updatedArtist = edit.Artist;
 		var dto = new RMD.Data.Models.DTO.ArtistDto
 			{
 				Name = updatedArtist.Name,
@@ -271,17 +263,32 @@
 
 		var result = await ArtistService.UpdateArtistByIdAsync(updatedArtist.ArtistId, dto);
 
-		if (result.IsSuccess)
+		if (!result.IsSuccess)
 		{
-			// // Optionally reload songs from service
-			// artist = await ArtistService.GetAllArtistsAsync();
-			isSelected = false;
-			editModalVisible = false;
+			ToastService.ShowToast("FEIL: Kunne ikke lagre endringene. " + result.Error, ToastType.Error);
+			return;
 		}
-		else
+
+		// Aliases are only written when they changed
+		var current = aliases.Select(a => a.ArtistId).ToHashSet();
+		if (!current.SetEquals(edit.AliasIds))
 		{
-			// Handle error
-			Console.WriteLine(result.Error);
+			var aliasResult = await ArtistService.SetAliasesAsync(updatedArtist.ArtistId, edit.AliasIds);
+			if (!aliasResult.IsSuccess)
+			{
+				ToastService.ShowToast("FEIL: Artisten ble lagret, men aliasene ikke. " + aliasResult.Error, ToastType.Error);
+				return;
+			}
 		}
+
+		// Reload so the alias group and the alias list are current
+		var reloaded = await ArtistService.GetArtistById(updatedArtist.ArtistId);
+		artist = reloaded.IsSuccess ? reloaded.Value : result.Value;
+		await LoadAliasesAsync();
+
+		editModalVisible = false;
+		ToastService.ShowToast($"SUKSESS! {Shorten(artist.Name)} ble endret!", ToastType.Success);
 	}
+
+	private static string Shorten(string name) => name.Length > 18 ? name[..18] + "..." : name;
 }

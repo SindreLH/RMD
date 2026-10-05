@@ -1,19 +1,23 @@
-﻿@inject NavigationManager Nav
+@inject NavigationManager Nav
+
+@* Rendered by AuthorizeRouteView when the user may not see a page.
+   Full page loads are redirected on the server (PrerenderRedirects); this handles a session that
+   expires while the app is open. NavigateTo runs after rendering, so it never throws during prerendering. *@
+
+@if (IsAuthenticated)
+{
+    <p>Du har ikke tilgang til denne siden.</p>
+}
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    [Parameter] public bool IsAuthenticated { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
     {
-
-        var path = new Uri(Nav.Uri).AbsolutePath.ToLower();
-
-        if (path == "/")
+        if (!firstRender || IsAuthenticated)
             return;
 
-
-        if (firstRender)
-        {
-            Nav.NavigateTo("/?reason=unauthorized", replace: true);
-        }
-        
+        var returnUrl = "/" + Nav.ToBaseRelativePath(Nav.Uri);
+        Nav.NavigateTo($"/login?returnUrl={Uri.EscapeDataString(returnUrl)}", replace: true);
     }
 }

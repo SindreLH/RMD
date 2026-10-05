@@ -1,142 +1,92 @@
-﻿@page "/Modal6"
-@using RMD.Data.Models
-@using RMD.Data.Models.DTO
+﻿@using RMD.Data.Models
 @using RMD.Business.Services
 @using RMD.GUI.Pages.Components.Toasts
 
 @inject ToastService ToastService
 @inject IArtistService ArtistService
 
-@if (IsVisible)
+@if (IsVisible && editableArtist != null)
 {
-    <div class="modal-backdrop">
-        <div class="container_parent">
-            <div class="main_form_container">
+    <ModalShell Title="Rediger artist" Icon="bi-pencil-square" Width="42rem" CloseOnBackdrop="false" OnClose="CloseEditModal">
+        <ChildContent>
+            @* EditForm is required: InputSelect throws without a cascading EditContext *@
+            <EditForm id="@formId" Model="editableArtist" OnValidSubmit="SaveChangesAsync">
+                <DataAnnotationsValidator />
 
-                <i class="bi bi-pencil-square"></i>
-
-                <h3>Rediger artist</h3>
-
-                @if(editableArtist != null)
-                {
-                    <form id="reg_artist_form">
-                        <div class="artist_information">
-
-                            <div class="info_child">
-                                <label for="artistName">Navn</label>
-                                <input type="text" class="form-control" @bind="editableArtist.Name" />
-                            </div>
-
-                            <div class="info_child">
-                                <label for="artistNationality">Land </label>
-                                <InputSelect @bind-Value="editableArtist.Nationality" class="form-control">
-                                    <option value="" disabled selected>Nasjonalitet</option>
-                                    <option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
-                                    <option value="🇳🇴 Norge" class="fw-bold"> 🇳🇴 Norge</option>
-                                    <option value="🇸🇪 Sverige" class="fw-bold"> 🇸🇪 Sverige</option>
-                                    <option value="🇩🇰 Danmark" class="fw-bold"> 🇩🇰 Danmark</option>
-                                    <option value="🇫🇮 Finland" class="fw-bold"> 🇫🇮 Finland</option>
-                                    <option value="🇩🇪 Tyskland" class="fw-bold"> 🇩🇪 Tyskland</option>
-                                    <option value="🇮🇸 Island" class="fw-bold"> 🇮🇸 Island</option>
-                                    <option value="🇦🇺 Australia" class="fw-bold"> 🇦🇺 Australia</option>
-                                    <option value="🇺🇸 USA" class="fw-bold"> 🇺🇸 USA</option>
-                                    <option value="🇳🇱 Nederland" class="fw-bold"> 🇳🇱 Nederland</option>
-                                    <option value="🇬🇧 Storbritannia" class="fw-bold"> 🇬🇧 Storbritannia</option>
-                                    <option value="🇹🇷 Tyrkia"> 🇹🇷 Tyrkia</option>
-                                    <option value="🇹🇭 Thailand"> 🇹🇭 Thailand</option>
-                                    <option value="🇹🇼 Taiwan"> 🇹🇼 Taiwan</option>
-                                    <option value="🇨🇭 Sveits"> 🇨🇭 Sveits</option>
-                                    <option value="🇪🇸 Spania"> 🇪🇸 Spania</option>
-                                    <option value="🇿🇦 Sør-Afrika"> 🇿🇦 Sør-Afrika</option>
-                                    <option value="🇸🇮 Slovenia"> 🇸🇮 Slovenia</option>
-                                    <option value="🇸🇰 Slovakia"> 🇸🇰 Slovakia</option>
-                                    <option value="🇷🇺 Russland"> 🇷🇺 Russland</option>
-                                    <option value="🇷🇴 Romania"> 🇷🇴 Romania</option>
-                                    <option value="🇵🇹 Portugal"> 🇵🇹 Portugal</option>
-                                    <option value="🇵🇱 Polen"> 🇵🇱 Polen</option>
-                                    <option value="🇵🇪 Peru"> 🇵🇪 Peru</option>
-                                    <option value="🇳🇿 New Zealand"> 🇳🇿 New Zealand</option>
-                                    <option value="🇲🇽 Mexico"> 🇲🇽 Mexico</option>
-                                    <option value="🇱🇹 Litauen"> 🇱🇹 Litauen</option>
-                                    <option value="🇱🇮 Liechtenstein"> 🇱🇮 Liechtenstein</option>
-                                    <option value="🇱🇻 Latvia"> 🇱🇻 Latvia</option>
-                                    <option value="🇰🇷 Sør-Korea"> 🇰🇷 Sør-Korea</option>
-                                    <option value="🇯🇵 Japan"> 🇯🇵 Japan</option>
-                                    <option value="Italy"> 🇮🇹 Italia</option>
-                                    <option value="🇮🇹 Italia"> 🇮🇱 Israel</option>
-                                    <option value="🇮🇪 Irland"> 🇮🇪 Irland</option>
-                                    <option value="🇭🇺 Ungarn"> 🇭🇺 Ungarn</option>
-                                    <option value="🇬🇱 Grønland"> 🇬🇱 Grønland</option>
-                                    <option value="🇬🇷 Hellas"> 🇬🇷 Hellas</option>
-                                    <option value="🇬🇪 Georgia"> 🇬🇪 Georgia</option>
-                                    <option value="🇫🇷 Frankrike"> 🇫🇷 Frankrike</option>
-                                    <option value="🇪🇪 Estland"> 🇪🇪 Estland</option>
-                                    <option value="🇨🇿 Tsjekkia"> 🇨🇿 Tsjekkia</option>
-                                    <option value="🇭🇷 Kroatia"> 🇭🇷 Kroatia</option>
-                                    <option value="🇨🇦 Canada"> 🇨🇦 Canada</option>
-                                    <option value="🇧🇪 Belgia"> 🇧🇪 Belgia</option>
-                                    <option value="🇧🇾 Hviterussland"> 🇧🇾 Hviterussland</option>
-                                    <option value="🇦🇹 Østerrike"> 🇦🇹 Østerrike</option>
-                                    <option value="🇦🇷 Argentina"> 🇦🇷 Argentina</option>
-                                    <option value="🇺🇦 Ukraina"> 🇺🇦 Ukraina</option>
-                                </InputSelect>
-                            </div>
+                <div class="rmd-artist-form">
+                    <div class="rmd-artist-form__row">
+                        <div class="rmd-field">
+                            <label for="artistName">Navn</label>
+                            <InputText id="artistName" class="form-control" @bind-Value="editableArtist.Name" />
+                            <ValidationMessage For="@(() => editableArtist.Name)" />
                         </div>
 
-
-                        <div class="artist_links">
-                            <div class="links_child">
-                                <label for="artistName">Facebook</label>
-                                <input type="url" class="form-control" @bind="editableArtist.FacebookUrl" />
-                            </div>
-
-                            <div class="links_child">
-                                <label for="artistName">Soundcloud</label>
-                                <input type="url" class="form-control" @bind="editableArtist.SoundcloudUrl" />
-                            </div>
-
-                            <div class="links_child">
-                                <label for="profilePicture">Profilbilde</label>
-                                <input type="url" class="form-control" @bind="editableArtist.ProfilePicUrl" />
-                            </div>
-
-                            <div class="links_child">
-                                <label for="profilePicture">Discogs</label>
-                                <input type="url" class="form-control" @bind="editableArtist.DiscogsUrl" />
-                            </div>
+                        <div class="rmd-field">
+                            <label for="artistNationality">Land</label>
+                            <InputSelect id="artistNationality" @bind-Value="editableArtist.Nationality" class="form-control">
+                                @NationalityOptions.Options
+                            </InputSelect>
                         </div>
-
-                    </form>
-                }
-
-
-                <div class="button_container">
-                    <div class="cancel_button">
-                        <button type="button" @onclick="CloseEditModal" class="btn btn-secondary">
-                            Avbryt
-                        </button>
                     </div>
 
-                    <div class="save_button">
-                        <button type="button" class="btn btn-success" @onclick="SaveChangesAsync">
-                            Lagre endringer
-                        </button>
+                    <div class="rmd-field">
+                        <label for="artistFacebook">Facebook</label>
+                        <input id="artistFacebook" type="url" class="form-control" @bind="editableArtist.FacebookUrl" />
                     </div>
+
+                    <div class="rmd-field">
+                        <label for="artistSoundcloud">Soundcloud</label>
+                        <input id="artistSoundcloud" type="url" class="form-control" @bind="editableArtist.SoundcloudUrl" />
+                    </div>
+
+                    <div class="rmd-field">
+                        <label for="profilePicture">Profilbilde</label>
+                        <input id="profilePicture" type="url" class="form-control" @bind="editableArtist.ProfilePicUrl" />
+                    </div>
+
+                    <div class="rmd-field">
+                        <label for="artistDiscogs">Discogs</label>
+                        <input id="artistDiscogs" type="url" class="form-control" @bind="editableArtist.DiscogsUrl" />
+                    </div>
+
+                    @if (allArtists != null)
+                    {
+                        <AliasPicker Artists="allArtists" ArtistId="editableArtist.ArtistId" AliasGroupId="Artist?.AliasGroupId" Selected="aliasIds" />
+                    }
                 </div>
-            </div>
-        </div>
-    </div>
+            </EditForm>
+        </ChildContent>
+        <Footer>
+            <button type="button" @onclick="CloseEditModal" class="btn btn-secondary">
+                Avbryt
+            </button>
+            <button type="submit" form="@formId" class="btn btn-success" disabled="@isSaving">
+                @(isSaving ? "Lagrer..." : "Lagre endringer")
+            </button>
+        </Footer>
+    </ModalShell>
 }
 
 
 @code {
-        [Parameter]
-        public bool IsVisible { get; set; }
-        [Parameter] public EventCallback<bool> OnClose{ get; set; }
-        [Parameter] public EventCallback<Artist> OnSave{ get; set; }
-        [Parameter] public Artist? Artist { get; set; }
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    /// <summary>The parent saves (artist and aliases), shows the result toast and closes the modal on success.</summary>
+    [Parameter] public EventCallback<ArtistEdit> OnSave { get; set; }
+    [Parameter] public Artist? Artist { get; set; }
+    /// <summary>The artist's current aliases.</summary>
+    [Parameter] public IReadOnlyList<Artist> Aliases { get; set; } = Array.Empty<Artist>();
 
+    /// <summary>What the modal hands back on save.</summary>
+    public sealed record ArtistEdit(Artist Artist, List<int> AliasIds);
+
+    private List<Artist>? allArtists;
+    private List<int> aliasIds = new();
+
+    private const string formId = "edit-artist-form";
     private Artist? editableArtist;
+    private int editingArtistId;
+    private bool isSaving;
 
     private void CloseEditModal()
     {
@@ -150,31 +100,35 @@
         ToastService.ShowToast($"INFO: Endringene på {name} ble avbrutt.", ToastType.Info);
     }
 
-    
-
     private async Task SaveChangesAsync()
     {
-        if(editableArtist != null)
-        {
-            await OnSave.InvokeAsync(editableArtist);
+        if (editableArtist == null || isSaving)
+            return;
 
-            // Truncating long artist names
-            var name = editableArtist?.Name.Length > 18
-                ? editableArtist.Name[..18] + "..."
-                : editableArtist?.Name;
-            ToastService.ShowToast($"SUKSESS! {name} ble endret! ", ToastType.Success);
-        }
-
-        else
+        isSaving = true;
+        try
         {
-            ToastService.ShowToast("FEIL: En ukjent feil oppstod. Prøv igjen senere.", ToastType.Error);
+            await OnSave.InvokeAsync(new ArtistEdit(editableArtist, aliasIds.ToList()));
         }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ArtistService.GetAllArtistsAsync();
+        allArtists = result.IsSuccess ? result.Value.ToList() : new();
     }
 
     protected override void OnParametersSet()
     {
-        if(Artist != null)
+        // Only copy when a different artist is passed in, so a parent re-render doesn't wipe the user's edits
+        if (Artist != null && Artist.ArtistId != editingArtistId)
         {
+            editingArtistId = Artist.ArtistId;
+            aliasIds = Aliases.Select(a => a.ArtistId).ToList();
             editableArtist = new Artist
                 {
                     ArtistId = Artist.ArtistId,

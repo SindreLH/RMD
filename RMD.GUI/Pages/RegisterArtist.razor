@@ -1,130 +1,71 @@
 ﻿@using RMD.GUI.Pages.Components
 @using RMD.GUI.Pages.Components.Toasts
-@using RMD.Data.Context
 @using RMD.Data.Models
 @using RMD.Data.Models.DTO
 @using RMD.Business.Services
-@using RMD.GUI.Pages.Components.Modals
 
 @inject ToastService ToastService
 @inject IArtistService ArtistService
-@inject ISongService SongService
 @page "/AddArtist"
 @attribute [Authorize]
 
 <PageTitle>RMD | Legg til artist</PageTitle>
 
-<div class="container_parent">
-	<div class="main_form_container">
+<section class="rmd-panel register-card">
+	<h2 class="h4 mb-4">Ny artist</h2>
 
-		<EditForm Model="newArtistDto" OnValidSubmit="SaveArtist">
-			<DataAnnotationsValidator />
-			<div class="artist_information">
+	<EditForm Model="newArtistDto" OnValidSubmit="SaveArtist">
+		<DataAnnotationsValidator />
 
-				<div class="info_child">
+		<div class="rmd-artist-form">
+			<div class="rmd-artist-form__row">
+				<div class="rmd-field">
 					<label for="artistName">Navn</label>
-					<InputText @bind-Value="newArtistDto.Name" class="form-control" />
+					<InputText id="artistName" @bind-Value="newArtistDto.Name" class="form-control" />
+					<ValidationMessage For="@(() => newArtistDto.Name)" />
 				</div>
 
-				<div class="info_child">
-					<label for="artistNationality">Land </label>
-					<InputSelect @bind-Value="newArtistDto.Nationality" class="form-control">
-						<option value="" disabled selected>Nasjonalitet</option>
-						<option value="Ukjent Opphav" class="fw-bold"> Ukjent nasjonalitet</option>
-						<option value="🇳🇴 Norge" class="fw-bold"> 🇳🇴 Norge</option>
-						<option value="🇸🇪 Sverige" class="fw-bold"> 🇸🇪 Sverige</option>
-						<option value="🇩🇰 Danmark" class="fw-bold"> 🇩🇰 Danmark</option>
-						<option value="🇫🇮 Finland" class="fw-bold"> 🇫🇮 Finland</option>
-						<option value="🇩🇪 Tyskland" class="fw-bold"> 🇩🇪 Tyskland</option>
-						<option value="🇮🇸 Island" class="fw-bold"> 🇮🇸 Island</option>
-						<option value="🇦🇺 Australia" class="fw-bold"> 🇦🇺 Australia</option>
-						<option value="🇺🇸 USA" class="fw-bold"> 🇺🇸 USA</option>
-						<option value="🇳🇱 Nederland" class="fw-bold"> 🇳🇱 Nederland</option>
-						<option value="🇬🇧 Storbritannia" class="fw-bold"> 🇬🇧 Storbritannia</option>
-						<option value="🇹🇷 Tyrkia"> 🇹🇷 Tyrkia</option>
-						<option value="🇹🇭 Thailand"> 🇹🇭 Thailand</option>
-						<option value="🇹🇼 Taiwan"> 🇹🇼 Taiwan</option>
-						<option value="🇨🇭 Sveits"> 🇨🇭 Sveits</option>
-						<option value="🇪🇸 Spania"> 🇪🇸 Spania</option>
-						<option value="🇿🇦 Sør-Afrika"> 🇿🇦 Sør-Afrika</option>
-						<option value="🇸🇮 Slovenia"> 🇸🇮 Slovenia</option>
-						<option value="🇸🇰 Slovakia"> 🇸🇰 Slovakia</option>
-						<option value="🇷🇺 Russland"> 🇷🇺 Russland</option>
-						<option value="🇷🇴 Romania"> 🇷🇴 Romania</option>
-						<option value="🇵🇹 Portugal"> 🇵🇹 Portugal</option>
-						<option value="🇵🇱 Polen"> 🇵🇱 Polen</option>
-						<option value="🇵🇪 Peru"> 🇵🇪 Peru</option>
-						<option value="🇳🇿 New Zealand"> 🇳🇿 New Zealand</option>
-						<option value="🇲🇽 Mexico"> 🇲🇽 Mexico</option>
-						<option value="🇱🇹 Litauen"> 🇱🇹 Litauen</option>
-						<option value="🇱🇮 Liechtenstein"> 🇱🇮 Liechtenstein</option>
-						<option value="🇱🇻 Latvia"> 🇱🇻 Latvia</option>
-						<option value="🇰🇷 Sør-Korea"> 🇰🇷 Sør-Korea</option>
-						<option value="🇯🇵 Japan"> 🇯🇵 Japan</option>
-						<option value="Italy"> 🇮🇹 Italia</option>
-						<option value="🇮🇹 Italia"> 🇮🇱 Israel</option>
-						<option value="🇮🇪 Irland"> 🇮🇪 Irland</option>
-						<option value="🇭🇺 Ungarn"> 🇭🇺 Ungarn</option>
-						<option value="🇬🇱 Grønland"> 🇬🇱 Grønland</option>
-						<option value="🇬🇷 Hellas"> 🇬🇷 Hellas</option>
-						<option value="🇬🇪 Georgia"> 🇬🇪 Georgia</option>
-						<option value="🇫🇷 Frankrike"> 🇫🇷 Frankrike</option>
-						<option value="🇪🇪 Estland"> 🇪🇪 Estland</option>
-						<option value="🇨🇿 Tsjekkia"> 🇨🇿 Tsjekkia</option>
-						<option value="🇭🇷 Kroatia"> 🇭🇷 Kroatia</option>
-						<option value="🇨🇦 Canada"> 🇨🇦 Canada</option>
-						<option value="🇧🇪 Belgia"> 🇧🇪 Belgia</option>
-						<option value="🇧🇾 Hviterussland"> 🇧🇾 Hviterussland</option>
-						<option value="🇦🇹 Østerrike"> 🇦🇹 Østerrike</option>
-						<option value="🇦🇷 Argentina"> 🇦🇷 Argentina</option>
-						<option value="🇺🇦 Ukraina"> 🇺🇦 Ukraina</option>
+				<div class="rmd-field">
+					<label for="artistNationality">Land</label>
+					<InputSelect id="artistNationality" @bind-Value="newArtistDto.Nationality" class="form-control">
+						@NationalityOptions.Options
 					</InputSelect>
+					<ValidationMessage For="@(() => newArtistDto.Nationality)" />
 				</div>
 			</div>
 
-			<div class="artist_links">
-				<div class="links_child">
-					<label for="artistName">Facebook</label>
-					<InputText @bind-Value="newArtistDto.FacebookUrl" class="form-control"/>
-				</div>
-
-				<div class="links_child">
-					<label for="artistName">Soundcloud</label>
-					<InputText @bind-Value="newArtistDto.SoundcloudUrl" class="form-control"/>
-				</div>
-
-				<div class="links_child">
-					<label for="profilePicture">Profilbilde</label>
-					<InputText @bind-Value="newArtistDto.ProfilePicUrl" class="form-control"/>
-				</div>
-
-				<div class="links_child">
-					<label for="links_child">Discogs</label>
-					<InputText @bind-Value="newArtistDto.DiscogsUrl" class="form-control"/>
-				</div>
+			<div class="rmd-field">
+				<label for="artistFacebook">Facebook</label>
+				<InputText id="artistFacebook" type="url" @bind-Value="newArtistDto.FacebookUrl" class="form-control" />
 			</div>
 
-			<div class="links_child">
-				<div class="save_button">
-					<button type="submit" class="btn btn-success">
-						<i class="bi bi-floppy-fill"></i> Lagre Artist
-					</button>
-				</div>
+			<div class="rmd-field">
+				<label for="artistSoundcloud">Soundcloud</label>
+				<InputText id="artistSoundcloud" type="url" @bind-Value="newArtistDto.SoundcloudUrl" class="form-control" />
 			</div>
 
-			<div class="validation-container-artist">
-				<ValidationSummary class="fade-in" />
+			<div class="rmd-field">
+				<label for="profilePicture">Profilbilde</label>
+				<InputText id="profilePicture" type="url" @bind-Value="newArtistDto.ProfilePicUrl" class="form-control" />
 			</div>
-		</EditForm>
-	</div>
-</div>
+
+			<div class="rmd-field">
+				<label for="artistDiscogs">Discogs</label>
+				<InputText id="artistDiscogs" type="url" @bind-Value="newArtistDto.DiscogsUrl" class="form-control" />
+			</div>
+		</div>
+
+		<div class="register-card__actions">
+			<button type="submit" class="btn btn-success">
+				<i class="bi bi-floppy-fill"></i> Lagre artist
+			</button>
+		</div>
+	</EditForm>
+</section>
 
 
 
 @code {
-	private bool warningModalDuplicateVisible = false;
-	private string? attemptedArtistName;
-	private List<Artist> allArtists = new();
 	private ArtistDto newArtistDto = new ArtistDto
 	{
 
@@ -150,11 +91,7 @@
 			newArtistDto = new ArtistDto
 				{
 					Name = string.Empty,
-					Nationality = string.Empty,
-					FacebookUrl = "",
-					SoundcloudUrl = "",
-					ProfilePicUrl = "",
-					DiscogsUrl = ""
+					Nationality = string.Empty
 				};
 
 			StateHasChanged();
@@ -163,8 +100,6 @@
 		{
 			if (result.Error.Contains("already exists", StringComparison.OrdinalIgnoreCase))
 			{
-				attemptedArtistName = newArtistDto.Name;
-
 				// Truncating long artist names
 				var name = newArtistDto.Name.Length > 18
 					? newArtistDto.Name[..18] + "..."

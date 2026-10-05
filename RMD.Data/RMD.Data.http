@@ -1,6 +1,0 @@
-@RMD.Data_HostAddress = http://localhost:5171
-
-GET {{RMD.Data_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

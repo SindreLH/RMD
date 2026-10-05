@@ -1,41 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>7392d91d-074f-4e51-8f02-7291108cf1aa</UserSecretsId>
   </PropertyGroup>
 
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-	
   <ItemGroup>
-    <None Remove="Pages\ArtistListPage.razor.css" />
-    <None Remove="Pages\ArtistProfile.razor.css" />
-    <None Remove="Pages\Components\ArchiveTabParent.razor.css" />
-    <None Remove="Pages\Components\Modals\WarningModal.razor.css" />
-    <None Remove="Pages\Components\Modals\WarningModalDeletion.razor.css" />
-    <None Remove="Pages\Components\RegisterTabParent.razor.css" />
-    <None Remove="Pages\Components\Tabs.razor.css" />
-    <None Remove="Pages\MixtapeListPage.razor.css" />
-    <None Remove="Pages\RegisterSong.razor.css" />
-    <None Remove="Pages\SongListPage.razor.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Pages\ArtistListPage.razor.css" />
-    <Content Include="Pages\ArtistProfile.razor.css" />
-    <Content Include="Pages\Components\ArchiveTabParent.razor.css" />
-    <Content Include="Pages\Components\RegisterTabParent.razor.css" />
-    <Content Include="Pages\MixtapeListPage.razor.css" />
-    <Content Include="Pages\RegisterSong.razor.css" />
-    <Content Include="Pages\SongListPage.razor.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Components\Tabs\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
@@ -43,7 +15,7 @@
 	<!--EFC Versions were set to 6.0.12 here-->
 
 	<ItemGroup>
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
 		    <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 	     <PackageReference Include="Blazor-ApexCharts" Version="6.0.0" />

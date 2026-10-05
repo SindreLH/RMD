@@ -1,0 +1,502 @@
+/*
+    RMD shared components (global, so they also style child components that scoped CSS can't reach).
+    Colours come from themes.css, spacing and breakpoints from layout.css.
+*/
+
+/* ---------- Buttons ---------- */
+
+.btn-success {
+    --bs-btn-bg: var(--rmd-success);
+    --bs-btn-border-color: var(--rmd-success);
+    --bs-btn-hover-bg: var(--rmd-success);
+    --bs-btn-hover-border-color: var(--rmd-success);
+    --bs-btn-active-bg: var(--rmd-success);
+    --bs-btn-active-border-color: var(--rmd-success);
+    --bs-btn-disabled-bg: var(--rmd-success);
+    --bs-btn-disabled-border-color: var(--rmd-success);
+}
+
+    .btn-success:hover {
+        filter: brightness(1.1);
+    }
+
+.btn-warning {
+    --bs-btn-color: var(--rmd-on-warning);
+    --bs-btn-bg: var(--rmd-warning);
+    --bs-btn-border-color: var(--rmd-warning);
+    --bs-btn-hover-color: var(--rmd-on-warning);
+    --bs-btn-hover-bg: var(--rmd-warning-hover);
+    --bs-btn-hover-border-color: var(--rmd-warning-hover);
+    --bs-btn-active-color: var(--rmd-on-warning);
+    --bs-btn-active-bg: var(--rmd-warning-hover);
+    --bs-btn-active-border-color: var(--rmd-warning-hover);
+}
+
+.btn-danger {
+    --bs-btn-bg: var(--rmd-danger);
+    --bs-btn-border-color: var(--rmd-danger);
+    --bs-btn-hover-bg: var(--rmd-danger-hover);
+    --bs-btn-hover-border-color: var(--rmd-danger-hover);
+    --bs-btn-active-bg: var(--rmd-danger-hover);
+    --bs-btn-active-border-color: var(--rmd-danger-hover);
+    --bs-btn-disabled-bg: var(--rmd-danger);
+    --bs-btn-disabled-border-color: var(--rmd-danger);
+}
+
+.btn-secondary {
+    --bs-btn-color: var(--rmd-text);
+    --bs-btn-bg: var(--rmd-modal-cancel-bg);
+    --bs-btn-border-color: var(--rmd-text-muted);
+    --bs-btn-hover-color: var(--rmd-text);
+    --bs-btn-hover-bg: var(--rmd-surface-hover);
+    --bs-btn-hover-border-color: var(--rmd-text);
+    --bs-btn-active-color: var(--rmd-text);
+    --bs-btn-active-bg: var(--rmd-surface-hover);
+    --bs-btn-active-border-color: var(--rmd-text);
+}
+
+/* Small square +/- buttons next to the artist pickers */
+.rmd-icon-btn {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* ---------- Data table ---------- */
+
+.rmd-table-wrap {
+    border-radius: var(--rmd-radius-lg);
+    overflow: auto;
+    max-height: var(--rmd-table-max-h, none);
+}
+
+.rmd-table {
+    margin: 0;
+    width: 100%;
+}
+
+    .rmd-table th {
+        position: sticky;
+        top: 0;
+        z-index: var(--rmd-z-sticky);
+        white-space: nowrap;
+    }
+
+    .rmd-table td {
+        vertical-align: middle;
+    }
+
+    .rmd-table.is-selectable tbody tr {
+        cursor: pointer;
+    }
+
+    .rmd-table a {
+        text-decoration: none;
+    }
+
+/* The original RMD table look: borderless, semi-transparent, rounded, roomy rows */
+@media (min-width: 768px) {
+    .rmd-table {
+        opacity: var(--rmd-table-opacity);
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .rmd-table > :not(caption) > * > * {
+            border: none;
+        }
+
+        .rmd-table td:first-child,
+        .rmd-table th:first-child {
+            padding-left: 45px;
+        }
+
+        .rmd-table th {
+            padding: 10px;
+            line-height: 2.5;
+            font-weight: 600;
+            font-size: large;
+        }
+
+        .rmd-table tbody tr {
+            line-height: 3.5;
+        }
+}
+
+/* Columns that disappear on smaller screens (in table mode) */
+@media (max-width: 1199.98px) {
+    .rmd-table .rmd-col-xl {
+        display: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .rmd-table .rmd-col-lg {
+        display: none;
+    }
+}
+
+/* Phones: every row becomes a compact card; cells show their column name from data-label */
+@media (max-width: 767.98px) {
+    .rmd-table-wrap {
+        overflow: visible;
+        max-height: none;
+    }
+
+    .rmd-table--stack thead {
+        display: none;
+    }
+
+    .rmd-table--stack,
+    .rmd-table--stack tbody {
+        display: block;
+        width: 100%;
+    }
+
+        .rmd-table--stack tr {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-bottom: var(--rmd-space-3);
+            border: 1px solid var(--rmd-table-border);
+            border-radius: var(--rmd-radius-md);
+            overflow: hidden;
+            background-color: var(--rmd-table-bg);
+        }
+
+        .rmd-table--stack td,
+        .rmd-table--stack .rmd-col-xl,
+        .rmd-table--stack .rmd-col-lg {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            border-width: 0 0 1px 0;
+            padding: 0.45rem 0.75rem;
+            max-width: none !important;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+            .rmd-table--stack td::before {
+                content: attr(data-label);
+                font-size: 0.75rem;
+                opacity: 0.7;
+            }
+
+            .rmd-table--stack td:empty,
+            .rmd-table--stack .rmd-hide-stack {
+                display: none;
+            }
+
+            .rmd-table--stack td.rmd-cell-title {
+                grid-column: 1 / -1;
+                font-weight: 700;
+                font-size: 1.05rem;
+            }
+
+                .rmd-table--stack td.rmd-cell-title::before {
+                    display: none;
+                }
+}
+
+/* ---------- Loader and empty state ---------- */
+
+.rmd-loader,
+.rmd-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--rmd-space-3);
+    padding: var(--rmd-space-6) var(--rmd-space-4);
+    background-color: var(--rmd-surface);
+    border-radius: var(--rmd-radius-lg);
+    color: var(--rmd-text);
+    text-align: center;
+}
+
+    .rmd-loader img {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .rmd-loader p,
+    .rmd-empty p {
+        margin: 0;
+        color: var(--rmd-text);
+    }
+
+/* ---------- Tabs (Arkiv / Legg til) ---------- */
+
+.rmd-tabs {
+    display: flex;
+    justify-content: center;
+    gap: var(--rmd-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .rmd-tabs a {
+        display: block;
+        padding: var(--rmd-space-2) var(--rmd-space-4);
+        border-radius: 4px;
+        color: var(--rmd-tab-text);
+        text-decoration: none;
+    }
+
+        .rmd-tabs a:hover {
+            color: var(--rmd-tab-hover-text);
+        }
+
+        .rmd-tabs a.active {
+            background-color: var(--rmd-tab-active-bg);
+            color: var(--rmd-tab-active-text);
+        }
+
+/* ---------- Modal ---------- */
+
+.rmd-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--rmd-z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--rmd-space-4);
+    background: var(--rmd-backdrop);
+    animation: rmd-fade-in 0.15s ease-out;
+}
+
+.rmd-modal {
+    width: min(100%, var(--rmd-modal-w, 32rem));
+    max-height: calc(100dvh - 2 * var(--rmd-space-4));
+    display: flex;
+    flex-direction: column;
+    background-image: var(--rmd-modal-bg-image);
+    border-radius: var(--rmd-radius-lg);
+    color: var(--rmd-text);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35);
+    outline: none;
+}
+
+.rmd-modal--lg {
+    --rmd-modal-w: 56rem;
+}
+
+.rmd-modal__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--rmd-space-2);
+    padding: var(--rmd-space-5) var(--rmd-space-5) var(--rmd-space-3);
+    text-align: center;
+}
+
+    .rmd-modal__header .bi {
+        font-size: 2.75rem;
+        line-height: 1;
+        color: var(--rmd-modal-icon);
+    }
+
+    .rmd-modal__header h3,
+    .rmd-modal__header h4 {
+        margin: 0;
+        color: var(--rmd-text);
+    }
+
+    .rmd-modal__header h4 {
+        font-size: 1.1rem;
+        opacity: 0.85;
+    }
+
+.rmd-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--rmd-space-3) var(--rmd-space-5) var(--rmd-space-4);
+}
+
+    .rmd-modal__body p,
+    .rmd-modal__body label,
+    .rmd-modal__body legend {
+        color: var(--rmd-text);
+    }
+
+.rmd-modal__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--rmd-space-3) 4rem;
+    padding: var(--rmd-space-4) var(--rmd-space-5) var(--rmd-space-5);
+}
+
+    .rmd-modal__footer .btn {
+        width: min(11rem, 100%);
+    }
+
+/* Phones: full-screen sheet with the buttons always visible */
+@media (max-width: 575.98px) {
+    .rmd-modal-backdrop {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .rmd-modal {
+        width: 100%;
+        max-height: none;
+        height: 100dvh;
+        border-radius: 0;
+    }
+
+    .rmd-modal__footer .btn {
+        flex: 1 1 0;
+    }
+}
+
+@keyframes rmd-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---------- Auth pages (login, forgot, reset, 404) ---------- */
+
+.rmd-auth-card {
+    width: min(100%, 34rem);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--rmd-space-4);
+    padding: clamp(1.5rem, 1rem + 3vw, 3rem);
+    background-color: var(--rmd-surface-glass);
+    border-radius: var(--rmd-radius-lg);
+    backdrop-filter: blur(10px);
+    color: var(--rmd-text);
+}
+
+    .rmd-auth-card h1,
+    .rmd-auth-card h2,
+    .rmd-auth-card h3,
+    .rmd-auth-card p,
+    .rmd-auth-card label,
+    .rmd-auth-card a {
+        color: var(--rmd-text);
+    }
+
+    .rmd-auth-card h1 {
+        text-align: center;
+        font-weight: 600;
+        font-size: var(--rmd-fs-h1);
+        margin-bottom: var(--rmd-space-3);
+    }
+
+    .rmd-auth-card a {
+        text-decoration: none;
+    }
+
+        .rmd-auth-card a:hover {
+            text-decoration: underline;
+        }
+
+    .rmd-auth-card .btn {
+        width: 100%;
+    }
+
+.rmd-auth-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--rmd-space-2);
+    font-size: var(--rmd-fs-sm);
+}
+
+/* ---------- Validation ---------- */
+
+.validation-message {
+    color: var(--rmd-invalid);
+    font-size: var(--rmd-fs-sm);
+}
+
+.validation-errors {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--rmd-invalid);
+}
+
+/* ---------- Artist picker ---------- */
+
+.rmd-picker__row {
+    display: flex;
+    align-items: center;
+    gap: var(--rmd-space-2);
+}
+
+    .rmd-picker__row select {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+/* ---------- Artist form (register page and edit modal) ---------- */
+
+/* Navn and Land side by side, every link on its own full-width row below */
+.rmd-artist-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rmd-space-5);
+}
+
+.rmd-artist-form__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--rmd-space-5);
+}
+
+/* ---------- Alias picker ---------- */
+
+.alias-picker__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rmd-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.alias-picker__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rmd-space-1);
+    padding: 0.2rem 0.3rem 0.2rem 0.75rem;
+    border-radius: 999px;
+    background-color: var(--rmd-surface-2);
+    color: var(--rmd-text);
+    font-size: var(--rmd-fs-sm);
+}
+
+    .alias-picker__tag button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--rmd-text);
+        cursor: pointer;
+    }
+
+        .alias-picker__tag button:hover,
+        .alias-picker__tag button:focus-visible {
+            background-color: var(--rmd-danger);
+            color: var(--rmd-on-danger);
+        }

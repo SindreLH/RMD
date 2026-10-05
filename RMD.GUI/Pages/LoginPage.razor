@@ -1,74 +1,89 @@
-﻿@using Microsoft.AspNetCore.Components.Web.HtmlRendering
-@using RMD.Business.Services;
+﻿@using RMD.Business.Services;
 @using RMD.Data.Models;
+@using RMD.GUI.Infrastructure;
 @using RMD.GUI.Pages.Components.Toasts;
 
 @inject NavigationManager Nav
 @inject ToastService Toast
 
-@page "/"
+@page "/login"
 @attribute [AllowAnonymous]
 @layout AuthLayout
 
 
 <PageTitle>RMD | Logg inn</PageTitle>
-<div class="main_container">
-	
-	<div class="login_contents">
-			
-		<h1> Logg inn</h1>
+<div class="rmd-auth-card">
+	<h1>Logg inn</h1>
 
-		<form method="post" action="/auth/login">
-			<div class="fields_container">
-				<div class="form-group field_item">
-					<label for="email">E-post</label>
-					<input name="Email" class="form-control"/>
-				</div>
+	<form method="post" action="/auth/login" class="d-flex flex-column gap-3">
+		<AntiforgeryInput />
+		<input type="hidden" name="returnUrl" value="@safeReturnUrl" />
 
-				<div class="form-group field_item">
-					<label for="password">Passord</label>
-					<input name="Password" type="password" class="form-control"/>
-				</div>
-			</div>
+		<div class="rmd-field">
+			<label for="email">E-post</label>
+			<input id="email" name="Email" type="email" autocomplete="username" class="form-control" required />
+		</div>
 
-			<div class="remember_me">
-				<a href="/ForgotPassword">Glemt passord?</a>
-			</div>
+		<div class="rmd-field">
+			<label for="password">Passord</label>
+			<input id="password" name="Password" type="password" autocomplete="current-password" class="form-control" required />
+		</div>
 
-			<div class="button_container">
-				<button type="submit" class="btn btn-success">
-					Logg inn
-				</button>
-			</div>
-		</form>
+		<div class="rmd-auth-row">
+			<label class="d-inline-flex align-items-center gap-2">
+				<input type="checkbox" name="RememberMe" value="true" class="form-check-input m-0" />
+				Husk meg
+			</label>
+			<a href="/ForgotPassword">Glemt passord?</a>
+		</div>
 
-	</div>
+		<button type="submit" class="btn btn-success mt-3">
+			Logg inn
+		</button>
+	</form>
 </div>
 
 @code {
+	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+
+	[SupplyParameterFromQuery] public string? ReturnUrl { get; set; }
+	[SupplyParameterFromQuery] public string? Reason { get; set; }
+	[SupplyParameterFromQuery(Name = "reset")] public string? Reset { get; set; }
+
+	private string safeReturnUrl = "/dashboard";
+	private bool alreadySignedIn;
+
+	protected override async Task OnInitializedAsync()
+	{
+		safeReturnUrl = LocalUrl.OrDefault(ReturnUrl);
+
+		// Already signed in: skip the login form
+		// (NavigateTo happens after rendering: during prerendering it would throw NavigationException)
+		var state = await AuthState;
+		alreadySignedIn = state.User.Identity?.IsAuthenticated == true;
+	}
+
 	protected override void OnAfterRender(bool firstRender)
 	{
 		if (!firstRender) return;
 
-		var uri = Nav.ToAbsoluteUri(Nav.Uri);
-		var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-		var reason = query["reason"];
-
-		if (reason == "invalid")
+		if (alreadySignedIn)
 		{
-			Toast.ShowToast(
-				"Innlogging feilet. Kontroller innloggingsdetaljer.",
-				ToastType.Warning
-			);
+			Nav.NavigateTo(safeReturnUrl, replace: true);
+			return;
 		}
 
-		if (reason == "unauthorized")
+		var message = Reason switch
 		{
-			Toast.ShowToast(
-				"Tilgang til området krever innlogging. Vennligst logg inn. ",
-				ToastType.Warning
-			);
-		}
+			"invalid" => "Innlogging feilet. Kontroller innloggingsdetaljer.",
+			"locked" => "For mange mislykkede forsøk. Kontoen er låst i 15 minutter.",
+			"ratelimited" => "For mange forsøk. Vent litt og prøv igjen.",
+			_ => null
+		};
+
+		if (message != null)
+			Toast.ShowToast(message, ToastType.Warning);
+		else if (Reset == "success")
+			Toast.ShowToast("Passordet er endret. Logg inn med det nye passordet.", ToastType.Success);
 	}
 }
-
